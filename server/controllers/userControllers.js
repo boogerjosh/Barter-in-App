@@ -1,72 +1,60 @@
 const imagekit = require("../helpers/imagekit");
-const { Item, Image, User } = require("../models");
+const uploadFile = require("../helpers/uploadFile");
+const { Item, Image, User, sequelize } = require("../models");
 
 class userControllers {
   static async postItems(req, res, next) {
-    try {
-      const { files } = req;
-      const {
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase,
-        dateExpired,
-        statusPost,
-        myAdsId,
-      } = req.body;
-      const userId = req.userLogin.id;
+        const t = await sequelize.transaction();
+        try {
+            const imageData = []
+            const { files } = req
+            const {
+                title,
+                category,
+                description,
+                brand,
+                yearOfPurchase,
+                dateExpired,
+                statusPost,
+                myAdsId,
+                UserId,
+                imageId } = req.body
 
-      const createItems = await Item.create({
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase,
-        dateExpired,
-        statusPost,
-        myAdsId,
-        userId,
-      });
+            const createItems = await Item.create({
+                title,
+                category,
+                description,
+                brand,
+                yearOfPurchase,
+                dateExpired,
+                statusPost,
+                myAdsId,
+                UserId,
+                imageId
+            }, { transaction: t })
 
-      files.forEach((file) => {
-        imagekit
-          .upload({
-            file: file.buffer,
-            fileName: `my_file_name.jpg`,
-            extensions: [
-              {
-                name: "google-auto-tagging",
-                maxTags: 5,
-                minConfidence: 95,
-              },
-            ],
-          })
-          .then((data) => {
-            // console.log(data);
-            if (data.AITags === null) {
-              Image.create({
-                imageUrl: data.url,
-                itemId: createItems.id,
-                tag: "",
-              });
-            } else {
-              let tags = [];
-              data.AITags.forEach((e) => {
-                tags.push(e.name);
-              });
-              Image.create({
-                imageUrl: data.url,
-                itemId: createItems.id,
-                tag: tags.join(", "),
-              });
-            }
-          });
-      });
-      res.status(201).json({ message: "Item has been created" });
-    } catch (error) {
-      next(error);
-    }
+            files.forEach(async (file) => {
+                uploadFile(file)
+                    .then(data => {
+                        let tags = []
+                        if (data.AITags) {
+                            data.AITags.forEach(e => {
+                                tags.push(e.name)
+                            })
+                        }
+                        imageData.push({
+                            imageUrl: data.url,
+                            itemId: createItems.id,
+                            tag: tags.join(', ')
+                        })
+                    })
+            })
+            await t.commit();
+            res.status(201).send(createItems)
+        } catch (error) {
+            await t.rollback();
+            next(error)
+        }
   }
 
   static async getItems(req, res, next) {
