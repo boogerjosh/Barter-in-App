@@ -15,28 +15,20 @@ import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-const BarterRoomScreen = () => {
+const ChatRoomScreen = () => {
   const navigation = useNavigation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
         <StatusBar style="auto" />
         <Text>Ini Barter Room Screen</Text>
-      </View>
-      <View style={styles.containerButton}>
+
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
           onPress={() => navigation.push("Home", {})}
         >
           <Text style={styles.buttonText}>Confirm Barter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={() => navigation.push("ChatRoom", {})}
-        >
-          <Text style={styles.buttonText}>Chat Owner</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -46,15 +38,6 @@ const BarterRoomScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  containerButton: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -76,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BarterRoomScreen;
+export default ChatRoomScreen;
