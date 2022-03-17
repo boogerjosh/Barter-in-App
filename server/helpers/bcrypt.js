@@ -1,7 +1,11 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 
 function hashPassword(password) {
-    return bcrypt.hashSync(password, 10)
+  return bcrypt.hashSync(password, 10);
 }
 
-module.exports = hashPassword
+function comparePassword(password, hashPass) {
+  return bcrypt.compareSync(password, hashPass);
+}
+
+module.exports = { hashPassword, comparePassword };
