@@ -3,11 +3,12 @@ const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, sequelize } = require("../models");
 
 class userControllers {
+
   static async postItems(req, res, next) {
         const t = await sequelize.transaction();
         try {
-            const imageData = []
-            const { files } = req
+          let imageData = []
+          const { files } = req
             const {
                 title,
                 category,
@@ -18,7 +19,7 @@ class userControllers {
                 statusPost,
                 myAdsId,
                 UserId,
-                imageId } = req.body
+                } = req.body
 
             const createItems = await Item.create({
                 title,
@@ -29,29 +30,40 @@ class userControllers {
                 dateExpired,
                 statusPost,
                 myAdsId,
-                UserId,
-                imageId
-            }, { transaction: t })
-
-            files.forEach(async (file) => {
-                uploadFile(file)
-                    .then(data => {
-                        let tags = []
-                        if (data.AITags) {
-                            data.AITags.forEach(e => {
-                                tags.push(e.name)
-                            })
-                        }
-                        imageData.push({
-                            imageUrl: data.url,
-                            itemId: createItems.id,
-                            tag: tags.join(', ')
-                        })
-                    })
+                UserId
+            }, { 
+              returning: true,
+              transaction: t
             })
+
+          const mappedArray = await Promise.all(
+            files.map((file) => {
+              return uploadFile(file).then((data) => {
+                let tags = []
+                if (data.AITags) {
+                  data.AITags.forEach(e => {
+                    tags.push(e.name)
+                  })
+                }
+                let temp = {
+                  imageUrl: data.url,
+                  itemId: createItems.id,
+                  tag: tags.join(', ')
+                }
+                return temp
+              });
+            })
+          );
+          
+           await Image.bulkCreate(mappedArray, {
+                returning: true,
+                transaction: t,
+           })
+          
             await t.commit();
             res.status(201).send(createItems)
         } catch (error) {
+            console.log(error)
             await t.rollback();
             next(error)
         }

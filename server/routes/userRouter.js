@@ -1,10 +1,10 @@
 const userRouter = require("express").Router();
 const userControllers = require("../controllers/userControllers");
-const Authentication = require("../middlewares/auth");
+// const Authentication = require("../middlewares/auth");
 const multerImage = require("../middlewares/multerImage");
 
 userRouter.get("/items", userControllers.getItems);
-userRouter.use(Authentication);
+// userRouter.use(Authentication);
 userRouter.post(
   "/items",
   multerImage().array("image"),
