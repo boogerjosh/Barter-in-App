@@ -1,9 +1,12 @@
 const imagekit = require("../helpers/imagekit");
-const { Item, Image } = require('../models')
+const uploadFile = require("../helpers/uploadFile");
+const { Item, Image, sequelize } = require('../models')
 
 class userControllers {
     static async postItems(req, res, next) {
+        const t = await sequelize.transaction();
         try {
+            const imageData = []
             const { files } = req
             const {
                 title,
@@ -28,44 +31,28 @@ class userControllers {
                 myAdsId,
                 UserId,
                 imageId
-            })
+            }, { transaction: t })
 
-            files.forEach((file) => {
-                imagekit.upload({
-                    file: file.buffer,
-                    fileName: `my_file_name.jpg`,
-                    extensions: [
-                        {
-                            name: "google-auto-tagging",
-                            maxTags: 5,
-                            minConfidence: 95
-                        }
-                    ]
-                })
+            files.forEach(async (file) => {
+                uploadFile(file)
                     .then(data => {
-                        console.log(data)
-                        if (data.AITags === null) {
-                            Image.create({
-                                imageUrl: data.url,
-                                itemId: createItems.id,
-                                tag: ''
-                            })
-                        }
-                        else {
-                            let tags = []
+                        let tags = []
+                        if (data.AITags) {
                             data.AITags.forEach(e => {
                                 tags.push(e.name)
                             })
-                            Image.create({
-                                imageUrl: data.url,
-                                itemId: createItems.id,
-                                tag: tags.join(', ')
-                            })
                         }
+                        imageData.push({
+                            imageUrl: data.url,
+                            itemId: createItems.id,
+                            tag: tags.join(', ')
+                        })
                     })
-
             })
+            await t.commit();
+            res.status(201).send(createItems)
         } catch (error) {
+            await t.rollback();
             next(error)
         }
     }
