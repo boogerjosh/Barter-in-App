@@ -1,68 +1,81 @@
 const imagekit = require("../helpers/imagekit");
+const sendEmail = require("../helpers/sendEmail");
 const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, sequelize } = require("../models");
+const { Op } = require("sequelize");
+const { OAuth2Client } = require("google-auth-library");
+const { signToken } = require("../helpers/jwt");
 
 class userControllers {
   static async postItems(req, res, next) {
-        const t = await sequelize.transaction();
-        try {
-            const imageData = []
-            const { files } = req
-            const {
-                title,
-                category,
-                description,
-                brand,
-                yearOfPurchase,
-                dateExpired,
-                statusPost,
-                myAdsId,
-                UserId,
-                imageId } = req.body
+    const t = await sequelize.transaction();
+    try {
+      const { files } = req;
+      const {
+        title,
+        category,
+        description,
+        brand,
+        yearOfPurchase,
+        dateExpired,
+        userId,
+      } = req.body;
+      const createItems = await Item.create(
+        {
+          title,
+          category,
+          description,
+          brand,
+          yearOfPurchase,
+          dateExpired,
+          statusPost: "Review",
+          userId,
+        },
+        { transaction: t }
+      );
 
-            const createItems = await Item.create({
-                title,
-                category,
-                description,
-                brand,
-                yearOfPurchase,
-                dateExpired,
-                statusPost,
-                myAdsId,
-                UserId,
-                imageId
-            }, { transaction: t })
+      const mappedArray = await Promise.all(
+        files.map((file) => {
+          return uploadFile(file).then((data) => {
+            let tags = [];
+            if (data.AITags) {
+              data.AITags.forEach((e) => {
+                tags.push(e.name);
+              });
+            }
+            let temp = {
+              imageUrl: data.url,
+              itemId: createItems.id,
+              tag: tags.join(", "),
+            };
+            return temp;
+          });
+        })
+      );
 
-            files.forEach(async (file) => {
-                uploadFile(file)
-                    .then(data => {
-                        let tags = []
-                        if (data.AITags) {
-                            data.AITags.forEach(e => {
-                                tags.push(e.name)
-                            })
-                        }
-                        imageData.push({
-                            imageUrl: data.url,
-                            itemId: createItems.id,
-                            tag: tags.join(', ')
-                        })
-                    })
-            })
-            await t.commit();
-            res.status(201).send(createItems)
-        } catch (error) {
-            await t.rollback();
-            next(error)
-        }
+      let newImage = await Image.bulkCreate(mappedArray, {
+        returning: true,
+        transaction: t,
+      });
+
+      await sendEmail({ email: "aryaadhm@gmail.com" });
+
+      await t.commit();
+      res.status(201).send({ ...createItems.dataValues, Images: newImage });
+    } catch (error) {
+      await t.rollback();
+      next(error);
+    }
   }
 
   static async getItems(req, res, next) {
     try {
       let items = await Item.findAll({
         include: [Image],
+        where: {
+          status: "Approve",
+        },
       });
-
       res.status(200).json(items);
     } catch (error) {
       next(error);
@@ -91,10 +104,19 @@ class userControllers {
   }
 
   static async putItem(req, res, next) {
+    const t = await sequelize.transaction();
     try {
       let { id } = req.params;
-      let { title, category, description, brand, yearOfPurchase, dateExpired } =
-        req.body;
+      const { files } = req;
+      const {
+        title,
+        category,
+        description,
+        brand,
+        yearOfPurchase,
+        dateExpired,
+      } = req.body;
+
       await Item.update(
         {
           title,
@@ -103,22 +125,43 @@ class userControllers {
           brand,
           yearOfPurchase,
           dateExpired,
+          statusPost: "Review",
         },
         { where: { id } }
       );
+
+      const mappedArray = await Promise.all(
+        files.map((file) => {
+          return uploadFile(file).then((data) => {
+            let tags = [];
+            if (data.AITags) {
+              data.AITags.forEach((e) => {
+                tags.push(e.name);
+              });
+            }
+            let temp = {
+              imageUrl: data.url,
+              itemId: createItems.id,
+              tag: tags.join(", "),
+            };
+            return temp;
+          });
+        })
+      );
+
+      await Image.destroy({ where: { itemId: req.userLogin.id } });
+
+      let newImage = await Image.bulkCreate(mappedArray, {
+        returning: true,
+        transaction: t,
+      });
+
+      await sendEmail({ email: "aryaadhm@gmail.com" });
+
+      await t.commit();
       res.status(200).json({ message: "Item successfully updated" });
     } catch (error) {
-      next(error);
-    }
-  }
-
-  static async patchItem(req, res, next) {
-    try {
-      let { id } = req.params;
-      let { status } = req.body;
-      await Item.update({ status }, { where: { id } });
-      res.status(200).json({ message: "Item status successfully updated" });
-    } catch (error) {
+      await t.rollback();
       next(error);
     }
   }
@@ -135,6 +178,108 @@ class userControllers {
       next(error);
     }
   }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const CLIENT_ID = process.env.CLIENT_ID;
+      const client = OAuth2Client(CLIENT_ID);
+      const { token } = req.body;
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      const [user] = await User.findOrCreate({
+        where: { email: payload.email },
+        default: {
+          role: "Customer",
+          password: `${payload.email}-${new Date()}`,
+        },
+      });
+      const payloadFromServer = signToken({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      });
+      res.status(200).json({ access_token: payloadFromServer });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // static async patchItem(req, res, next) {
+  //   try {
+  //     let { id } = req.params;
+  //     let { status } = req.body;
+  //     await Item.update({ status }, { where: { id } });
+  //     res.status(200).json({ message: "Item status successfully updated" });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
+  // static async getRequest(req, res, next) {
+  //   try {
+  //     const UserId = req.currentUser.id;
+  //     const userItems = Item.findAll({ where: { UserId, status: "Reviewed" } });
+  //     let userRequests = [];
+  //     let topush = {};
+  //     userItems.forEach((el) => {
+  //       topush = await Request.findOne({
+  //         where: { [Op.or]: [{ ItemId: el.id }, { ItemId2: el.id }] },
+  //         include: {
+  //           model: Item,
+  //         },
+  //       });
+  //       if (topush) {
+  //         userRequests.push(topush);
+  //       }
+  //     });
+  //     res.send(200).json({ userRequests });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
+  // static async postRequest(req, res, next) {
+  //   try {
+  //     const { ItemId2, ItemId } = req.body;
+  //     const batch = {
+  //       ItemId,
+  //       ItemId2,
+  //     };
+  //     const resu = await Request.create(batch);
+  //     res.send(200).json({ message: "Request" });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
+  // static async sendEmail(req, res, next) {
+  //   try {
+  //     let email = req.userLogin.email;
+  //     let transporter = nodemailer.createTransport({
+  //       service: "Gmail",
+  //       auth: {
+  //         user: process.env.EMAIL, // generated ethereal user
+  //         pass: process.env.PASSWORD, // generated ethereal password
+  //       },
+  //       tls: {
+  //         rejectUnauthorized: false,
+  //       },
+  //     });
+  //     let mailOptions = {
+  //       from: process.env.EMAIL,
+  //       to: "admin@mail.com",
+  //       subject: "Asking for approvement",
+  //       text: ``,
+  //     };
+  //     let info = await transporter.sendMail(mailOptions);
+  //     res.status(200).json({ mesage: "Item has been deleted" });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 }
 
 module.exports = userControllers;

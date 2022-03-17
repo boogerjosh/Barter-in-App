@@ -1,8 +1,8 @@
-const multer  = require('multer')
-const upload = multer()
+const multer = require("multer");
+const upload = multer();
 
-function multerImage () {
-    return upload
+function multerImage() {
+  return upload;
 }
 
-module.exports = multerImage
+module.exports = multerImage;
