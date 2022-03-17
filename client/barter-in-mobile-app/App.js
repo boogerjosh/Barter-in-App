@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "./src/constants/Colors";
 
 import HomeRouter from "./src/routes/HomeRouter";
+import BarterRouter from "./src/routes/BarterRouter";
 import ProfileScreen from "./src/screens/Profile";
 import MyItemScreen from "./src/screens/MyItem";
 import BarterRoomScreen from "./src/screens/BarterRoom";
@@ -40,7 +41,7 @@ export default function App() {
               iconName = focused ? "person" : "person-outline";
             } else if (route.name === "MyItem") {
               iconName = focused ? "archive-sharp" : "archive-outline";
-            } else if (route.name === "BarterRoom") {
+            } else if (route.name === "BarterRouter") {
               iconName = focused ? "basket-sharp" : "basket-outline";
             }
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -57,7 +58,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Tab.Screen name="MyItem" component={MyItemScreen} />
-        <Tab.Screen name="BarterRoom" component={BarterRoomScreen} />
+        <Tab.Screen
+          name="BarterRouter"
+          component={BarterRouter}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>
