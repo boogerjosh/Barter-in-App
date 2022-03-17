@@ -26,9 +26,9 @@ const MyItemScreen = () => {
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.8}
-          onPress={() => navigation.push("ListItemHome", {})}
+          onPress={() => navigation.push("Home")}
         >
-          <Text style={styles.buttonText}>List Item</Text>
+          <Text style={styles.buttonText}>Choose Item</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
