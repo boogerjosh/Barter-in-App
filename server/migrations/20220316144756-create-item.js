@@ -1,54 +1,54 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Items', {
+    await queryInterface.createTable("Items", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       category: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       brand: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       yearOfPurchase: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       dateExpired: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       statusPost: {
-        type: Sequelize.STRING
-      },
-      myAdsId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
       },
       userId: {
-        type: Sequelize.INTEGER
-      },
-      imageId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "cascade",
+        onDelete: "cascade",
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Items');
-  }
+    await queryInterface.dropTable("Items");
+  },
 };
