@@ -24,6 +24,7 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const HomeScreen = () => {
+  console.log(categories);
   const navigation = useNavigation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -73,6 +74,77 @@ const HomeScreen = () => {
           ListFooterComponent={() => <ItemSpace width={20} />}
           showsHorizontalScrollIndicator={false}
         />
+      </View>
+      <View style={styles.categoryWrapper}>
+        <View style={styles.category}>
+          <View>
+            <Text style={styles.categoryTitle}>Categories</Text>
+          </View>
+          <View>
+            <Text style={styles.categorySubtitle}>See all</Text>
+          </View>
+        </View>
+        <View style={{ marginTop: 10 }}>
+          {categories.map((chunk, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginTop: 10,
+                }}
+              >
+                {chunk.map((category) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => navigation.push("ListItemHome")}
+                    >
+                      <View
+                        key={category.id}
+                        style={{
+                          width: width / 3 - 30,
+                          marginHorizontal: 10,
+                          justifyContent: "center",
+                          marginBottom: 20,
+                        }}
+                      >
+                        <View
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            backgroundColor: COLORS.PRIMARY_LIGHT,
+                            borderRadius: 10,
+                            width: width / 3 - 30,
+                            height: width / 3 - 60,
+                          }}
+                        />
+                        <View>
+                          <Image
+                            source={category.image}
+                            style={{
+                              width: width / 3 - 30,
+                              height: width / 3 - 30,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              fontFamily: FONTS.BOLD,
+                            }}
+                          >
+                            {category.title}
+                          </Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            );
+          })}
+        </View>
       </View>
       {/* <View style={styles.container}>
         <StatusBar style="auto" />
@@ -150,6 +222,27 @@ const styles = StyleSheet.create({
   },
   highlightWrapper: {
     marginTop: 20,
+  },
+  categoryWrapper: {
+    paddingHorizontal: 20,
+    marginTop: 20,
+    flex: 1,
+  },
+  category: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
+  categoryTitle: {
+    fontFamily: FONTS.MEDIUM,
+    fontSize: 18,
+    color: COLORS.DARK_GREY,
+  },
+  categorySubtitle: {
+    fontFamily: FONTS.REGULAR,
+    fontSize: 14,
+    color: COLORS.DARK_GREY,
+    textDecorationLine: "underline",
   },
   button: {
     justifyContent: "center",
