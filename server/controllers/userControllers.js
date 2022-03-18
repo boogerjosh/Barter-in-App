@@ -3,14 +3,20 @@ const sendEmail = require("../helpers/sendEmail");
 const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, sequelize } = require("../models");
 const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.OAUTH2_CLIENT);
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
 class userControllers {
   static async loginGoogle(req, res, next) {
     try {
-      const payload = req.body;
+      // const payload = req.body;
+      const client = new OAuth2Client(process.env.OAUTH2_CLIENT);
+      const { token } = req.body;
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -27,19 +33,16 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-      res
-        .status(200)
-        .json({
-          access_token: tokenServer,
-          id: String(user[0].dataValues.id),
-          username: user[0].dataValues.username,
-        });
+      res.status(200).json({
+        access_token: tokenServer,
+        id: String(user[0].dataValues.id),
+        username: user[0].dataValues.username,
+      });
     } catch (err) {
       console.log(err);
       next(err);
     }
   }
-
 
   static async postItems(req, res, next) {
     const t = await sequelize.transaction();
@@ -87,7 +90,7 @@ class userControllers {
           });
         })
       );
-
+      console.log("Masuk SINI >>>");
       let newImage = await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
@@ -139,7 +142,6 @@ class userControllers {
       next(error);
     }
   }
-  
 
   static async deleteItem(req, res, next) {
     try {
@@ -151,38 +153,87 @@ class userControllers {
       await Item.destroy({ where: { id } });
       res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
 
-//   static async googleLogin(req, res, next) {
-//     try {
-//       const CLIENT_ID = process.env.CLIENT_ID;
-//       const client = OAuth2Client(CLIENT_ID);
-//       const { token } = req.body;
-//       const ticket = await client.verifyIdToken({
-//         idToken: token,
-//         audience: CLIENT_ID,
-//       });
-//       const payload = ticket.getPayload();
-//       const [user] = await User.findOrCreate({
-//         where: { email: payload.email },
-//         default: {
-//           role: "Customer",
-//           password: `${payload.email}-${new Date()}`,
-//         },
-//       });
-//       const payloadFromServer = signToken({
-//         id: user.id,
-//         email: user.email,
-//         role: user.role,
-//       });
-//       res.status(200).json({ access_token: payloadFromServer });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
+  static async dataForHome(req, res, next) {
+    try {
+      let items = await Item.findAll({
+        order: [["updatedAt", "DESC"]],
+        limit: 10,
+      });
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getMyAds(req, res, next) {
+    try {
+      let items = await Item.findAll({
+        Where: {
+          [Op.and]: [
+            {
+              status: {
+                [Op.ne]: "Review",
+              },
+              userId: req.userLogin.id,
+            },
+          ],
+        },
+      });
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async dataForBarter(req, res, next) {
+    try {
+      let items = await Item.findAll({
+        Where: {
+          [Op.and]: [
+            {
+              status: {
+                [Op.eq]: "Approve",
+              },
+              userId: req.userLogin.id,
+            },
+          ],
+        },
+      });
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+  //   static async googleLogin(req, res, next) {
+  //     try {
+  //       const CLIENT_ID = process.env.CLIENT_ID;
+  //       const client = OAuth2Client(CLIENT_ID);
+  //       const { token } = req.body;
+  //       const ticket = await client.verifyIdToken({
+  //         idToken: token,
+  //         audience: CLIENT_ID,
+  //       });
+  //       const payload = ticket.getPayload();
+  //       const [user] = await User.findOrCreate({
+  //         where: { email: payload.email },
+  //         default: {
+  //           role: "Customer",
+  //           password: `${payload.email}-${new Date()}`,
+  //         },
+  //       });
+  //       const payloadFromServer = signToken({
+  //         id: user.id,
+  //         email: user.email,
+  //         role: user.role,
+  //       });
+  //       res.status(200).json({ access_token: payloadFromServer });
+  //     } catch (error) {
+  //       next(error);
+  //     }
+  //   }
 
   // static async getRequest(req, res, next) {
   //   try {

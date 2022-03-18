@@ -20,19 +20,18 @@ app.use(errorHandler);
 //   console.log(`Example app listening on port ${port}`)
 // })
 
+module.exports = app;
+
+// const messageArray = [];
+// io.on("connection", (socket) => {
+//   console.log(socket.id);
+//   socket.on("chatMessage", (message) => {
+//     messageArray.push(message);
+//     console.log(messageArray);
+//     io.emit("chatMessage", messageArray);
+//   });
+// });
+
 // server.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`);
 // });
-
-module.exports = app;
-
-const messageArray = []
-io.on("connection", (socket) => {
-  console.log(socket.id);
-  socket.on("chatMessage", (message) => {
-    messageArray.push(message);
-    console.log(messageArray);
-    io.emit("chatMessage", messageArray);
-  });
-});
-

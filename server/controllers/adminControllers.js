@@ -1,19 +1,24 @@
-const { comparePassword } = require("../helpers/bcrypt");
+// const { comparePassword } = require("../helpers/bcrypt");
 const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User } = require("../models");
 
 class adminControllers {
   static async register(req, res, next) {
-    const { name, email, password, role, address } = req.body;
-    const response = await User.create({
-      name,
-      email,
-      password,
-      role,
-      address,
-    });
-    res.status(201).send(response);
+    try {
+      const { username, email, password, role, address } = req.body;
+      const response = await User.create({
+        username,
+        email,
+        password,
+        role,
+        address,
+      });
+      res.status(201).send(response);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
   }
 
   static async patchItem(req, res, next) {

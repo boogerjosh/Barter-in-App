@@ -3,8 +3,11 @@ const { sequelize } = require("../models");
 const request = require("supertest");
 const { queryInterface } = sequelize;
 const userData = {
+  username: "test input",
   email: "admin@admin.admin",
   password: "admin@admin.admin",
+  address: "-",
+  role: "Admin",
 };
 
 describe("Admin Route Test", () => {
