@@ -1,12 +1,17 @@
 const app = require("../app");
 const { sequelize } = require("../models");
 const request = require("supertest");
+const ImageKit = require("imagekit");
+const { OAuth2Client } = require("google-auth-library");
 const { signToken } = require("../helpers/jwt");
 const { hashPassword } = require("../helpers/bcrypt");
 const { queryInterface } = sequelize;
-const fs = require("fs");
+const nodemailer = require("nodemailer");
 
 jest.setTimeout(2000);
+jest.mock("imagekit");
+jest.mock("google-auth-library");
+jest.mock("nodemailer");
 
 let access_token;
 
@@ -16,8 +21,10 @@ beforeAll((done) => {
       "Users",
       [
         {
+          username: "admin",
           email: "admin@mail.com",
           password: hashPassword("123456"),
+          address: "-",
           role: "Admin",
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -70,6 +77,7 @@ beforeAll((done) => {
             itemId: 1,
             imageUrl:
               "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/442839/item/goods_00_442839.jpg?width=1600&impolicy=quality_75",
+            tag: "test-input",
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -77,6 +85,7 @@ beforeAll((done) => {
             itemId: 1,
             imageUrl:
               "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/442839/sub/goods_442839_sub18.jpg?width=1600&impolicy=quality_75",
+            tag: "test-input",
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -149,6 +158,70 @@ describe("GET items", () => {
     });
   });
 
+  describe("GET /users/myads -  success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/myads")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /users/myads -  failed test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/myads")
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /users/items-barters -  success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/items-barters")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /users/items-barters -  failed test", () => {
+    it("should return an object with status 401", (done) => {
+      request(app)
+        .get("/users/items-barters")
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
   describe("GET /users/items/:id -  success test", () => {
     it("should return an object with status 200", (done) => {
       request(app)
@@ -206,38 +279,90 @@ describe("GET items", () => {
   });
 });
 
+describe("GET items/homes", () => {
+  describe("GET /users/items/homes -  success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/items/homes")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          console.log(err);
+          done(err);
+        });
+    });
+  });
+});
+
 // //POST ITEMS
 describe("POST items", () => {
-  // describe("POST /users/items -  success test", () => {
-  //   const newItem = {
-  //     title: "test post",
-  //     category: "pakaian",
-  //     description:
-  //       "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
-  //     brand: "Supreme",
-  //     yearOfPurchase: "2021",
-  //     userId: 1,
-  //   };
+  beforeAll(() => {
+    ImageKit.mockImplementation(() => {
+      return {
+        upload: () => {
+          return new Promise((resolve) => {
+            resolve({
+              url: "fake-image.png",
+            });
+          });
+        },
+      };
+    });
 
-  //   it("should return an object with status 201", (done) => {
-  //     request(app)
-  //       .post("/users/items")
-  //       .set("access_token", access_token)
-  //       .field("title", "test input post")
-  //       .attach("image", "assets/JK5OICOiE54.jpg")
-  //       .attach("image", "assets/JK5OICOiE54.jpg")
-  //       .attach("image", "assets/JK5OICOiE54.jpg")
-  //       .then((res) => {
-  //         expect(res.status).toBe(201);
-  //         expect(res.body).toBeInstanceOf(Object);
-  //         expect(res.body).toHaveProperty("message", expect.any(String));
-  //         done();
-  //       })
-  //       .catch((err) => {
-  //         done(err);
-  //       });
-  //   });
-  // });
+    // nodemailer.mockImplementation(() => {
+    //   return {
+    //     sendMail: () => {
+    //       return new Promise((resolve) => {
+    //         resolve({
+    //           url: "email send",
+    //         });
+    //       });
+    //     },
+    //   };
+    // });
+  });
+
+  describe("POST /users/items -  success test", () => {
+    const newItem = {
+      title: "test post",
+      category: "pakaian",
+      description:
+        "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+      brand: "Supreme",
+      yearOfPurchase: "2021",
+      usderI: 1,
+    };
+
+    it("should return an object with status 201", (done) => {
+      request(app)
+        .post("/users/items")
+        .set("access_token", access_token)
+        .field("title", "test input post")
+        .field("category", "pakaian")
+        .field(
+          "description",
+          "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga."
+        )
+        .field("brand", "Supreme")
+        .field("yearOfPurchase", "2021")
+        .field("userId", 1)
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        // .attach("image", "assets/JK5OICOiE54.jpg")
+        // .attach("image", "assets/JK5OICOiE54.jpg")
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
 
   describe("POST /users/items -  failed test", () => {
     const newItem = {};
@@ -258,35 +383,35 @@ describe("POST items", () => {
   });
 });
 
-// //PUT ITEM
-// describe("PUT items", () => {
-//   describe("PUT /items/:id -  success test", () => {
-//     const newItem = {};
-//     it("should return an object with status 200", (done) => {
-//       request(app)
-//         .put("/items/:id")
-//         .set(access_token, "access_token")
-//         .send(newItem)
-//         .then((res) => {
-//           expect(res.status).toBe(200);
-//           expect(res.body).toBeInstanceOf(Object);
-//           expect(res.body).toHaveProperty("message", expect.any(String));
-//           done();
-//         })
-//         .catch((err) => {
-//           done(err);
-//         });
+//POST loginGoolge
+// describe("POST items", () => {
+//   beforeAll(() => {
+//     OAuth2Client.mockImplementation(() => {
+//       return {
+//         verifyIdToken: () => {
+//           return new Promise((resolve) => {
+//             resolve({
+//               getPayload: () => {
+//                 return new Promise((resolve) => {
+//                   resolve({
+//                     token: "fake token",
+//                   });
+//                 });
+//               },
+//             });
+//           });
+//         },
+//       };
 //     });
 //   });
 
-//   describe("PUT /items/:id -  failed test", () => {
-//     const newItem = {};
-//     it("should return an object with status 401 - input without access_token as headers", (done) => {
+//   describe("POST users/googleLogin - success test", () => {
+//     it("should an obj with status 200", (done) => {
 //       request(app)
-//         .post("/items")
-//         .send(newItem)
+//         .post("/users/googleLogin")
+//         .send("token", "fake token")
 //         .then((res) => {
-//           expect(res.status).toBe(401);
+//           expect(res.status).toBe(200);
 //           expect(res.body).toBeInstanceOf(Object);
 //           expect(res.body).toHaveProperty("message", expect.any(String));
 //           done();
@@ -300,7 +425,7 @@ describe("POST items", () => {
 
 //DELETE ITEM
 describe("DELETE items", () => {
-  describe("DELETE users/items/:id -  success test", () => {
+  describe("DELETE users/items/:id - success test", () => {
     it("should return an object with status 200", (done) => {
       request(app)
         .delete("/users/items/2")

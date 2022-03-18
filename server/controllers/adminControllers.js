@@ -1,4 +1,4 @@
-const { comparePassword } = require("../helpers/bcrypt");
+// const { comparePassword } = require("../helpers/bcrypt");
 const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");

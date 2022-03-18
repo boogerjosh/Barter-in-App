@@ -1,5 +1,5 @@
 const errorHandler = (err, req, res, next) => {
-    let code = 500
+  let code = 500
   let msg = err
   if(err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
     code = 400
