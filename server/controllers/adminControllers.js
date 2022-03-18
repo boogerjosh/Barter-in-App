@@ -6,17 +6,17 @@ const { User, Item, Image } = require("../models");
 class adminControllers {
 
   static async register(req, res, next) {
-    const { username, email, password, address } = req.body;
+    const { username, email, password, photoUrl, address } = req.body;
     try {   
       const response = await User.create({
         username,
         email,
         password,
         role: 'Admin',
-        photoUrl: '',
+        photoUrl,
         address,
       });
-      res.status(201).send({ email: response.email});
+      res.status(201).send({ id: response.id, email: response.email});
     } catch (error) {
       next(error)
     }

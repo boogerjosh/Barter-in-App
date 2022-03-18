@@ -11,6 +11,7 @@ class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
+      console.log(payload)
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -19,7 +20,8 @@ class userControllers {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
           username: payload.givenName,
-          address: "-"
+          address: "-",
+          photoUrl: payload.photoUrl
         },
       });
       let tokenServer = signToken({
