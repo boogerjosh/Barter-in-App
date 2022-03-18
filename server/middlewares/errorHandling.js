@@ -17,7 +17,7 @@ const errorHandler = (err, req, res, next) => {
     code = 403;
     msg = "Forbidden to access source";
   }
-  res.status(code).json({ message: msg });
+  res.status(code).json(msg);
 };
 
 module.exports = errorHandler;
