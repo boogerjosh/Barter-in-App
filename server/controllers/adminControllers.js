@@ -25,6 +25,8 @@ class adminControllers {
   static async login(req, res, next) {
     const { email, password } = req.body;
     try {
+      if(!password || password === '') throw new Error("NO_INPUT_PASSWORD")
+      if(!email || email === '') throw new Error("NO_INPUT_EMAIL")
       let user = await User.findOne({ where: { email } });
       if (!user) {
         throw new Error("INVALID_USER");
@@ -38,7 +40,7 @@ class adminControllers {
         email: user.email,
         role: user.role,
       };
-      res.status(201).send({ access_token: signToken(payload) });
+      res.status(200).send({ access_token: signToken(payload) });
     } catch (error) {
       next(error)
     }
