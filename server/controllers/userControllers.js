@@ -7,52 +7,40 @@ const client = new OAuth2Client(process.env.OAUTH2_CLIENT);
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
-
 class userControllers {
-
-   static async loginGoogle(req, res, next) {
+  static async loginGoogle(req, res, next) {
     try {
-      var pwdChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$";
-      var pwdLen = 8;
-      var randPassword = Array(pwdLen).fill(pwdChars).map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
-      
-      const {token} = req.body
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.AUDIENCE
-      });
-    
-      const payload = ticket.getPayload();
-      console.log(payload)
-    
+      const payload = req.body;
       const user = await User.findOrCreate({
         where: {
-          email: payload.email
+          email: payload.email,
         },
         defaults: {
-          password: randPassword,
-          role: 'Customer',
-          username: payload.given_name,
-          phoneNumber: '08XXXXXXXXX',
-          address: 'XXXXX'
+          password: "rahasia" + Math.random() * 10,
+          role: "Customer",
+          username: payload.givenName,
+          phoneNumber: "-",
+          address: "-",
         },
-      })
-
+      });
       let tokenServer = signToken({
         id: user[0].dataValues.id,
-        email: user[0].dataValues.email
-      })
-
-      console.log(tokenServer)
-      res.status(200).json({access_token: tokenServer});
+        email: user[0].dataValues.email,
+      });
+      res
+        .status(200)
+        .json({
+          access_token: tokenServer,
+          id: String(user[0].dataValues.id),
+          username: user[0].dataValues.username,
+        });
     } catch (err) {
-      console.log(err)
-      next(err)
+      console.log(err);
+      next(err);
     }
   }
 
   static async postItems(req, res, next) {
-
     const t = await sequelize.transaction();
     try {
       const { files } = req;
