@@ -15,15 +15,6 @@ class userControllers {
       var pwdChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$";
       var pwdLen = 8;
       var randPassword = Array(pwdLen).fill(pwdChars).map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
-      
-      const {token} = req.body
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.AUDIENCE
-      });
-    
-      const payload = ticket.getPayload();
-      console.log(payload)
     
       const user = await User.findOrCreate({
         where: {
@@ -73,7 +64,7 @@ class userControllers {
           brand,
           yearOfPurchase,
           dateExpired,
-          statusPost: "Review",
+          statusPost: "Reviewed",
           userId,
         },
         { transaction: t }
@@ -118,7 +109,7 @@ class userControllers {
       let items = await Item.findAll({
         include: [Image],
         where: {
-          status: "Approve",
+          statusPost: "Approve",
         },
       });
       res.status(200).json(items);
@@ -170,7 +161,7 @@ class userControllers {
           brand,
           yearOfPurchase,
           dateExpired,
-          statusPost: "Review",
+          statusPost: "Approve",
         },
         { where: { id } }
       );

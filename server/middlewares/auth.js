@@ -7,7 +7,7 @@ const Authentication = async (req, res, next) => {
     let payload = verifyToken(access_token);
     let user = await User.findByPk(payload.id);
     if (!user) {
-      throw new Error("INVALID_TOKEN");
+      throw new Error("INVALID_USER");
     }
     req.userLogin = {
       id: user.id,
