@@ -11,7 +11,6 @@ class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
-      console.log(payload)
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -45,6 +44,7 @@ class userControllers {
   static async postItems(req, res, next) {
     const t = await sequelize.transaction();
     try {
+      const userLogin = req.userLogin
       const { files } = req;
       const {
         title,
@@ -52,9 +52,9 @@ class userControllers {
         description,
         brand,
         yearOfPurchase,
-        dateExpired,
-        userId,
+        dateExpired
       } = req.body;
+      const userId = userLogin.id
 
       const createItems = await Item.create(
         {
@@ -88,13 +88,12 @@ class userControllers {
           });
         })
       );
-
       let newImage = await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
       });
 
-      await sendEmail({ email: "aryaadhm@gmail.com" });
+      // await sendEmail({ email: "aryaadhm@gmail.com" });
 
       await t.commit();
       res.status(201).send({ ...createItems.dataValues, Images: newImage });
