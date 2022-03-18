@@ -2,9 +2,9 @@ const imagekit = require("../helpers/imagekit");
 const sendEmail = require("../helpers/sendEmail");
 const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, sequelize } = require("../models");
+const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.OAUTH2_CLIENT);
 const { Op } = require("sequelize");
-const { OAuth2Client } = require("google-auth-library");
 const { signToken } = require("../helpers/jwt");
 
 
