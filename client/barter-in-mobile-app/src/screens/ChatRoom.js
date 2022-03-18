@@ -68,8 +68,9 @@ const ChatRoomScreen = () => {
       </View>
       <ScrollView style={styles.scrollView}>
         {messageData
-          ? messageData.map((e, i) => <Text key={i}>{e}</Text>)
+          ? messageData.map((e, i) => <Text style={styles.messageText} key={i}>{e}</Text>)
           : null}
+          <Text style={styles.messageTextSender}>From Right</Text>
       </ScrollView>
       <TextInput
         keyboardShouldPersistTaps="always"
@@ -133,6 +134,24 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 10,
   },
+  messageText: {
+    backgroundColor: 'green',
+    alignSelf:'flex-start',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginLeft: 10,
+    margin: 2,
+    borderRadius: 10
+  },
+  messageTextSender: {
+    backgroundColor: '#92a8d1',
+    alignSelf:'flex-end',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
+    margin: 2,
+    borderRadius: 10
+  }
 });
 
 export default ChatRoomScreen;
