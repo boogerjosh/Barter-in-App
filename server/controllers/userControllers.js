@@ -19,8 +19,7 @@ class userControllers {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
           username: payload.givenName,
-          phoneNumber: "-",
-          address: "-",
+          address: "-"
         },
       });
       let tokenServer = signToken({
@@ -63,12 +62,12 @@ class userControllers {
           brand,
           yearOfPurchase,
           dateExpired,
-          statusPost: "Review",
+          statusPost: "Reviewed",
           userId,
         },
         { transaction: t }
       );
-      console.log(files);
+      
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -140,7 +139,6 @@ class userControllers {
     }
   }
   
-
   static async deleteItem(req, res, next) {
     try {
       let { id } = req.params;
