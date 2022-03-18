@@ -7,43 +7,40 @@ const client = new OAuth2Client(process.env.OAUTH2_CLIENT);
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
-
 class userControllers {
-
-   static async loginGoogle(req, res, next) {
+  static async loginGoogle(req, res, next) {
     try {
-      var pwdChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$";
-      var pwdLen = 8;
-      var randPassword = Array(pwdLen).fill(pwdChars).map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
-    
+      const payload = req.body;
       const user = await User.findOrCreate({
         where: {
-          email: payload.email
+          email: payload.email,
         },
         defaults: {
-          password: randPassword,
-          role: 'Customer',
-          username: payload.given_name,
-          phoneNumber: '08XXXXXXXXX',
-          address: 'XXXXX'
+          password: "rahasia" + Math.random() * 10,
+          role: "Customer",
+          username: payload.givenName,
+          address: "-"
         },
-      })
-
+      });
       let tokenServer = signToken({
         id: user[0].dataValues.id,
-        email: user[0].dataValues.email
-      })
-
-      console.log(tokenServer)
-      res.status(200).json({access_token: tokenServer});
+        email: user[0].dataValues.email,
+      });
+      res
+        .status(200)
+        .json({
+          access_token: tokenServer,
+          id: String(user[0].dataValues.id),
+          username: user[0].dataValues.username,
+        });
     } catch (err) {
-      console.log(err)
-      next(err)
+      console.log(err);
+      next(err);
     }
   }
 
-  static async postItems(req, res, next) {
 
+  static async postItems(req, res, next) {
     const t = await sequelize.transaction();
     try {
       const { files } = req;
@@ -56,6 +53,7 @@ class userControllers {
         dateExpired,
         userId,
       } = req.body;
+
       const createItems = await Item.create(
         {
           title,
@@ -69,7 +67,7 @@ class userControllers {
         },
         { transaction: t }
       );
-
+      
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -99,6 +97,7 @@ class userControllers {
       await t.commit();
       res.status(201).send({ ...createItems.dataValues, Images: newImage });
     } catch (error) {
+      console.log(error, "<<<<<<");
       await t.rollback();
       next(error);
     }
@@ -114,6 +113,7 @@ class userControllers {
       });
       res.status(200).json(items);
     } catch (error) {
+      // console.log(error);
       next(error);
     }
   }
@@ -138,70 +138,7 @@ class userControllers {
       next(error);
     }
   }
-
-  static async putItem(req, res, next) {
-    const t = await sequelize.transaction();
-    try {
-      let { id } = req.params;
-      const { files } = req;
-      const {
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase,
-        dateExpired,
-      } = req.body;
-
-      await Item.update(
-        {
-          title,
-          category,
-          description,
-          brand,
-          yearOfPurchase,
-          dateExpired,
-          statusPost: "Approve",
-        },
-        { where: { id } }
-      );
-
-      const mappedArray = await Promise.all(
-        files.map((file) => {
-          return uploadFile(file).then((data) => {
-            let tags = [];
-            if (data.AITags) {
-              data.AITags.forEach((e) => {
-                tags.push(e.name);
-              });
-            }
-            let temp = {
-              imageUrl: data.url,
-              itemId: createItems.id,
-              tag: tags.join(", "),
-            };
-            return temp;
-          });
-        })
-      );
-
-      await Image.destroy({ where: { itemId: req.userLogin.id } });
-
-      let newImage = await Image.bulkCreate(mappedArray, {
-        returning: true,
-        transaction: t,
-      });
-
-      await sendEmail({ email: "aryaadhm@gmail.com" });
-
-      await t.commit();
-      res.status(200).json({ message: "Item successfully updated" });
-    } catch (error) {
-      await t.rollback();
-      next(error);
-    }
-  }
-
+  
   static async deleteItem(req, res, next) {
     try {
       let { id } = req.params;
@@ -209,50 +146,41 @@ class userControllers {
       if (!item) {
         throw new Error("NOT_FOUND");
       }
-      res.status(200).json({ mesage: "Item has been deleted" });
+      await Item.destroy({ where: { id } });
+      res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
 
-  static async googleLogin(req, res, next) {
-    try {
-      const CLIENT_ID = process.env.CLIENT_ID;
-      const client = OAuth2Client(CLIENT_ID);
-      const { token } = req.body;
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
-      const [user] = await User.findOrCreate({
-        where: { email: payload.email },
-        default: {
-          role: "Customer",
-          password: `${payload.email}-${new Date()}`,
-        },
-      });
-      const payloadFromServer = signToken({
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      });
-      res.status(200).json({ access_token: payloadFromServer });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  // static async patchItem(req, res, next) {
-  //   try {
-  //     let { id } = req.params;
-  //     let { status } = req.body;
-  //     await Item.update({ status }, { where: { id } });
-  //     res.status(200).json({ message: "Item status successfully updated" });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+//   static async googleLogin(req, res, next) {
+//     try {
+//       const CLIENT_ID = process.env.CLIENT_ID;
+//       const client = OAuth2Client(CLIENT_ID);
+//       const { token } = req.body;
+//       const ticket = await client.verifyIdToken({
+//         idToken: token,
+//         audience: CLIENT_ID,
+//       });
+//       const payload = ticket.getPayload();
+//       const [user] = await User.findOrCreate({
+//         where: { email: payload.email },
+//         default: {
+//           role: "Customer",
+//           password: `${payload.email}-${new Date()}`,
+//         },
+//       });
+//       const payloadFromServer = signToken({
+//         id: user.id,
+//         email: user.email,
+//         role: user.role,
+//       });
+//       res.status(200).json({ access_token: payloadFromServer });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
 
   // static async getRequest(req, res, next) {
   //   try {

@@ -6,14 +6,17 @@ const multerImage = require("../middlewares/multerImage");
 userRouter.get("/items", userControllers.getItems);
 userRouter.post("/googleLogin", userControllers.loginGoogle);
 userRouter.get("/items/:id", userControllers.getItem);
+
 userRouter.use(Authentication);
 userRouter.post(
   "/items",
   multerImage().array("image"),
   userControllers.postItems
 );
-userRouter.put("/:id", userControllers.putItem);
-userRouter.delete("/:id", userControllers.deleteItem);
+
+userRouter.get("/items/:id", userControllers.getItem);
+userRouter.delete("/items/:id", userControllers.deleteItem);
+
 // userRouter.patch("/:id", userControllers.patchItem);
 // userRouter.post("/send-emails", userControllers.sendEmail);
 module.exports = userRouter;

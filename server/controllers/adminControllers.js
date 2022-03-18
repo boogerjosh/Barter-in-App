@@ -1,4 +1,5 @@
 const { comparePassword } = require("../helpers/bcrypt");
+const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");
 
@@ -57,6 +58,19 @@ class adminControllers {
     }
   }
   
+  static async patchItem(req, res, next) {
+    try {
+      let { id } = req.params;
+      let { status } = req.body;
+      if (status === "Approve") {
+        deleteItem(+id);
+      }
+      await Item.update({ status }, { where: { id } });
+      res.status(200).json({ message: "Item status successfully updated" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = adminControllers;
