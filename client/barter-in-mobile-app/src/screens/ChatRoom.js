@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Image,
+  Image
 } from "react-native";
 import { io } from "socket.io-client";
-socket = io("http://192.168.1.5:3000");
+socket = io("http://33d6-125-160-235-225.ngrok.io");
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
@@ -19,16 +19,22 @@ import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const messageArray = [];
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const ChatRoomScreen = () => {
   const navigation = useNavigation();
-  const [chatMessage, setChatMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [messageData, setMessageData] = useState("");
+  const [senderId, setSenderId] = useState('')
+  const [username, setUsername] = useState('')
+  const [receiverId, setReceiverId] = useState('1000')
 
-  useEffect(() => {
+  useEffect(async () => {
     socket.on("connect", () => {
       console.log(socket.id); // x8WIv7-mJelg7on_ALbx
     });
+    setUsername(await AsyncStorage.getItem('username'))
+    setSenderId(await AsyncStorage.getItem('id'))
   }, []);
 
   useEffect(() => {
@@ -38,25 +44,14 @@ const ChatRoomScreen = () => {
   }, [messageData]);
 
   function submitChatMessage(text, eventCount, target) {
-    socket.emit("chatMessage", chatMessage);
+    socket.emit("chatMessage", {message, senderId, receiverId, username});
     setMessageData(messageData);
-    setChatMessage("");
+    setMessage("");
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Text>Ini Barter Room Screen</Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={() => navigation.push("Home", {})}
-        >
-          <Text style={styles.buttonText}>Confirm Barter</Text>
-        </TouchableOpacity>
-      </View> */}
       <View style={styles.receiverView}>
         <Image
           style={styles.receiverImage}
@@ -68,20 +63,20 @@ const ChatRoomScreen = () => {
       </View>
       <ScrollView style={styles.scrollView}>
         {messageData
-          ? messageData.map((e, i) => <Text style={styles.messageText} key={i}>{e}</Text>)
+          ? messageData.map((e, i) => <Text style={styles.messageText} key={i}>{e.message}</Text>)
           : null}
           <Text style={styles.messageTextSender}>From Right</Text>
       </ScrollView>
       <TextInput
         keyboardShouldPersistTaps="always"
-        value={chatMessage}
+        value={message}
         style={styles.textInputStyle}
         onSubmitEditing={() => {
           submitChatMessage();
         }}
         blurOnSubmit={false}
         onChangeText={(e) => {
-          setChatMessage(e);
+          setMessage(e);
         }}
         placeholder="Message"
       />
