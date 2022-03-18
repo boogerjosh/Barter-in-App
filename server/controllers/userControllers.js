@@ -25,8 +25,8 @@ class userControllers {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
           username: payload.givenName,
-          phoneNumber: "-",
           address: "-",
+          photoUrl: payload.photoUrl
         },
       });
       let tokenServer = signToken({
@@ -47,6 +47,7 @@ class userControllers {
   static async postItems(req, res, next) {
     const t = await sequelize.transaction();
     try {
+      const userLogin = req.userLogin
       const { files } = req;
       const {
         title,
@@ -54,9 +55,9 @@ class userControllers {
         description,
         brand,
         yearOfPurchase,
-        dateExpired,
-        userId,
+        dateExpired
       } = req.body;
+      const userId = userLogin.id
 
       const createItems = await Item.create(
         {
@@ -66,12 +67,12 @@ class userControllers {
           brand,
           yearOfPurchase,
           dateExpired,
-          statusPost: "Review",
+          statusPost: "Reviewed",
           userId,
         },
         { transaction: t }
       );
-      console.log(files);
+      
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -90,13 +91,13 @@ class userControllers {
           });
         })
       );
-      console.log("Masuk SINI >>>");
+
       let newImage = await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
       });
 
-      await sendEmail({ email: "aryaadhm@gmail.com" });
+      // await sendEmail({ email: "aryaadhm@gmail.com" });
 
       await t.commit();
       res.status(201).send({ ...createItems.dataValues, Images: newImage });
@@ -142,7 +143,7 @@ class userControllers {
       next(error);
     }
   }
-
+  
   static async deleteItem(req, res, next) {
     try {
       let { id } = req.params;
