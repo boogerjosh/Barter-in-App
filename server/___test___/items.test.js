@@ -4,10 +4,10 @@ const request = require("supertest");
 const { signToken } = require("../helpers/jwt");
 const { hashPassword } = require("../helpers/bcrypt");
 const { queryInterface } = sequelize;
+const fs = require("fs");
 
 jest.setTimeout(2000);
 
-// let user = await user.findByPk(1);
 let access_token;
 
 beforeAll((done) => {
@@ -34,6 +34,18 @@ beforeAll((done) => {
       return queryInterface.bulkInsert(
         "Items",
         [
+          {
+            title: "test",
+            description:
+              "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+            category: "pakaian",
+            brand: "H&M",
+            yearOfPurchase: "2021",
+            statusPost: "Review",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userId: 1,
+          },
           {
             title: "test",
             description:
@@ -80,24 +92,46 @@ beforeAll((done) => {
     });
 });
 
-// afterAll((done) => {
-//   queryInterface
-//     .bulkDelete(
-//       "Items",
-//       {},
-//       {
-//         truncate: true,
-//         restartIdentity: true,
-//         cascade: true,
-//       }
-//     )
-//     .then(() => {
-//       return queryInterface.bulkDelete();
-//     })
-//     .catch((err) => {
-//       done(err);
-//     });
-// });
+afterAll((done) => {
+  queryInterface
+    .bulkDelete(
+      "Images",
+      {},
+      {
+        truncate: true,
+        restartIdentity: true,
+        cascade: true,
+      }
+    )
+    .then(() => {
+      return queryInterface.bulkDelete(
+        "Items",
+        {},
+        {
+          truncate: true,
+          restartIdentity: true,
+          cascade: true,
+        }
+      );
+    })
+    .then(() => {
+      return queryInterface.bulkDelete(
+        "Users",
+        {},
+        {
+          truncate: true,
+          restartIdentity: true,
+          cascade: true,
+        }
+      );
+    })
+    .then(() => {
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+});
 //GET ITEM
 describe("GET items", () => {
   describe("GET /users/items -  success test", () => {
@@ -173,44 +207,56 @@ describe("GET items", () => {
 });
 
 // //POST ITEMS
-// describe("POST items", () => {
-//   describe("POST /items -  success test", () => {
-//     const newItem = {};
-//     it("should return an object with status 201", (done) => {
-//       request(app)
-//         .post("/items")
-//         .set(access_token, "access_token")
-//         .send(newItem)
-//         .then((res) => {
-//           expect(res.status).toBe(201);
-//           expect(res.body).toBeInstanceOf(Object);
-//           expect(res.body).toHaveProperty("message", expect.any(String));
-//           done();
-//         })
-//         .catch((err) => {
-//           done(err);
-//         });
-//     });
-//   });
+describe("POST items", () => {
+  // describe("POST /users/items -  success test", () => {
+  //   const newItem = {
+  //     title: "test post",
+  //     category: "pakaian",
+  //     description:
+  //       "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+  //     brand: "Supreme",
+  //     yearOfPurchase: "2021",
+  //     userId: 1,
+  //   };
 
-//   describe("POST /items -  failed test", () => {
-//     const newItem = {};
-//     it("should return an object with status 401 - input without access_token as headers", (done) => {
-//       request(app)
-//         .post("/items")
-//         .send(newItem)
-//         .then((res) => {
-//           expect(res.status).toBe(401);
-//           expect(res.body).toBeInstanceOf(Object);
-//           expect(res.body).toHaveProperty("message", expect.any(String));
-//           done();
-//         })
-//         .catch((err) => {
-//           done(err);
-//         });
-//     });
-//   });
-// });
+  //   it("should return an object with status 201", (done) => {
+  //     request(app)
+  //       .post("/users/items")
+  //       .set("access_token", access_token)
+  //       .field("title", "test input post")
+  //       .attach("image", "assets/JK5OICOiE54.jpg")
+  //       .attach("image", "assets/JK5OICOiE54.jpg")
+  //       .attach("image", "assets/JK5OICOiE54.jpg")
+  //       .then((res) => {
+  //         expect(res.status).toBe(201);
+  //         expect(res.body).toBeInstanceOf(Object);
+  //         expect(res.body).toHaveProperty("message", expect.any(String));
+  //         done();
+  //       })
+  //       .catch((err) => {
+  //         done(err);
+  //       });
+  //   });
+  // });
+
+  describe("POST /users/items -  failed test", () => {
+    const newItem = {};
+    it("should return an object with status 401 - input without access_token as headers", (done) => {
+      request(app)
+        .post("/users/items")
+        .send(newItem)
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
 
 // //PUT ITEM
 // describe("PUT items", () => {
@@ -251,3 +297,54 @@ describe("GET items", () => {
 //     });
 //   });
 // });
+
+//DELETE ITEM
+describe("DELETE items", () => {
+  describe("DELETE users/items/:id -  success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .delete("/users/items/2")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("DELETE /items/:id -  failed test", () => {
+    it("should return an object with status 401 - input without access_token as headers", (done) => {
+      request(app)
+        .delete("/users/items/2")
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    it("should return an object with status 404 - item not found", (done) => {
+      request(app)
+        .delete("/users/items/100")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});

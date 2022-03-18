@@ -7,9 +7,7 @@ const { OAuth2Client } = require("google-auth-library");
 const { signToken } = require("../helpers/jwt");
 
 class userControllers {
-
   static async postItems(req, res, next) {
-
     const t = await sequelize.transaction();
     try {
       const { files } = req;
@@ -22,6 +20,7 @@ class userControllers {
         dateExpired,
         userId,
       } = req.body;
+
       const createItems = await Item.create(
         {
           title,
@@ -35,7 +34,7 @@ class userControllers {
         },
         { transaction: t }
       );
-
+      console.log(files);
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -65,6 +64,7 @@ class userControllers {
       await t.commit();
       res.status(201).send({ ...createItems.dataValues, Images: newImage });
     } catch (error) {
+      console.log(error, "<<<<<<");
       await t.rollback();
       next(error);
     }
@@ -75,11 +75,12 @@ class userControllers {
       let items = await Item.findAll({
         include: [Image],
         where: {
-          status: "Approve",
+          statusPost: "Approve",
         },
       });
       res.status(200).json(items);
     } catch (error) {
+      // console.log(error);
       next(error);
     }
   }
@@ -105,68 +106,72 @@ class userControllers {
     }
   }
 
-  static async putItem(req, res, next) {
-    const t = await sequelize.transaction();
-    try {
-      let { id } = req.params;
-      const { files } = req;
-      const {
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase,
-        dateExpired,
-      } = req.body;
+  // static async putItem(req, res, next) {
+  //   const t = await sequelize.transaction();
+  //   try {
+  //     let { id } = req.params;
+  //     const { files } = req;
+  //     const {
+  //       title,
+  //       category,
+  //       description,
+  //       brand,
+  //       yearOfPurchase,
+  //       dateExpired,
+  //     } = req.body;
+  //     const item = await Item.findByPk(+id);
 
-      await Item.update(
-        {
-          title,
-          category,
-          description,
-          brand,
-          yearOfPurchase,
-          dateExpired,
-          statusPost: "Review",
-        },
-        { where: { id } }
-      );
+  //     if (item.statusPost !== "Approve") {
+  //       throw new Error("CANNOT_EDIT");
+  //     }
 
-      const mappedArray = await Promise.all(
-        files.map((file) => {
-          return uploadFile(file).then((data) => {
-            let tags = [];
-            if (data.AITags) {
-              data.AITags.forEach((e) => {
-                tags.push(e.name);
-              });
-            }
-            let temp = {
-              imageUrl: data.url,
-              itemId: createItems.id,
-              tag: tags.join(", "),
-            };
-            return temp;
-          });
-        })
-      );
+  //     await Item.update(
+  //       {
+  //         title,
+  //         category,
+  //         description,
+  //         brand,
+  //         yearOfPurchase,
+  //         dateExpired,
+  //       },
+  //       { where: { id }, transaction: t }
+  //     );
 
-      await Image.destroy({ where: { itemId: req.userLogin.id } });
+  //     const mappedArray = await Promise.all(
+  //       files.map((file) => {
+  //         return uploadFile(file).then((data) => {
+  //           let tags = [];
+  //           if (data.AITags) {
+  //             data.AITags.forEach((e) => {
+  //               tags.push(e.name);
+  //             });
+  //           }
+  //           let temp = {
+  //             imageUrl: data.url,
+  //             itemId: createItems.id,
+  //             tag: tags.join(", "),
+  //           };
+  //           return temp;
+  //         });
+  //       })
+  //     );
 
-      let newImage = await Image.bulkCreate(mappedArray, {
-        returning: true,
-        transaction: t,
-      });
+  //     await Image.destroy({ where: { itemId: req.userLogin.id } });
 
-      await sendEmail({ email: "aryaadhm@gmail.com" });
+  //     await Image.bulkCreate(mappedArray, {
+  //       returning: true,
+  //       transaction: t,
+  //     });
 
-      await t.commit();
-      res.status(200).json({ message: "Item successfully updated" });
-    } catch (error) {
-      await t.rollback();
-      next(error);
-    }
-  }
+  //     await sendEmail({ email: "aryaadhm@gmail.com" });
+
+  //     await t.commit();
+  //     res.status(200).json({ message: "Item successfully updated" });
+  //   } catch (error) {
+  //     await t.rollback();
+  //     next(error);
+  //   }
+  // }
 
   static async deleteItem(req, res, next) {
     try {
@@ -175,8 +180,10 @@ class userControllers {
       if (!item) {
         throw new Error("NOT_FOUND");
       }
-      res.status(200).json({ mesage: "Item has been deleted" });
+      await Item.destroy({ where: { id } });
+      res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -208,17 +215,6 @@ class userControllers {
       next(error);
     }
   }
-
-  // static async patchItem(req, res, next) {
-  //   try {
-  //     let { id } = req.params;
-  //     let { status } = req.body;
-  //     await Item.update({ status }, { where: { id } });
-  //     res.status(200).json({ message: "Item status successfully updated" });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
 
   // static async getRequest(req, res, next) {
   //   try {
