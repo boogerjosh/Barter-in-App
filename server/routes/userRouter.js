@@ -13,6 +13,7 @@ userRouter.post(
   userControllers.postItems
 );
 userRouter.put("/:id", userControllers.putItem);
-userRouter.patch("/:id", userControllers.patchItem);
 userRouter.delete("/:id", userControllers.deleteItem);
+// userRouter.patch("/:id", userControllers.patchItem);
+// userRouter.post("/send-emails", userControllers.sendEmail);
 module.exports = userRouter;
