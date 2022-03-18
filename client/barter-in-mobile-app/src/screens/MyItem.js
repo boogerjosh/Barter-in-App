@@ -15,7 +15,7 @@ import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-const MyItemScreen = () => {
+const MyItemScreen = ({ route }) => {
   const navigation = useNavigation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
