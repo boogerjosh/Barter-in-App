@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -36,7 +36,20 @@ const HomeScreen = () => {
         const { type, user } = result;
         if (type === 'success') {
           const { email, name, photoUrl } = user
-          console.log(user)
+          // console.log(user)
+
+          axios({
+            method: 'post',
+            url: 'http://33d6-125-160-235-225.ngrok.io/users/googleLogin',
+            data: user
+          })
+            .then(data => {
+              AsyncStorage.setItem('access_token', data.data.access_token)
+              AsyncStorage.setItem('id', data.data.id)
+              AsyncStorage.setItem('username', data.data.username)
+            })
+            .catch(err => console.log('GAGAL MASUK SERVER'))
+
           console.log('Google signin successfull', 'SUCCESS');
           setTimeout(() => navigation.navigate('MyItem', { 
             email, name, photoUrl 
