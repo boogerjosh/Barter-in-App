@@ -14,9 +14,42 @@ module.exports = (sequelize, DataTypes) => {
   }
   Image.init(
     {
-      imageUrl: DataTypes.STRING,
-      tag: DataTypes.STRING,
-      itemId: DataTypes.INTEGER,
+      imageUrl: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Image is required"
+          },
+          notNull: {
+            msg: "Image is required"
+          }
+        }
+      },
+      tag: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Tag is required"
+          },
+          notNull: {
+            msg: "Tag is required"
+          }
+        }
+      },
+      itemId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: {
+            msg: "ItemId is required"
+          },
+          notNull: {
+            msg: "ItemId is required"
+          }
+        }
+      },
     },
     {
       sequelize,
