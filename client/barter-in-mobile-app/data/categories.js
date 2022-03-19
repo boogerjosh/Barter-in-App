@@ -2,35 +2,35 @@ export default [
   [
     {
       id: "1",
-      title: "Fruits and Vegetables",
-      image: require("../assets/images/p1.png"),
+      title: "Decoration",
+      image: require("../assets/images/decorations.png"),
     },
     {
       id: "2",
-      title: "Rice, Pulses and Dals",
-      image: require("../assets/images/p2.png"),
+      title: "Fashion",
+      image: require("../assets/images/fashions.png"),
     },
     {
       id: "3",
-      title: "Coocking oil essentials",
-      image: require("../assets/images/p6.png"),
+      title: "Books",
+      image: require("../assets/images/books.png"),
     },
   ],
   [
     {
       id: "4",
-      title: "Meat, eggs and dairy product",
-      image: require("../assets/images/p3.png"),
+      title: "Electronics",
+      image: require("../assets/images/electronics.png"),
     },
     {
       id: "5",
-      title: "Bread, loaf and glutenous",
-      image: require("../assets/images/p4.png"),
+      title: "Automotives",
+      image: require("../assets/images/automotives.png"),
     },
     {
       id: "6",
-      title: "Beverages and pasta",
-      image: require("../assets/images/p5.png"),
+      title: "Othes",
+      image: require("../assets/images/others.png"),
     },
   ],
 ];

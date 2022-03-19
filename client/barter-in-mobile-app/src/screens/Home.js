@@ -19,15 +19,19 @@ import COLORS from "../constants/Colors";
 import highlights from "../../data/banner";
 import categories from "../../data/categories";
 import Highlight from "../components/Highlight";
+import Categories from "../components/Categories";
 import ItemSpace from "../components/ItemSpace";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-
+const numColumns = 3;
 const HomeScreen = () => {
-  console.log(categories);
+  // console.log(categories);
   const navigation = useNavigation();
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      options={{ headerShown: false }}
+    >
       <StatusBar
         style="auto"
         translucent={false}
@@ -52,17 +56,6 @@ const HomeScreen = () => {
         </View>
       </SafeAreaView>
       {/* Search Bar */}
-      <View style={styles.search}>
-        <View style={styles.searchWrapper}>
-          <FontAwesome5
-            name="search"
-            size={20}
-            color="black"
-            style={styles.searchicon}
-          />
-          <TextInput placeholder="Search Item" style={styles.searchInput} />
-        </View>
-      </View>
       <View style={styles.highlightWrapper}>
         <FlatList
           data={highlights}
@@ -80,9 +73,9 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.categoryTitle}>Categories</Text>
           </View>
-          <View>
+          {/* <View>
             <Text style={styles.categorySubtitle}>See all</Text>
-          </View>
+          </View> */}
         </View>
         <View style={{ marginTop: 10 }}>
           {categories.map((chunk, index) => {
@@ -124,14 +117,16 @@ const HomeScreen = () => {
                           <Image
                             source={category.image}
                             style={{
-                              width: width / 3 - 30,
-                              height: width / 3 - 30,
+                              width: width / 4 - 30,
+                              height: width / 4 - 30,
                             }}
                           />
                           <Text
                             style={{
                               textAlign: "center",
-                              fontFamily: FONTS.BOLD,
+                              fontFamily: FONTS.MEDIUM,
+                              marginTop: 10,
+                              fontSize: 16,
                             }}
                           >
                             {category.title}
@@ -146,18 +141,6 @@ const HomeScreen = () => {
           })}
         </View>
       </View>
-      {/* <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Text>Ini Home Page</Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={() => navigation.push("ListItemHome")}
-        >
-          <Text style={styles.buttonText}>List Item</Text>
-        </TouchableOpacity>
-      </View> */}
     </ScrollView>
   );
 };
@@ -179,7 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
   headerImage: {
     height: 50,
@@ -193,32 +176,6 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     marginLeft: 10,
-  },
-  search: {
-    marginHorizontal: 20,
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 20,
-    padding: 15,
-    marginTop: -25,
-    shadowColor: COLORS.BLACK,
-    shadowOffset: {
-      height: 3,
-      width: 0,
-    },
-    shadowRadius: 4,
-    shadowOpacity: 0.1,
-    elevation: 1,
-  },
-  searchWrapper: {
-    flexDirection: "row",
-  },
-  searchicon: {
-    marginRight: 10,
-    color: COLORS.DARK_GREY,
-  },
-  searchInput: {
-    color: COLORS.DARK_GREY,
-    fontFamily: FONTS.MEDIUM,
   },
   highlightWrapper: {
     marginTop: 20,
