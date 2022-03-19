@@ -9,17 +9,80 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
       User.hasMany(models.Item, { foreignKey: "userId" });
+      User.hasMany(models.RoomBarter, { foreignKey: "user1" });
+      User.hasMany(models.RoomBarter, { foreignKey: "user2" });
     }
   }
   User.init(
     {
-      usersname: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      role: DataTypes.STRING,
-      address: DataTypes.STRING,
+      username: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Username is required",
+          },
+          notNull: {
+            msg: "Username is required",
+          },
+        },
+      },
+      email: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Email is required",
+          },
+          notNull: {
+            msg: "Email is required",
+          },
+          isEmail: {
+            msg: "Email must be email format",
+          },
+        },
+        unique: {
+          msg: "Email must be unique",
+        },
+      },
+      password: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Password is required",
+          },
+          notNull: {
+            msg: "Password is required",
+          },
+        },
+      },
+      role: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Role is required",
+          },
+          notNull: {
+            msg: "Role is required",
+          },
+        },
+      },
+      address: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Address is required",
+          },
+          notNull: {
+            msg: "Address is required",
+          },
+        },
+      },
+      photoUrl: DataTypes.STRING,
     },
     {
       hooks: {

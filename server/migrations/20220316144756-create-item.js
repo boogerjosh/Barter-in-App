@@ -9,24 +9,31 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       category: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       description: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       brand: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       yearOfPurchase: {
-        type: Sequelize.STRING,
-      },
-      dateExpired: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       statusPost: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      statusBarter: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       userId: {

@@ -13,6 +13,8 @@ import ProfileScreen from "./src/screens/Profile";
 import MyItemScreen from "./src/screens/MyItem";
 import BarterRoomScreen from "./src/screens/BarterRoom";
 import PostItemRouter from "./src/routes/PostItem";
+import ChatRoomScreen from "./src/screens/ChatRoom";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -74,6 +76,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="ChatRoomScreen" component={ChatRoomScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   ) : (
