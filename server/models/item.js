@@ -8,8 +8,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
       Item.hasMany(models.Image, { foreignKey: "itemId" });
+      Item.hasMany(models.RoomBarter, { foreignKey: "item1" });
+      Item.hasMany(models.RoomBarter, { foreignKey: "item2" });
       Item.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
@@ -25,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Title is required",
           },
-          //  len: {
-          //   args: [15],
-          //   msg: "Length minimum must be 15 characters"
-          // }
+           len: {
+            args: [15],
+            msg: "Length minimum must be 15 characters"
+          }
         },
       },
       category: {
@@ -83,8 +84,30 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      dateExpired: DataTypes.STRING,
-      statusPost: DataTypes.STRING,
+      statusPost: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Status Post is required",
+          },
+          notNull: {
+            msg: "Status Post is required",
+          },
+        },
+      },
+      statusBarter: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "Status Barter is required",
+          },
+          notNull: {
+            msg: "Status Barter is required",
+          },
+        },
+      },
       userId: {
         allowNull: false,
         type: DataTypes.INTEGER,

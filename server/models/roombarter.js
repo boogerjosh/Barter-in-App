@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      RoomBarter.belongsTo(models.User, { foreignKey: "user1" });
+      RoomBarter.belongsTo(models.User, { foreignKey: "user2" });
+      RoomBarter.belongsTo(models.Item, { foreignKey: "item1" });
+      RoomBarter.belongsTo(models.Item, { foreignKey: "item2" });
     }
   }
   RoomBarter.init(
@@ -17,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       user2: DataTypes.INTEGER,
       item1: DataTypes.INTEGER,
       item2: DataTypes.INTEGER,
-      status1: DataTypes.STRING,
-      status2: DataTypes.STRING,
+      status1: DataTypes.BOOLEAN,
+      status2: DataTypes.BOOLEAN,
     },
     {
       sequelize,

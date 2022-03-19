@@ -28,10 +28,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      dateExpired: {
+      statusPost: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
-      statusPost: {
+      statusBarter: {
         allowNull: false,
         type: Sequelize.STRING,
       },
