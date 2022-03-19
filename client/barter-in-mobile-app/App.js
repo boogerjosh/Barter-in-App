@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "./src/constants/Colors";
 
 import HomeRouter from "./src/routes/HomeRouter";
+import InputItem from "./src/screens/InputItem";
 import BarterRouter from "./src/routes/BarterRouter";
 import ProfileScreen from "./src/screens/Profile";
 import MyItemScreen from "./src/screens/MyItem";
@@ -45,6 +46,8 @@ export default function App() {
               iconName = focused ? "archive-sharp" : "archive-outline";
             } else if (route.name === "BarterRouter") {
               iconName = focused ? "basket-sharp" : "basket-outline";
+            } else if (route.name === "InputItem") {
+              iconName = focused ? "add-circle" : "add-circle-outline";
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -60,6 +63,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Tab.Screen name="MyItem" component={MyItemScreen} />
+        <Tab.Screen name="InputItem" component={InputItem} />
         <Tab.Screen
           name="BarterRouter"
           component={BarterRouter}

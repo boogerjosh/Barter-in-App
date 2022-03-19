@@ -26,9 +26,6 @@ import ItemSpace from "../components/ItemSpace";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from 'axios';
 import * as Google from 'expo-google-app-auth';
-  
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 3;

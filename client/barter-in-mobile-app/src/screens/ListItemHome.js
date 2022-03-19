@@ -24,7 +24,7 @@ const numColumns = 2;
 const ListItemHomeScreen = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={{flex: 1}}>
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
@@ -33,14 +33,10 @@ const ListItemHomeScreen = () => {
             </View>
           </View>
           <View>
-            {/* <Image
-              source={require("../../assets/person.jpg")}
-              style={styles.headerImage}
-            /> */}
           </View>
         </View>
       </SafeAreaView>
-      <View style={styles.search}>
+       <View style={styles.search}>
         <View style={styles.searchWrapper}>
           <FontAwesome5
             name="search"
@@ -51,28 +47,20 @@ const ListItemHomeScreen = () => {
           <TextInput placeholder="Search Item" style={styles.searchInput} />
         </View>
       </View>
-      <View>
         <FlatList
           data={items}
           keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <Items item={item} />}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
-          renderItem={({ item }) => <Items item={item} />}
           numColumns={numColumns}
         />
-      </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-  },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,
     borderBottomLeftRadius: 40,

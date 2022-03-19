@@ -12,12 +12,16 @@ const Stack = createNativeStackNavigator();
 const HomeRouter = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{
+        headerShown: false
+      }} />
       <Stack.Screen name="MyItem" component={MyItemScreen} />
       <Stack.Screen name="BarterRoom" component={BarterRoomScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Detail" component={DetailScreen} />
-      <Stack.Screen name="ListItemHome" component={ListItemHomeScreen} />
+      <Stack.Screen name="ListItemHome" component={ListItemHomeScreen} options={{
+        headerShown: false
+      }} />
     </Stack.Navigator>
   );
 };
