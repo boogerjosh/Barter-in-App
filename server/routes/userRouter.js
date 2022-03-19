@@ -4,8 +4,8 @@ const Authentication = require("../middlewares/auth");
 const multerImage = require("../middlewares/multerImage");
 
 userRouter.get("/items", userControllers.getItems);
-userRouter.get("/items/homes", userControllers.dataForHome);
 userRouter.post("/googleLogin", userControllers.loginGoogle);
+userRouter.get("/items/homes", userControllers.dataForHome);
 userRouter.get("/items/:id", userControllers.getItem);
 
 userRouter.use(Authentication);
@@ -18,7 +18,11 @@ userRouter.post(
   multerImage().array("image"),
   userControllers.postItems
 );
-userRouter.get("/items/:id", userControllers.getItem);
+
+userRouter.post('/roomBarter', userControllers.postRoomBarter);
+
+userRouter.get('/roomBarter', userControllers.getRoomBarter);
+
 userRouter.delete("/items/:id", userControllers.deleteItem);
 
 userRouter.patch("/room-barters/:id", userControllers.patchRoomBarter);

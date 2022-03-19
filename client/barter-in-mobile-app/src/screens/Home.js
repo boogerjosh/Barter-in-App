@@ -47,13 +47,12 @@ const HomeScreen = () => {
       .logInAsync(config)
       .then((result) => {
         const { type, user } = result;
+        console.log(user)
         if (type === 'success') {
           const { email, name, photoUrl } = user
-          // console.log(user)
-
           axios({
             method: 'post',
-            url: 'http://33d6-125-160-235-225.ngrok.io/users/googleLogin',
+            url: 'https://2c97-2001-448a-1061-10b7-645d-3da0-3efa-9e25.ngrok.io/users/googleLogin',
             data: user
           })
             .then(data => {
