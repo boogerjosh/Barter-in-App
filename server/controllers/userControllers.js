@@ -25,7 +25,7 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-      console.log(tokenServer)
+      console.log(tokenServer);
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
@@ -41,15 +41,9 @@ class userControllers {
     try {
       const userId = req.userLogin.id;
       const { files } = req;
-      console.log(files)
-      const {
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase
-      } = req.body;
-      console.log(req.body)
+      console.log(files);
+      const { title, category, description, brand, yearOfPurchase } = req.body;
+      console.log(req.body);
       const createItems = await Item.create(
         {
           title,
@@ -58,7 +52,7 @@ class userControllers {
           brand,
           yearOfPurchase,
           statusPost: "Reviewed",
-          statusBarter: 'Not bartered yet',
+          statusBarter: "Not bartered yet",
           userId,
         },
         { transaction: t }
@@ -120,10 +114,19 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
+      let {filterByTitle, filterByCategory} = req.query
+      if(!filterByTitle) filterByTitle = ''
+      if(!filterByCategory) filterByCategory = ''
       let items = await Item.findAll({
         include: [Image],
         where: {
           statusPost: "Approve",
+          title: {
+            [Op.iLike]: `%${filterByTitle}%`,
+          },
+          category: {
+            [Op.iLike]: `%${filterByCategory}%`,
+          },
         },
       });
       res.status(200).json(items);
@@ -222,7 +225,7 @@ class userControllers {
   static async postRoomBarter(req, res, next) {
     try {
       const UserId = req.userLogin.id;
-      console.log(req.body)
+      console.log(req.body);
       const { user2, item1, item2 } = req.body;
       const batch = {
         user1: UserId,
@@ -230,14 +233,14 @@ class userControllers {
         item1,
         item2,
         status1: false,
-        status2: false
+        status2: false,
       };
       const response = await RoomBarter.create(batch);
       res.status(201).json(response);
-     } catch (error) {
-       next(error);
+    } catch (error) {
+      next(error);
     }
-  }  
+  }
 
   static async patchRoomBarter(req, res, next) {
     try {
@@ -273,7 +276,6 @@ class userControllers {
       next(error);
     }
   }
-
 
   //   static async googleLogin(req, res, next) {
   //     try {
@@ -345,15 +347,14 @@ class userControllers {
       const UserId = req.userLogin.id;
       const response1 = await RoomBarter.findAll({
         where: {
-           [Op.or]: [{user1: UserId}, {user2: UserId}]
-        }
-      })
-      res.status(200).json(response1)
+          [Op.or]: [{ user1: UserId }, { user2: UserId }],
+        },
+      });
+      res.status(200).json(response1);
     } catch (error) {
       next(error);
     }
   }
-  
 }
 
 module.exports = userControllers;
