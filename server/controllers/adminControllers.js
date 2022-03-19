@@ -13,7 +13,7 @@ class adminControllers {
         email,
         password,
         role: 'Admin',
-        photoUrl: '',
+        photoUrl: '-',
         address,
       });
       res.status(201).send({ email: response.email});

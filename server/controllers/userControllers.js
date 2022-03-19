@@ -8,6 +8,7 @@ const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
 class userControllers {
+
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
@@ -19,7 +20,8 @@ class userControllers {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
           username: payload.givenName,
-          address: "-"
+          address: "-",
+          photoUrl: payload.photoUrl
         },
       });
       let tokenServer = signToken({
@@ -92,7 +94,7 @@ class userControllers {
         transaction: t,
       });
 
-      await sendEmail({ email: "aryaadhm@gmail.com" });
+      await sendEmail({ email: req.userLogin.email });
 
       await t.commit();
       res.status(201).send({ ...createItems.dataValues, Images: newImage });
@@ -113,7 +115,6 @@ class userControllers {
       });
       res.status(200).json(items);
     } catch (error) {
-      // console.log(error);
       next(error);
     }
   }
@@ -154,37 +155,9 @@ class userControllers {
     }
   }
 
-//   static async googleLogin(req, res, next) {
-//     try {
-//       const CLIENT_ID = process.env.CLIENT_ID;
-//       const client = OAuth2Client(CLIENT_ID);
-//       const { token } = req.body;
-//       const ticket = await client.verifyIdToken({
-//         idToken: token,
-//         audience: CLIENT_ID,
-//       });
-//       const payload = ticket.getPayload();
-//       const [user] = await User.findOrCreate({
-//         where: { email: payload.email },
-//         default: {
-//           role: "Customer",
-//           password: `${payload.email}-${new Date()}`,
-//         },
-//       });
-//       const payloadFromServer = signToken({
-//         id: user.id,
-//         email: user.email,
-//         role: user.role,
-//       });
-//       res.status(200).json({ access_token: payloadFromServer });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-
   // static async getRequest(req, res, next) {
   //   try {
-  //     const UserId = req.currentUser.id;
+  //     const UserId = req.userLogin.id;
   //     const userItems = Item.findAll({ where: { UserId, status: "Reviewed" } });
   //     let userRequests = [];
   //     let topush = {};
@@ -218,32 +191,7 @@ class userControllers {
   //     next(error);
   //   }
   // }
-
-  // static async sendEmail(req, res, next) {
-  //   try {
-  //     let email = req.userLogin.email;
-  //     let transporter = nodemailer.createTransport({
-  //       service: "Gmail",
-  //       auth: {
-  //         user: process.env.EMAIL, // generated ethereal user
-  //         pass: process.env.PASSWORD, // generated ethereal password
-  //       },
-  //       tls: {
-  //         rejectUnauthorized: false,
-  //       },
-  //     });
-  //     let mailOptions = {
-  //       from: process.env.EMAIL,
-  //       to: "admin@mail.com",
-  //       subject: "Asking for approvement",
-  //       text: ``,
-  //     };
-  //     let info = await transporter.sendMail(mailOptions);
-  //     res.status(200).json({ mesage: "Item has been deleted" });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  
 }
 
 module.exports = userControllers;
