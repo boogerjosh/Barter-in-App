@@ -2,21 +2,13 @@ const imagekit = require("../helpers/imagekit");
 const sendEmail = require("../helpers/sendEmail");
 const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, sequelize } = require("../models");
-const { OAuth2Client } = require("google-auth-library");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
 class userControllers {
   static async loginGoogle(req, res, next) {
     try {
-      // const payload = req.body;
-      const client = new OAuth2Client(process.env.OAUTH2_CLIENT);
-      const { token } = req.body;
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
+      const payload = req.body;
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -26,7 +18,7 @@ class userControllers {
           role: "Customer",
           username: payload.givenName,
           address: "-",
-          photoUrl: payload.photoUrl
+          photoUrl: payload.photoUrl,
         },
       });
       let tokenServer = signToken({
@@ -47,7 +39,7 @@ class userControllers {
   static async postItems(req, res, next) {
     const t = await sequelize.transaction();
     try {
-      const userLogin = req.userLogin
+      const userLogin = req.userLogin;
       const { files } = req;
       const {
         title,
@@ -55,9 +47,9 @@ class userControllers {
         description,
         brand,
         yearOfPurchase,
-        dateExpired
+        dateExpired,
       } = req.body;
-      const userId = userLogin.id
+      const userId = userLogin.id;
 
       const createItems = await Item.create(
         {
@@ -72,7 +64,7 @@ class userControllers {
         },
         { transaction: t }
       );
-      
+
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -143,7 +135,7 @@ class userControllers {
       next(error);
     }
   }
-  
+
   static async deleteItem(req, res, next) {
     try {
       let { id } = req.params;

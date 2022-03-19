@@ -19,6 +19,8 @@ beforeAll((done) => {
           password: hashPassword("123456"),
           address: "-",
           role: "Admin",
+          photoUrl:
+            "https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

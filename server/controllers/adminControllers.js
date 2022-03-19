@@ -4,29 +4,28 @@ const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");
 
 class adminControllers {
-
   static async register(req, res, next) {
     const { username, email, password, photoUrl, address } = req.body;
-    try {   
+    try {
       const response = await User.create({
         username,
         email,
         password,
-        role: 'Admin',
+        role: "Admin",
         photoUrl,
         address,
       });
-      res.status(201).send({ id: response.id, email: response.email});
+      res.status(201).send({ id: response.id, email: response.email });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
   static async login(req, res, next) {
     const { email, password } = req.body;
     try {
-      if(!password || password === '') throw new Error("NO_INPUT_PASSWORD")
-      if(!email || email === '') throw new Error("NO_INPUT_EMAIL")
+      if (!password || password === "") throw new Error("NO_INPUT_PASSWORD");
+      if (!email || email === "") throw new Error("NO_INPUT_EMAIL");
       let user = await User.findOne({ where: { email } });
       if (!user) {
         throw new Error("INVALID_USER");
@@ -57,10 +56,10 @@ class adminControllers {
       });
       res.status(200).json(items);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
-  
+
   static async patchItem(req, res, next) {
     try {
       let { id } = req.params;

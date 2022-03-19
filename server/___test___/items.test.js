@@ -26,6 +26,8 @@ beforeAll((done) => {
           password: hashPassword("123456"),
           address: "-",
           role: "Admin",
+          photoUrl:
+            "https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -383,45 +385,48 @@ describe("POST items", () => {
   });
 });
 
-//POST loginGoolge
-// describe("POST items", () => {
-//   beforeAll(() => {
-//     OAuth2Client.mockImplementation(() => {
-//       return {
-//         verifyIdToken: () => {
-//           return new Promise((resolve) => {
-//             resolve({
-//               getPayload: () => {
-//                 return new Promise((resolve) => {
-//                   resolve({
-//                     token: "fake token",
-//                   });
-//                 });
-//               },
-//             });
-//           });
-//         },
-//       };
-//     });
-//   });
+// POST loginGoolge
+describe("POST googleLogin", () => {
+  describe("POST users/googleLogin - success test", () => {
+    it("should an obj with status 200", (done) => {
+      let payload = {
+        email: "dummy.akun.1400@gmail.com",
+        photoUrl: "-",
+        givenName: "Dummy",
+      };
+      request(app)
+        .post("/users/googleLogin")
+        .send("payload", payload)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("access_token", expect.any(String));
+          expect(res.body).toHaveProperty("id", expect.any(Number));
+          expect(res.body).toHaveProperty("username", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
 
-//   describe("POST users/googleLogin - success test", () => {
-//     it("should an obj with status 200", (done) => {
-//       request(app)
-//         .post("/users/googleLogin")
-//         .send("token", "fake token")
-//         .then((res) => {
-//           expect(res.status).toBe(200);
-//           expect(res.body).toBeInstanceOf(Object);
-//           expect(res.body).toHaveProperty("message", expect.any(String));
-//           done();
-//         })
-//         .catch((err) => {
-//           done(err);
-//         });
-//     });
-//   });
-// });
+  // describe("POST users/googleLogin - failed test", () => {
+  //   it("should an obj with status 400", (done) => {
+  //     request(app)
+  //       .post("/users/googleLogin")
+  //       .then((res) => {
+  //         expect(res.status).toBe(200);
+  //         expect(res.body).toBeInstanceOf(Object);
+  //         expect(res.body).toHaveProperty("message", expect.any(String));
+  //         done();
+  //       })
+  //       .catch((err) => {
+  //         done(err);
+  //       });
+  //   });
+  // });
+});
 
 //DELETE ITEM
 describe("DELETE items", () => {

@@ -14,22 +14,33 @@ const customerToken = signToken({
 
 beforeAll(() => {
   queryInterface
-    .bulkInsert(
+    .bulkDelete(
       "Users",
-      [
-        {
-          username: "customer@customer.customer",
-          email: "customer@customer.customer",
-          password: hashPassword("customer@customer.customer"),
-          role: "Customer",
-          address: "customer@customer.customer",
-          photoUrl: "customer@customer.customer",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-      {}
+      {},
+      {
+        truncate: true,
+        restartIdentity: true,
+        cascade: true,
+      }
     )
+    .then(() => {
+      return queryInterface.bulkInsert(
+        "Users",
+        [
+          {
+            username: "customer@customer.customer",
+            email: "customer@customer.customer",
+            password: hashPassword("customer@customer.customer"),
+            role: "Customer",
+            address: "customer@customer.customer",
+            photoUrl: "customer@customer.customer",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        {}
+      );
+    })
     .then(() => {
       return queryInterface.bulkInsert(
         "Items",
@@ -144,7 +155,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
-    test("400 Error login - wrong email and returning message", (done) => {
+    test("401 Error login - wrong email and returning message", (done) => {
       request(app)
         .post("/admins/login")
         .send({
@@ -161,7 +172,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
-    test("400 Error login - wrong password and returning message", (done) => {
+    test("401 Error login - wrong password and returning message", (done) => {
       request(app)
         .post("/admins/login")
         .send({
@@ -245,6 +256,7 @@ describe("Admin Route Test", () => {
         });
     });
   });
+  //GET item/ admin
   describe("GET /items - get all items", () => {
     test("200 Success get items - should return array of item", (done) => {
       request(app)
