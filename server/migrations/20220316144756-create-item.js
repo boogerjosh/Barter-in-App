@@ -25,15 +25,14 @@ module.exports = {
         type: Sequelize.STRING,
       },
       yearOfPurchase: {
-        allowNull: false, 
+        allowNull: false,
         type: Sequelize.STRING,
       },
       dateExpired: {
-        allowNull: false, 
         type: Sequelize.STRING,
       },
       statusPost: {
-        allowNull: false, 
+        allowNull: false,
         type: Sequelize.STRING,
       },
       userId: {
