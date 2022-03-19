@@ -1,4 +1,4 @@
-// const { comparePassword } = require("../helpers/bcrypt");
+const { comparePassword } = require("../helpers/bcrypt");
 const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");
@@ -42,6 +42,7 @@ class adminControllers {
       };
       res.status(200).send({ access_token: signToken(payload) });
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
