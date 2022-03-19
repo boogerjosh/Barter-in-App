@@ -200,7 +200,6 @@ class userControllers {
     }
   }
 
-  
   static async postRoomBarter(req, res, next) {
     try {
       const UserId = req.userLogin.id;
@@ -216,6 +215,39 @@ class userControllers {
       };
       const response = await RoomBarter.create(batch);
       res.status(201).json(response);
+     } catch (error) {
+       next(error);
+    }
+  }  
+
+  static async patchRoomBarter(req, res, next) {
+    try {
+      let { id } = req.params;
+      // let { status } = req.body;
+      let userId = req.userLogin.id;
+
+      let roomBarter = await RoomBarter.findByPk(+id, {
+        include: [Item],
+      });
+
+      if (!roomBarter) {
+        throw new Error("ROOM_NOT_FOUND");
+      }
+
+      if (roomBarter.user1 === userId) {
+        await RoomBarter.update({ status1: true });
+      } else if (roomBarter.user2 === userId) {
+        await RoomBarter.update({ status2: true });
+      }
+
+      if (roomBarter.status1 && roomBarter.status2) {
+        await RoomBarter.destroy({ where: { id } });
+        await Item.destroy({ where: { id: roomBarter.item1 } });
+        await Item.destroy({ where: { id: roomBarter.item2 } });
+        res.status(200).json({ message: "Item terbarter" });
+      } else {
+        res.status(200).json({ message: "Wait for another user to confirm" });
+      }
     } catch (error) {
       next(error);
     }
