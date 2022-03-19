@@ -15,7 +15,7 @@ import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-const InputItem = () => {
+const ChooseCategory = () => {
   const navigation = useNavigation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputItem;
+export default ChooseCategory;

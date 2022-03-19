@@ -6,6 +6,7 @@ import BarterRoomScreen from "../screens/BarterRoom";
 import ProfileScreen from "../screens/Profile";
 import DetailScreen from "../screens/Detail";
 import ListItemHomeScreen from "../screens/ListItemHome";
+import Login from "../screens/Login";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ const HomeRouter = () => {
       <Stack.Screen name="Home" component={HomeScreen} options={{
         headerShown: false
       }} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="MyItem" component={MyItemScreen} />
       <Stack.Screen name="BarterRoom" component={BarterRoomScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />

@@ -10,8 +10,6 @@ function deleteItem(id) {
     d,
     () => {
       Item.destroy({ where: { id } });
-      // const d2 = new Date();
-      // console.log("Tick @:", d2);
     },
     () => {
       console.log("complete");
