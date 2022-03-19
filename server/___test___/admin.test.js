@@ -7,33 +7,34 @@ const { hashPassword } = require("../helpers/bcrypt");
 let access_token;
 
 beforeAll(() => {
-  queryInterface.bulkDelete(
-    "Users",
-    {},
-    {
-      truncate: true,
-      restartIdentity: true,
-      cascade: true,
-    }
-  );
-
   queryInterface
-    .bulkInsert(
+    .bulkDelete(
       "Users",
-      [
-        {
-          username: "customer@customer.customer",
-          email: "customer@customer.customer",
-          password: hashPassword("customer@customer.customer"),
-          role: "Customer",
-          address: "customer@customer.customer",
-          photoUrl: "customer@customer.customer",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-      {}
+      {},
+      {
+        truncate: true,
+        restartIdentity: true,
+        cascade: true,
+      }
     )
+    .then(() => {
+      return queryInterface.bulkInsert(
+        "Users",
+        [
+          {
+            username: "customer@customer.customer",
+            email: "customer@customer.customer",
+            password: hashPassword("customer@customer.customer"),
+            role: "Customer",
+            address: "customer@customer.customer",
+            photoUrl: "customer@customer.customer",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        {}
+      );
+    })
     .then(() => {
       return queryInterface.bulkInsert(
         "Items",
@@ -148,7 +149,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
-    test("400 Error login - wrong email and returning message", (done) => {
+    test("401 Error login - wrong email and returning message", (done) => {
       request(app)
         .post("/admins/login")
         .send({
@@ -165,7 +166,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
-    test("400 Error login - wrong password and returning message", (done) => {
+    test("401 Error login - wrong password and returning message", (done) => {
       request(app)
         .post("/admins/login")
         .send({
@@ -249,27 +250,28 @@ describe("Admin Route Test", () => {
         });
     });
   });
+  //GET item/ admin
   describe("GET /items - get all items", () => {
     test("200 Success get items - should return array of item", (done) => {
       request(app)
         .get("/admins/items")
         .set("access_token", access_token)
         .then((response) => {
-          expect(response.body).toEqual(expect.any(Array))
-          expect(response.body[0]).toEqual(expect.any(Object))
-          expect(response.status).toBe(200)
+          expect(response.body).toEqual(expect.any(Array));
+          expect(response.body[0]).toEqual(expect.any(Object));
+          expect(response.status).toBe(200);
           done();
         })
         .catch((err) => {
           done(err);
         });
     });
-    test("404 Error get items - not authorized without token", (done) => {
+    test("401 Error get items - not authorized without token", (done) => {
       request(app)
         .get("/admins/items")
         // .set("access_token", access_token)
         .then((response) => {
-          expect(response.status).toBe(404);
+          expect(response.status).toBe(401);
           expect(response.body).toHaveProperty("message");
           expect(response.body.message).toBe("You are not authorized");
           done();
@@ -278,12 +280,12 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
-    test("404 Error get items - not authorized with wrong token", (done) => {
+    test("401 Error get items - not authorized with wrong token", (done) => {
       request(app)
         .get("/admins/items")
-        .set("access_token", 'WRONG-TOKEN')
+        .set("access_token", "WRONG-TOKEN")
         .then((response) => {
-          expect(response.status).toBe(404);
+          expect(response.status).toBe(401);
           expect(response.body).toHaveProperty("message");
           expect(response.body.message).toBe("You are not authorized");
           done();
