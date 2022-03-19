@@ -12,6 +12,7 @@ import BarterRouter from "./src/routes/BarterRouter";
 import ProfileScreen from "./src/screens/Profile";
 import MyItemScreen from "./src/screens/MyItem";
 import BarterRoomScreen from "./src/screens/BarterRoom";
+import PostItemRouter from "./src/routes/PostItem";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +40,10 @@ export default function App() {
               iconName = focused ? "home-sharp" : "home-outline";
             } else if (route.name === "Profile") {
               iconName = focused ? "person" : "person-outline";
+            } else if (route.name === "PostItemRouter") {
+              iconName = focused
+                ? "md-add-circle-sharp"
+                : "md-add-circle-outline";
             } else if (route.name === "MyItem") {
               iconName = focused ? "archive-sharp" : "archive-outline";
             } else if (route.name === "BarterRouter") {
@@ -58,6 +63,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Tab.Screen name="MyItem" component={MyItemScreen} />
+        <Tab.Screen
+          name="PostItemRouter"
+          component={PostItemRouter}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen
           name="BarterRouter"
           component={BarterRouter}
