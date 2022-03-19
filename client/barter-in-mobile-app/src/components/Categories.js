@@ -59,6 +59,7 @@ const Categories = ({ item }) => {
     </TouchableOpacity>
   );
   // buat push
+  // buat push lagi
 };
 
 export default Categories;
