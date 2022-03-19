@@ -14,8 +14,8 @@ beforeAll((done) => {
       "Users",
       [
         {
-          username: "admin",
-          email: "admin@mail.com",
+          username: "admin12",
+          email: "admin12@mail.com",
           password: hashPassword("123456"),
           address: "-",
           role: "Admin",
