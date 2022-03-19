@@ -25,7 +25,6 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-      console.log(tokenServer);
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
@@ -41,9 +40,7 @@ class userControllers {
     try {
       const userId = req.userLogin.id;
       const { files } = req;
-      console.log(files);
       const { title, category, description, brand, yearOfPurchase } = req.body;
-      console.log(req.body);
       const createItems = await Item.create(
         {
           title,
@@ -87,7 +84,7 @@ class userControllers {
                   tags.push(e.name);
                 });
               }
-              console.log(data);
+
               let temp = {
                 imageUrl: data.url,
                 itemId: createItems.id,
@@ -117,6 +114,7 @@ class userControllers {
       let {filterByTitle, filterByCategory} = req.query
       if(!filterByTitle) filterByTitle = ''
       if(!filterByCategory) filterByCategory = ''
+
       let items = await Item.findAll({
         include: [Image],
         where: {
@@ -225,7 +223,6 @@ class userControllers {
   static async postRoomBarter(req, res, next) {
     try {
       const UserId = req.userLogin.id;
-      console.log(req.body);
       const { user2, item1, item2 } = req.body;
       const batch = {
         user1: UserId,
@@ -262,17 +259,37 @@ class userControllers {
       }
 
       if (roomBarter.status1 && roomBarter.status2) {
-        await RoomBarter.destroy({ where: { id } });
-        await Item.destroy({ where: { id: roomBarter.item1 } });
-        await Item.destroy({ where: { id: roomBarter.item2 } });
-        console.log(">>>>");
+        await Item.update(
+          { statusBarter: true },
+          { where: { id: roomBarter.item1 } }
+        );
+
+        await Item.update(
+          { statusBarter: true },
+          { where: { id: roomBarter.item2 } }
+        );
+
         res.status(200).json({ message: "Item terbarter" });
       } else {
-        console.log("<<<<,");
         res.status(200).json({ message: "Wait for another user to confirm" });
       }
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+
+
+  static async getRoomBarter(req, res, next) {
+    try {
+      const UserId = req.userLogin.id;
+      const response1 = await RoomBarter.findAll({
+        where: {
+          [Op.or]: [{ user1: UserId }, { user2: UserId }],
+        },
+      });
+      res.status(200).json(response1);
+    } catch (error) {
       next(error);
     }
   }
@@ -304,6 +321,7 @@ class userControllers {
   //       next(error);
   //     }
   //   }
+
 
   // static async getRequest(req, res, next) {
   //   try {
@@ -341,20 +359,6 @@ class userControllers {
   //     next(error);
   //   }
   // }
-
-  static async getRoomBarter(req, res, next) {
-    try {
-      const UserId = req.userLogin.id;
-      const response1 = await RoomBarter.findAll({
-        where: {
-          [Op.or]: [{ user1: UserId }, { user2: UserId }],
-        },
-      });
-      res.status(200).json(response1);
-    } catch (error) {
-      next(error);
-    }
-  }
 }
 
 module.exports = userControllers;

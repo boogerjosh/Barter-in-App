@@ -7,7 +7,6 @@ const Authorization = async (req, res, next) => {
     if (!item) {
       throw new Error("NOT_FOUND");
     }
-
     if (req.userLogin.role !== "Admin") {
       throw new Error("FORBIDDEN");
     }

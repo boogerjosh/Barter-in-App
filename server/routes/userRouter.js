@@ -19,13 +19,13 @@ userRouter.post(
   userControllers.postItems
 );
 
-userRouter.post('/roomBarter', userControllers.postRoomBarter);
+userRouter.post("/roomBarter", userControllers.postRoomBarter);
 
-userRouter.get('/roomBarter', userControllers.getRoomBarter);
+userRouter.get("/roomBarter", userControllers.getRoomBarter);
 
 userRouter.delete("/items/:id", userControllers.deleteItem);
 
-userRouter.patch("/room-barters/:id", userControllers.patchRoomBarter);
+userRouter.patch("/roomBarter/:id", userControllers.patchRoomBarter);
 // userRouter.patch("/:id", userControllers.patchItem);
 // userRouter.post("/send-emails", userControllers.sendEmail);
 module.exports = userRouter;
