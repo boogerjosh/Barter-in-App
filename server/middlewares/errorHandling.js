@@ -29,7 +29,7 @@ const errorHandler = (err, req, res, next) => {
     code = 401;
     msg = "You are not authorized";
   }
-  res.status(code).json({ message: msg });
+  res.status(code).json(msg);
 };
 
 module.exports = errorHandler;
