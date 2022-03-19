@@ -41,8 +41,8 @@ class adminControllers {
       };
       res.status(200).send({ access_token: signToken(payload) });
     } catch (error) {
-      console.log(error);
-      next(error);
+      console.log(error)
+      next(error)
     }
   }
 

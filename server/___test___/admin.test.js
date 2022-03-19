@@ -4,7 +4,13 @@ const request = require("supertest");
 const { queryInterface } = sequelize;
 const { User } = require("../models");
 const { hashPassword } = require("../helpers/bcrypt");
+const { signToken } = require("../helpers/jwt.js");
 let access_token;
+const customerToken = signToken({
+  id: 1,
+  email: "customer@customer.customer",
+  role: "Customer",
+});
 
 beforeAll(() => {
   queryInterface
@@ -269,7 +275,6 @@ describe("Admin Route Test", () => {
     test("401 Error get items - not authorized without token", (done) => {
       request(app)
         .get("/admins/items")
-        // .set("access_token", access_token)
         .then((response) => {
           expect(response.status).toBe(401);
           expect(response.body).toHaveProperty("message");
@@ -288,6 +293,67 @@ describe("Admin Route Test", () => {
           expect(response.status).toBe(401);
           expect(response.body).toHaveProperty("message");
           expect(response.body.message).toBe("You are not authorized");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /items/:id - patch items", () => {
+    test("200 Success patch items - should return success message", (done) => {
+      request(app)
+        .patch("/admins/items/1")
+        .set("access_token", access_token)
+        .then((response) => {
+          expect(response.status).toBe(200);
+          expect(response.body).toHaveProperty("message");
+          expect(response.body.message).toBe(
+            "Item status successfully updated"
+          );
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+    test("401 Error patch items - not authorized without token", (done) => {
+      request(app)
+        .patch("/admins/items")
+        .then((response) => {
+          expect(response.status).toBe(401);
+          expect(response.body).toHaveProperty("message");
+          expect(response.body.message).toBe("You are not authorized");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+    test("401 Error patch items - not authorized with wrong token", (done) => {
+      request(app)
+        .patch("/admins/items")
+        .set("access_token", "WRONG-TOKEN")
+        .then((response) => {
+          expect(response.status).toBe(401);
+          expect(response.body).toHaveProperty("message");
+          expect(response.body.message).toBe("You are not authorized");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("403 Error patch items - forbidden with customer role", (done) => {
+      request(app)
+        .patch("/admins/items/1")
+        .set("access_token", customerToken)
+        .then((response) => {
+          expect(response.status).toBe(403);
+          expect(response.body).toHaveProperty("message");
+          expect(response.body.message).toBe("Forbidden to access source");
           done();
         })
         .catch((err) => {

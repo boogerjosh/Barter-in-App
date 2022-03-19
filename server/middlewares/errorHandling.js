@@ -25,10 +25,7 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.message === "NO_INPUT_EMAIL") {
     code = 400;
     msg = "Must input email";
-  } else if (
-    err.message === "INVALID_TOKEN" ||
-    err.message === "jwt malformed"
-  ) {
+  } else if (err.message === "INVALID_TOKEN" || err.message === 'jwt malformed') {
     code = 401;
     msg = "You are not authorized";
   }
