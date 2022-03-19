@@ -5,6 +5,10 @@ const { queryInterface } = sequelize;
 const { User } = require("../models");
 const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt.js");
+const CronJob = require("cron").CronJob;
+
+// jest.useFakeTimers();
+jest.mock("cron");
 
 let access_token;
 const customerToken = signToken({
@@ -303,9 +307,27 @@ describe("Admin Route Test", () => {
   });
   //PATCH
   describe("PATCH /items/:id - patch items", () => {
+    beforeAll(() => {
+      CronJob.mockImplementation(() => {
+        return {
+          start: () => {
+            return new Promise((resolve) => {
+              resolve({
+                message: "delete",
+              });
+            });
+          },
+        };
+      });
+    });
+
     test("200 Success patch items - should return success message", (done) => {
+      let payload = {
+        status: "Approve",
+      };
       request(app)
         .patch("/admins/items/1")
+        .send(payload)
         .set("access_token", access_token)
         .then((response) => {
           expect(response.status).toBe(200);
@@ -319,6 +341,23 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
+
+    // test("200 Success patch items - should return success message", (done) => {
+    //   request(app)
+    //     .patch("/admins/items/1")
+    //     .set("access_token", access_token)
+    //     .then((response) => {
+    //       expect(response.status).toBe(200);
+    //       expect(response.body).toHaveProperty("message");
+    //       expect(response.body.message).toBe(
+    //         "Item status successfully updated"
+    //       );
+    //       done();
+    //     })
+    //     .catch((err) => {
+    //       done(err);
+    //     });
+    // });
 
     test("401 Error patch items - not authorized without token", (done) => {
       request(app)
@@ -357,6 +396,21 @@ describe("Admin Route Test", () => {
           expect(response.status).toBe(403);
           expect(response.body).toHaveProperty("message");
           expect(response.body.message).toBe("Forbidden to access source");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("404 Error patch items - Item not founc", (done) => {
+      request(app)
+        .patch("/admins/items/100")
+        .set("access_token", access_token)
+        .then((response) => {
+          expect(response.status).toBe(404);
+          expect(response.body).toHaveProperty("message");
+          expect(response.body.message).toBe("Item not found");
           done();
         })
         .catch((err) => {

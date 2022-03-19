@@ -6,7 +6,6 @@ const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
 class userControllers {
-
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
@@ -19,7 +18,7 @@ class userControllers {
           role: "Customer",
           username: payload.givenName,
           address: "-",
-          photoUrl: payload.photoUrl
+          photoUrl: payload.photoUrl,
         },
       });
       let tokenServer = signToken({
@@ -33,8 +32,7 @@ class userControllers {
         username: user[0].dataValues.username,
       });
     } catch (err) {
-      console.log(err);
-      // next(err);
+      next(err);
     }
   }
 
@@ -66,34 +64,55 @@ class userControllers {
         { transaction: t }
       );
 
-      const mappedArray = await Promise.all(
-        files.map((file) => {
-          return uploadFile(file).then((data) => {
-            let tags = [];
-            if (data.AITags) {
-              data.AITags.forEach((e) => {
-                tags.push(e.name);
-              });
-            }
-            let temp = {
-              imageUrl: data.url,
-              itemId: createItems.id,
-              tag: tags.join(", "),
-            };
-            return temp;
-          });
-        })
-      );
+      // const mappedArray = await Promise.all(
+      //   files.map((file) => {
+      //     return uploadFile(file).then((data) => {
+      //       let tags = [];
+      //       if (data.AITags) {
+      //         data.AITags.forEach((e) => {
+      //           tags.push(e.name);
+      //         });
+      //       }
+      //       let temp = {
+      //         imageUrl: data.url,
+      //         itemId: createItems.id,
+      //         tag: tags.join(", "),
+      //       };
+      //       return temp;
+      //     });
+      //   })
+      // );
 
-      let newImage = await Image.bulkCreate(mappedArray, {
+      const mappedArray = new Promise((resolve) => {
+        resolve(() => {
+          files.map((file) => {
+            return uploadFile(file).then((data) => {
+              let tags = [];
+              if (data.AITags) {
+                data.AITags.forEach((e) => {
+                  tags.push(e.name);
+                });
+              }
+              console.log(data);
+              let temp = {
+                imageUrl: data.url,
+                itemId: createItems.id,
+                tag: tags.join(", "),
+              };
+              return temp;
+            });
+          });
+        });
+      });
+
+      await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
       });
-      await sendEmail({ email: req.userLogin.email })
+      await sendEmail({ email: req.userLogin.email });
       await t.commit();
-      res.status(201).send({ ...createItems.dataValues, Images: newImage });
+      res.status(201).send({ message: "Item has been created" });
     } catch (error) {
-      console.log(error, "<<<<<<");
       await t.rollback();
       next(error);
     }
@@ -179,7 +198,7 @@ class userControllers {
       next(error);
     }
   }
-  
+
   static async dataForBarter(req, res, next) {
     try {
       let items = await Item.findAll({
@@ -229,7 +248,6 @@ class userControllers {
       let roomBarter = await RoomBarter.findByPk(+id, {
         include: [Item],
       });
-
       if (!roomBarter) {
         throw new Error("ROOM_NOT_FOUND");
       }
@@ -244,14 +262,83 @@ class userControllers {
         await RoomBarter.destroy({ where: { id } });
         await Item.destroy({ where: { id: roomBarter.item1 } });
         await Item.destroy({ where: { id: roomBarter.item2 } });
+        console.log(">>>>");
         res.status(200).json({ message: "Item terbarter" });
       } else {
+        console.log("<<<<,");
         res.status(200).json({ message: "Wait for another user to confirm" });
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
+
+
+  //   static async googleLogin(req, res, next) {
+  //     try {
+  //       const CLIENT_ID = process.env.CLIENT_ID;
+  //       const client = OAuth2Client(CLIENT_ID);
+  //       const { token } = req.body;
+  //       const ticket = await client.verifyIdToken({
+  //         idToken: token,
+  //         audience: CLIENT_ID,
+  //       });
+  //       const payload = ticket.getPayload();
+  //       const [user] = await User.findOrCreate({
+  //         where: { email: payload.email },
+  //         default: {
+  //           role: "Customer",
+  //           password: `${payload.email}-${new Date()}`,
+  //         },
+  //       });
+  //       const payloadFromServer = signToken({
+  //         id: user.id,
+  //         email: user.email,
+  //         role: user.role,
+  //       });
+  //       res.status(200).json({ access_token: payloadFromServer });
+  //     } catch (error) {
+  //       next(error);
+  //     }
+  //   }
+
+  // static async getRequest(req, res, next) {
+  //   try {
+  //     const UserId = req.userLogin.id;
+  //     const userItems = Item.findAll({ where: { UserId, status: "Reviewed" } });
+  //     let userRequests = [];
+  //     let topush = {};
+  //     userItems.forEach((el) => {
+  //       topush = await Request.findOne({
+  //         where: { [Op.or]: [{ ItemId: el.id }, { ItemId2: el.id }] },
+  //         include: {
+  //           model: Item,
+  //         },
+  //       });
+  //       if (topush) {
+  //         userRequests.push(topush);
+  //       }
+  //     });
+  //     res.send(200).json({ userRequests });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
+  // static async postRequest(req, res, next) {
+  //   try {
+  //     const { ItemId2, ItemId } = req.body;
+  //     const batch = {
+  //       ItemId,
+  //       ItemId2,
+  //     };
+  //     const resu = await Request.create(batch);
+  //     res.send(200).json({ message: "Request" });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   static async getRoomBarter(req, res, next) {
     try {
