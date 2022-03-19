@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       user2: DataTypes.INTEGER,
       item1: DataTypes.INTEGER,
       item2: DataTypes.INTEGER,
-      status1: DataTypes.STRING,
-      status2: DataTypes.STRING,
+      status1: DataTypes.BOOLEAN,
+      status2: DataTypes.BOOLEAN,
     },
     {
       sequelize,
