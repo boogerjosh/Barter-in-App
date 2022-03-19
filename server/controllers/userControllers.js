@@ -1,17 +1,46 @@
 const imagekit = require("../helpers/imagekit");
 const sendEmail = require("../helpers/sendEmail");
 const uploadFile = require("../helpers/uploadFile");
-const { Item, Image, User, sequelize } = require("../models");
+const { Item, Image, User, sequelize, RoomBarter } = require("../models");
 const { Op } = require("sequelize");
-const { OAuth2Client } = require("google-auth-library");
 const { signToken } = require("../helpers/jwt");
 
 class userControllers {
 
-  static async postItems(req, res, next) {
+  static async loginGoogle(req, res, next) {
+    try {
+      const payload = req.body;
+      const user = await User.findOrCreate({
+        where: {
+          email: payload.email,
+        },
+        defaults: {
+          password: "rahasia" + Math.random() * 10,
+          role: "Customer",
+          username: payload.givenName,
+          address: "-",
+          photoUrl: payload.photoUrl
+        },
+      });
+      let tokenServer = signToken({
+        id: user[0].dataValues.id,
+        email: user[0].dataValues.email,
+      });
+      res.status(200).json({
+        access_token: tokenServer,
+        id: String(user[0].dataValues.id),
+        username: user[0].dataValues.username,
+      });
+    } catch (err) {
+      console.log(err);
+      next(err);
+    }
+  }
 
+  static async postItems(req, res, next) {
     const t = await sequelize.transaction();
     try {
+      const userLogin = req.userLogin;
       const { files } = req;
       const {
         title,
@@ -20,8 +49,9 @@ class userControllers {
         brand,
         yearOfPurchase,
         dateExpired,
-        userId,
       } = req.body;
+      const userId = userLogin.id;
+
       const createItems = await Item.create(
         {
           title,
@@ -30,7 +60,7 @@ class userControllers {
           brand,
           yearOfPurchase,
           dateExpired,
-          statusPost: "Review",
+          statusPost: "Reviewed",
           userId,
         },
         { transaction: t }
@@ -59,12 +89,11 @@ class userControllers {
         returning: true,
         transaction: t,
       });
-
-      await sendEmail({ email: "aryaadhm@gmail.com" });
-
+      await sendEmail({ email: req.userLogin.email })
       await t.commit();
       res.status(201).send({ ...createItems.dataValues, Images: newImage });
     } catch (error) {
+      console.log(error, "<<<<<<");
       await t.rollback();
       next(error);
     }
@@ -75,7 +104,7 @@ class userControllers {
       let items = await Item.findAll({
         include: [Image],
         where: {
-          status: "Approve",
+          statusPost: "Approve",
         },
       });
       res.status(200).json(items);
@@ -105,69 +134,6 @@ class userControllers {
     }
   }
 
-  static async putItem(req, res, next) {
-    const t = await sequelize.transaction();
-    try {
-      let { id } = req.params;
-      const { files } = req;
-      const {
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase,
-        dateExpired,
-      } = req.body;
-
-      await Item.update(
-        {
-          title,
-          category,
-          description,
-          brand,
-          yearOfPurchase,
-          dateExpired,
-          statusPost: "Review",
-        },
-        { where: { id } }
-      );
-
-      const mappedArray = await Promise.all(
-        files.map((file) => {
-          return uploadFile(file).then((data) => {
-            let tags = [];
-            if (data.AITags) {
-              data.AITags.forEach((e) => {
-                tags.push(e.name);
-              });
-            }
-            let temp = {
-              imageUrl: data.url,
-              itemId: createItems.id,
-              tag: tags.join(", "),
-            };
-            return temp;
-          });
-        })
-      );
-
-      await Image.destroy({ where: { itemId: req.userLogin.id } });
-
-      let newImage = await Image.bulkCreate(mappedArray, {
-        returning: true,
-        transaction: t,
-      });
-
-      await sendEmail({ email: "aryaadhm@gmail.com" });
-
-      await t.commit();
-      res.status(200).json({ message: "Item successfully updated" });
-    } catch (error) {
-      await t.rollback();
-      next(error);
-    }
-  }
-
   static async deleteItem(req, res, next) {
     try {
       let { id } = req.params;
@@ -175,54 +141,130 @@ class userControllers {
       if (!item) {
         throw new Error("NOT_FOUND");
       }
-      res.status(200).json({ mesage: "Item has been deleted" });
+      await Item.destroy({ where: { id } });
+      res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
       next(error);
     }
   }
 
-  static async googleLogin(req, res, next) {
+  static async dataForHome(req, res, next) {
     try {
-      const CLIENT_ID = process.env.CLIENT_ID;
-      const client = OAuth2Client(CLIENT_ID);
-      const { token } = req.body;
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: CLIENT_ID,
+      let items = await Item.findAll({
+        order: [["updatedAt", "DESC"]],
+        limit: 10,
       });
-      const payload = ticket.getPayload();
-      const [user] = await User.findOrCreate({
-        where: { email: payload.email },
-        default: {
-          role: "Customer",
-          password: `${payload.email}-${new Date()}`,
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getMyAds(req, res, next) {
+    try {
+      let items = await Item.findAll({
+        Where: {
+          [Op.and]: [
+            {
+              status: {
+                [Op.ne]: "Review",
+              },
+              userId: req.userLogin.id,
+            },
+          ],
         },
       });
-      const payloadFromServer = signToken({
-        id: user.id,
-        email: user.email,
-        role: user.role,
+      res.status(200).json(items);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  static async dataForBarter(req, res, next) {
+    try {
+      let items = await Item.findAll({
+        Where: {
+          [Op.and]: [
+            {
+              status: {
+                [Op.eq]: "Approve",
+              },
+              userId: req.userLogin.id,
+            },
+          ],
+        },
       });
-      res.status(200).json({ access_token: payloadFromServer });
+      res.status(200).json(items);
     } catch (error) {
       next(error);
     }
   }
 
-  // static async patchItem(req, res, next) {
-  //   try {
-  //     let { id } = req.params;
-  //     let { status } = req.body;
-  //     await Item.update({ status }, { where: { id } });
-  //     res.status(200).json({ message: "Item status successfully updated" });
-  //   } catch (error) {
-  //     next(error);
+  static async patchRoomBarter(req, res, next) {
+    try {
+      let { id } = req.params;
+      // let { status } = req.body;
+      let userId = req.userLogin.id;
+
+      let roomBarter = await RoomBarter.findByPk(+id, {
+        include: [Item],
+      });
+
+      if (!roomBarter) {
+        throw new Error("ROOM_NOT_FOUND");
+      }
+
+      if (roomBarter.user1 === userId) {
+        await RoomBarter.update({ status1: true });
+      } else if (roomBarter.user2 === userId) {
+        await RoomBarter.update({ status2: true });
+      }
+
+      if (roomBarter.status1 && roomBarter.status2) {
+        await RoomBarter.destroy({ where: { id } });
+        await Item.destroy({ where: { id: roomBarter.item1 } });
+        await Item.destroy({ where: { id: roomBarter.item2 } });
+        res.status(200).json({ message: "Item terbarter" });
+      } else {
+        res.status(200).json({ message: "Wait for another user to confirm" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  //   static async googleLogin(req, res, next) {
+  //     try {
+  //       const CLIENT_ID = process.env.CLIENT_ID;
+  //       const client = OAuth2Client(CLIENT_ID);
+  //       const { token } = req.body;
+  //       const ticket = await client.verifyIdToken({
+  //         idToken: token,
+  //         audience: CLIENT_ID,
+  //       });
+  //       const payload = ticket.getPayload();
+  //       const [user] = await User.findOrCreate({
+  //         where: { email: payload.email },
+  //         default: {
+  //           role: "Customer",
+  //           password: `${payload.email}-${new Date()}`,
+  //         },
+  //       });
+  //       const payloadFromServer = signToken({
+  //         id: user.id,
+  //         email: user.email,
+  //         role: user.role,
+  //       });
+  //       res.status(200).json({ access_token: payloadFromServer });
+  //     } catch (error) {
+  //       next(error);
+  //     }
   //   }
-  // }
+
 
   // static async getRequest(req, res, next) {
   //   try {
-  //     const UserId = req.currentUser.id;
+  //     const UserId = req.userLogin.id;
   //     const userItems = Item.findAll({ where: { UserId, status: "Reviewed" } });
   //     let userRequests = [];
   //     let topush = {};
@@ -256,32 +298,7 @@ class userControllers {
   //     next(error);
   //   }
   // }
-
-  // static async sendEmail(req, res, next) {
-  //   try {
-  //     let email = req.userLogin.email;
-  //     let transporter = nodemailer.createTransport({
-  //       service: "Gmail",
-  //       auth: {
-  //         user: process.env.EMAIL, // generated ethereal user
-  //         pass: process.env.PASSWORD, // generated ethereal password
-  //       },
-  //       tls: {
-  //         rejectUnauthorized: false,
-  //       },
-  //     });
-  //     let mailOptions = {
-  //       from: process.env.EMAIL,
-  //       to: "admin@mail.com",
-  //       subject: "Asking for approvement",
-  //       text: ``,
-  //     };
-  //     let info = await transporter.sendMail(mailOptions);
-  //     res.status(200).json({ mesage: "Item has been deleted" });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  
 }
 
 module.exports = userControllers;
