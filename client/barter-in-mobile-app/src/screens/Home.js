@@ -26,9 +26,6 @@ import ItemSpace from "../components/ItemSpace";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from 'axios';
 import * as Google from 'expo-google-app-auth';
-  
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 3;
@@ -123,9 +120,15 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.categoryTitle}>Categories</Text>
           </View>
-          {/* <View>
-            <Text style={styles.categorySubtitle}>See all</Text>
-          </View> */}
+          <View>
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate("Login", {})}
+            >
+              <Text style={styles.buttonText}>Ke Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={{ marginTop: 10 }}>
           {categories.map((chunk, index) => {
