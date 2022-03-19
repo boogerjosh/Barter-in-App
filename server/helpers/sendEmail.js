@@ -13,7 +13,7 @@ const sendEmail = async (obj) => {
   });
   let mailOptions = {
     from: process.env.EMAIL,
-    to: "aryawdy16@gmail.com",
+    to: obj.email,
     subject: "Asking for approvement",
     text: `user with ${obj.email} asking for approval`,
   };

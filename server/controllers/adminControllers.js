@@ -11,8 +11,8 @@ class adminControllers {
         username,
         email,
         password,
-        role: "Admin",
-        photoUrl,
+        role: 'Admin',
+        photoUrl: '-',
         address,
       });
       res.status(201).send({ id: response.id, email: response.email });
