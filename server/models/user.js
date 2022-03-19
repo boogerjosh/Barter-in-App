@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasMany(models.Item, { foreignKey: "userId" });
+      User.hasMany(models.RoomBarter, { foreignKey: "user1" });
+      User.hasMany(models.RoomBarter, { foreignKey: "user2" });
     }
   }
   User.init(
@@ -19,68 +21,68 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
-            msg: "Username is required"
+            msg: "Username is required",
           },
           notNull: {
-            msg: "Username is required"
-          }
-        }
+            msg: "Username is required",
+          },
+        },
       },
       email: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
-            msg: "Email is required"
+            msg: "Email is required",
           },
           notNull: {
-            msg: "Email is required"
+            msg: "Email is required",
           },
           isEmail: {
-            msg: "Email must be email format"
-          }
+            msg: "Email must be email format",
+          },
         },
         unique: {
-          msg: "Email must be unique"
-        }
+          msg: "Email must be unique",
+        },
       },
       password: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
-            msg: "Password is required"
+            msg: "Password is required",
           },
           notNull: {
-            msg: "Password is required"
-          }
-        }
+            msg: "Password is required",
+          },
+        },
       },
       role: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
-            msg: "Role is required"
+            msg: "Role is required",
           },
           notNull: {
-            msg: "Role is required"
-          }
-        }
+            msg: "Role is required",
+          },
+        },
       },
       address: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
-            msg: "Address is required"
+            msg: "Address is required",
           },
           notNull: {
-            msg: "Address is required"
-          }
-        }
+            msg: "Address is required",
+          },
+        },
       },
-      photoUrl: DataTypes.STRING
+      photoUrl: DataTypes.STRING,
     },
     {
       hooks: {

@@ -1,6 +1,7 @@
 const errorHandler = (err, req, res, next) => {
   let code = 500;
   let msg = err;
+  // console.log(err);
   if (
     err.name === "SequelizeValidationError" ||
     err.name === "SequelizeUniqueConstraintError"
@@ -25,11 +26,17 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.message === "NO_INPUT_EMAIL") {
     code = 400;
     msg = "Must input email";
-  } else if (err.message === "INVALID_TOKEN" || err.message === 'jwt malformed') {
+  } else if (
+    err.message === "INVALID_TOKEN" ||
+    err.message === "jwt malformed"
+  ) {
     code = 401;
     msg = "You are not authorized";
+  } else if (err.message === "ROOM_NOT_FOUND") {
+    code = 404;
+    msg = "Room barter not found";
   }
-  res.status(code).json(msg);
+  res.status(code).json({ message: msg });
 };
 
 module.exports = errorHandler;
