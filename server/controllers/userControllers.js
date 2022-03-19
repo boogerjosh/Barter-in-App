@@ -41,7 +41,6 @@ class userControllers {
       const userId = req.userLogin.id;
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
-
       const createItems = await Item.create(
         {
           title,
@@ -112,9 +111,10 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
-      let { filterByTitle, filterByCategory } = req.query;
-      if (!filterByTitle) filterByTitle = "";
-      if (!filterByCategory) filterByCategory = "";
+      let {filterByTitle, filterByCategory} = req.query
+      if(!filterByTitle) filterByTitle = ''
+      if(!filterByCategory) filterByCategory = ''
+
       let items = await Item.findAll({
         include: [Image],
         where: {
@@ -279,6 +279,7 @@ class userControllers {
     }
   }
 
+
   static async getRoomBarter(req, res, next) {
     try {
       const UserId = req.userLogin.id;
@@ -292,6 +293,35 @@ class userControllers {
       next(error);
     }
   }
+
+  //   static async googleLogin(req, res, next) {
+  //     try {
+  //       const CLIENT_ID = process.env.CLIENT_ID;
+  //       const client = OAuth2Client(CLIENT_ID);
+  //       const { token } = req.body;
+  //       const ticket = await client.verifyIdToken({
+  //         idToken: token,
+  //         audience: CLIENT_ID,
+  //       });
+  //       const payload = ticket.getPayload();
+  //       const [user] = await User.findOrCreate({
+  //         where: { email: payload.email },
+  //         default: {
+  //           role: "Customer",
+  //           password: `${payload.email}-${new Date()}`,
+  //         },
+  //       });
+  //       const payloadFromServer = signToken({
+  //         id: user.id,
+  //         email: user.email,
+  //         role: user.role,
+  //       });
+  //       res.status(200).json({ access_token: payloadFromServer });
+  //     } catch (error) {
+  //       next(error);
+  //     }
+  //   }
+
 
   // static async getRequest(req, res, next) {
   //   try {
