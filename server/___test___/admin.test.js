@@ -5,10 +5,11 @@ const { queryInterface } = sequelize;
 const { User } = require("../models");
 const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt.js");
+
 let access_token;
 const customerToken = signToken({
-  id: 1,
-  email: "customer@customer.customer",
+  id: 2,
+  email: "customer@mail.com",
   role: "Customer",
 });
 
@@ -300,7 +301,7 @@ describe("Admin Route Test", () => {
         });
     });
   });
-
+  //PATCH
   describe("PATCH /items/:id - patch items", () => {
     test("200 Success patch items - should return success message", (done) => {
       request(app)
@@ -318,6 +319,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
+
     test("401 Error patch items - not authorized without token", (done) => {
       request(app)
         .patch("/admins/items")
@@ -331,6 +333,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
+
     test("401 Error patch items - not authorized with wrong token", (done) => {
       request(app)
         .patch("/admins/items")
