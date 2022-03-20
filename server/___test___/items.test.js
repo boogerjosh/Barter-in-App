@@ -4,8 +4,10 @@ const request = require("supertest");
 const ImageKit = require("imagekit");
 const { signToken } = require("../helpers/jwt");
 const { hashPassword } = require("../helpers/bcrypt");
+
 const { queryInterface } = sequelize;
 const nodemailer = require("nodemailer");
+const uploadFile = require("../helpers/uploadFile");
 const sendMailMock = jest.fn();
 // const fileMock = jest.fn();
 
@@ -365,6 +367,12 @@ describe("POST items", () => {
       };
     });
   });
+
+  // describe("", () => {
+  //   it("should return an Array", (done) => {
+  //     expect(uploadFile("assets/JK5OICOiE54.jpg"));
+  //   });
+  // });
 
   describe("POST /users/items -  success test", () => {
     const newItem = {

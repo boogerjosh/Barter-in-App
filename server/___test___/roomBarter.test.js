@@ -8,6 +8,7 @@ const { queryInterface } = sequelize;
 jest.setTimeout(2000);
 
 let access_token;
+let access_token2;
 
 beforeAll((done) => {
   queryInterface
@@ -16,10 +17,10 @@ beforeAll((done) => {
       [
         {
           username: "admin",
-          email: "admin@mail.com",
+          email: "customer.1@mail.com",
           password: hashPassword("123456"),
           address: "-",
-          role: "Admin",
+          role: "Customer",
           photoUrl:
             "https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png",
           createdAt: new Date(),
@@ -27,10 +28,10 @@ beforeAll((done) => {
         },
         {
           username: "admin11",
-          email: "admin11@mail.com",
+          email: "customer.2@mail.com",
           password: hashPassword("123456"),
           address: "-",
-          role: "Admin",
+          role: "Customer",
           photoUrl:
             "https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png",
           createdAt: new Date(),
@@ -42,8 +43,14 @@ beforeAll((done) => {
     .then(() => {
       access_token = signToken({
         id: 1,
-        email: "admin@mail.com",
-        role: "Admin",
+        email: "customer.1@mail.com",
+        role: "Customer",
+      });
+
+      access_token2 = signToken({
+        id: 2,
+        email: "customer.2@mail.com",
+        role: "Customer",
       });
       return queryInterface.bulkInsert(
         "Items",
@@ -180,6 +187,123 @@ afterAll((done) => {
     });
 });
 
+//GET RoomBarter
+describe("GET RoomBarters", () => {
+  describe("GET /roomBarter - success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/roomBarter")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          // expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /roomBarter -  failed test", () => {
+    it("should return an object with status 401 - input without access_token as headers", (done) => {
+      request(app)
+        .get("/users/roomBarter")
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+//POST RoomBarter
+describe("POST RoomBarters", () => {
+  describe("POST /roomBarter - success test", () => {
+    let payload = {
+      user2: 2,
+      item1: 1,
+      item2: 2,
+    };
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .post("/users/roomBarter")
+        .set("access_token", access_token)
+        .send(payload)
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toBeInstanceOf(Object);
+          // expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /roomBarter -  failed test", () => {
+    it("should return an object with status 401 - input without access_token as headers", (done) => {
+      request(app)
+        .post("/users/roomBarter")
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /roomBarter -  failed test", () => {
+    it("should return an object with status 401 - input without access_token as headers", (done) => {
+      request(app)
+        .post("/users/roomBarter")
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("POST /roomBarter - success test", () => {
+    let payload = {
+      user2: 2,
+      item1: "",
+      item2: "",
+    };
+    it("should return an object with status 400 - validation error", (done) => {
+      request(app)
+        .post("/users/roomBarter")
+        .set("access_token", access_token)
+        .send(payload)
+        .then((res) => {
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
 //PATCH RoomBarter
 describe("PATCH RoomBarters", () => {
   describe("PATCH room-barters/:id - success test", () => {
@@ -187,6 +311,23 @@ describe("PATCH RoomBarters", () => {
       request(app)
         .patch("/users/roomBarter/1")
         .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH room-barters/:id - success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .patch("/users/roomBarter/1")
+        .set("access_token", access_token2)
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
