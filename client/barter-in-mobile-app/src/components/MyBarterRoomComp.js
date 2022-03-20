@@ -106,6 +106,7 @@ const MuBarterRoomComp = ({ item }) => {
         </View>
       </View>
     </TouchableOpacity>
+    // ubah dikit
   );
 };
 
