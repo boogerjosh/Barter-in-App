@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,19 +15,56 @@ import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-import categoryAdd from "../../data/categoryAdd";
-import CategoryInputCard from "../components/CategoryInputCard";
+import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
-const numColumns = 2;
-const ChooseCategory = () => {
+import axios from "axios";
+// const numColumns = 1;
+const MyAddsScreen = () => {
   const navigation = useNavigation();
+  const [items, setItems] = useState([]);
+  // console.log("🚀 ~ file: MyAdds.js ~ line 26 ~ MyAddsScreen ~ items", items);
+
+  const getItems = async () => {
+    console.log("masuk");
+    try {
+      const data = await axios.get("https://40eb-110-138-93-44.ngrok.io/items");
+      // console.log("🚀 ~ file: MyAdds.js ~ line 31 ~ getItems ~ data", data);
+      setItems(data.data);
+      // console.log(
+      //   "🚀 ~ file: MyAdds.js ~ line 33 ~ getItems ~ data",
+      //   data.data
+      // );
+    } catch (error) {
+      console.log(error);
+    }
+    // .then((response) => {
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! Status: ${response.status}`);
+    //   }
+    //   return response.json();
+    // })
+    // .then((data) => {
+    //   setItems(data);
+    //   console.log("🚀 ~ file: MyAdds.js ~ line 38 ~ .then ~ data", data);
+
+    //   // console.log("🚀 ~ file: Home.js ~ line 33 ~ .then ~ data", data);
+    // })
+    // .catch((error) => {
+    //   console.error(error);
+    // });
+  };
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.nameText}>Choose Item category</Text>
+              <Text style={styles.nameText}>My Ads</Text>
             </View>
           </View>
           <View>
@@ -40,16 +77,17 @@ const ChooseCategory = () => {
       </SafeAreaView>
       <View>
         <FlatList
-          data={categoryAdd}
+          contentContainerStyle={styles.listItem}
+          data={items}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
-          renderItem={({ item }) => <CategoryInputCard item={item} />}
-          numColumns={numColumns}
+          renderItem={({ item }) => <MyAddsComp item={item} />}
+          // numColumns={numColumns}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -59,6 +97,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     // alignItems: "center",
     // justifyContent: "center",
+  },
+  listItem: {
+    padding: 10,
+    paddingTop: StatusBar.currentHeight || 42,
   },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,
@@ -94,47 +136,6 @@ const styles = StyleSheet.create({
     color: COLORS.EXTRA_LIGHT_GRAY,
     fontFamily: FONTS.BOLD,
   },
-  search: {
-    marginHorizontal: 20,
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 20,
-    padding: 15,
-    marginTop: -25,
-    shadowColor: COLORS.BLACK,
-    shadowOffset: {
-      height: 3,
-      width: 0,
-    },
-    shadowRadius: 4,
-    shadowOpacity: 0.1,
-    elevation: 1,
-  },
-  searchWrapper: {
-    flexDirection: "row",
-  },
-  searchicon: {
-    marginRight: 10,
-    color: COLORS.DARK_GREY,
-  },
-  searchInput: {
-    color: COLORS.DARK_GREY,
-    fontFamily: FONTS.MEDIUM,
-  },
-  button: {
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    backgroundColor: COLORS.PRIMARY,
-    paddingVertical: 8,
-    elevation: 3,
-    marginVertical: 2,
-    width: setWidth(25),
-  },
-  buttonText: {
-    fontSize: 13,
-    color: COLORS.DARK_GREY,
-    fontFamily: FONTS.BOLD,
-  },
 });
 
-export default ChooseCategory;
+export default MyAddsScreen;

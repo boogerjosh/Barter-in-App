@@ -10,7 +10,8 @@ import COLORS from "./src/constants/Colors";
 import HomeRouter from "./src/routes/HomeRouter";
 import BarterRouter from "./src/routes/BarterRouter";
 import ProfileScreen from "./src/screens/Profile";
-import MyItemScreen from "./src/screens/MyItem";
+import MyAddsRouter from "./src/routes/MyAddsRouter";
+import MyItemScreen from "./src/screens/MyAdds";
 import BarterRoomScreen from "./src/screens/BarterRoom";
 import PostItemRouter from "./src/routes/PostItem";
 
@@ -44,7 +45,7 @@ export default function App() {
               iconName = focused
                 ? "md-add-circle-sharp"
                 : "md-add-circle-outline";
-            } else if (route.name === "MyItem") {
+            } else if (route.name === "MyAddsRouter") {
               iconName = focused ? "archive-sharp" : "archive-outline";
             } else if (route.name === "BarterRouter") {
               iconName = focused ? "basket-sharp" : "basket-outline";
@@ -62,7 +63,11 @@ export default function App() {
           component={HomeRouter}
           options={{ headerShown: false }}
         />
-        <Tab.Screen name="MyItem" component={MyItemScreen} />
+        <Tab.Screen
+          name="MyAddsRouter"
+          component={MyAddsRouter}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen
           name="PostItemRouter"
           component={PostItemRouter}
