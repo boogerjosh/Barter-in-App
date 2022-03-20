@@ -20,8 +20,6 @@ app.use(errorHandler);
 //   console.log(`Example app listening on port ${port}`)
 // })
 
-module.exports = app;
-
 // const messageArray = [];
 // io.on("connection", (socket) => {
 //   console.log(socket.id);
@@ -32,6 +30,7 @@ module.exports = app;
 //   });
 // });
 
+module.exports = app;
 // server.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`);
 // });

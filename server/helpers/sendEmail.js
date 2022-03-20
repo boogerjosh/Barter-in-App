@@ -1,12 +1,10 @@
 const nodemailer = require("nodemailer");
 const sendEmail = async (obj) => {
-  console.log(obj, '============= ini email')
-  // let { title, link } = req.body;
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: 'dummy.akun.1400@gmail.com', // generated ethereal user
-      pass: '123abc987', // generated ethereal password
+      user: "dummy.akun.1400@gmail.com", // generated ethereal user
+      pass: "123abc987", // generated ethereal password
     },
     tls: {
       rejectUnauthorized: false,
@@ -14,7 +12,7 @@ const sendEmail = async (obj) => {
   });
   let mailOptions = {
     from: obj.email,
-    to: 'dummy.akun.1400@gmail.com',
+    to: "dummy.akun.1400@gmail.com",
     subject: "Asking for approvement",
     text: `user with ${obj.email} asking for approval`,
   };

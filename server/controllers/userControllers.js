@@ -41,7 +41,7 @@ class userControllers {
       const userId = req.userLogin.id;
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
-      const createItems = await Item.create(
+      await Item.create(
         {
           title,
           category,
@@ -74,27 +74,61 @@ class userControllers {
       //   })
       // );
 
-      const mappedArray = new Promise((resolve) => {
-        resolve(() => {
-          files.map((file) => {
-            return uploadFile(file).then((data) => {
-              let tags = [];
-              if (data.AITags) {
-                data.AITags.forEach((e) => {
-                  tags.push(e.name);
-                });
-              }
+      // const mappedArray = await Promise.all(
+      //   files.map((file) => {
+      //     let data = uploadFile(file);
+      //     console.log(data, "<<<<<<");
+      //     let tags = [];
+      //     if (data.AITags) {
+      //       data.AITags.forEach((e) => {
+      //         tags.push(e.name);
+      //       });
+      //     }
+      //     let temp = {
+      //       imageUrl: data.url,
+      //       itemId: createItems.id,
+      //       tag: tags.join(", "),
+      //     };
+      //     return temp;
+      //   })
+      // );
 
-              let temp = {
-                imageUrl: data.url,
-                itemId: createItems.id,
-                tag: tags.join(", "),
-              };
-              return temp;
-            });
+      // const mappedArray = Promise.all(
+      //   files.map((file) => {
+      //     return uploadFile(file).then((data) => {
+      //       let tags = [];
+      //       if (data.AITags) {
+      //         data.AITags.forEach((e) => {
+      //           tags.push(e.name);
+      //         });
+      //       }
+      //       let temp = {
+      //         imageUrl: data.url,
+      //         itemId: createItems.id,
+      //         tag: tags.join(", "),
+      //       };
+      //       return temp;
+      //     });
+      //   })
+      // )
+      let mappedArray = [];
+      for (const file of files) {
+        let data = await uploadFile(file);
+        let tags = [];
+        if (data.AITags) {
+          data.AITags.forEach((e) => {
+            tags.push(e.name);
           });
-        });
-      });
+        }
+        let temp = {
+          imageUrl: data.url,
+          itemId: createItems.id,
+          tag: tags.join(", "),
+        };
+        console.log(data, ">>>>>");
+        mappedArray.push(temp);
+      }
+      console.log(mappedArray);
 
       await Image.bulkCreate(mappedArray, {
         returning: true,
@@ -104,6 +138,7 @@ class userControllers {
       await t.commit();
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
+      console.log(error);
       await t.rollback();
       next(error);
     }
@@ -111,9 +146,9 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
-      let {filterByTitle, filterByCategory} = req.query
-      if(!filterByTitle) filterByTitle = ''
-      if(!filterByCategory) filterByCategory = ''
+      let { filterByTitle, filterByCategory } = req.query;
+      if (!filterByTitle) filterByTitle = "";
+      if (!filterByCategory) filterByCategory = "";
 
       let items = await Item.findAll({
         include: [Image],
@@ -253,12 +288,16 @@ class userControllers {
       }
 
       if (roomBarter.user1 === userId) {
-        await RoomBarter.update({ status1: true });
+        await RoomBarter.update({ status1: true }, { where: { id } });
       } else if (roomBarter.user2 === userId) {
-        await RoomBarter.update({ status2: true });
+        await RoomBarter.update({ status2: true }, { where: { id } });
       }
 
-      if (roomBarter.status1 && roomBarter.status2) {
+      let newRoomBarter = await RoomBarter.findByPk(+id, {
+        include: [Item],
+      });
+
+      if (newRoomBarter.status1 && newRoomBarter.status2) {
         await Item.update(
           { statusBarter: true },
           { where: { id: roomBarter.item1 } }
@@ -278,7 +317,6 @@ class userControllers {
       next(error);
     }
   }
-
 
   static async getRoomBarter(req, res, next) {
     try {
@@ -321,7 +359,6 @@ class userControllers {
   //       next(error);
   //     }
   //   }
-
 
   // static async getRequest(req, res, next) {
   //   try {

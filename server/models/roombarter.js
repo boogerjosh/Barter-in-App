@@ -19,7 +19,18 @@ module.exports = (sequelize, DataTypes) => {
     {
       user1: DataTypes.INTEGER,
       user2: DataTypes.INTEGER,
-      item1: DataTypes.INTEGER,
+      item1: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Item 1 is required",
+          },
+          notNull: {
+            msg: "Item 1 is required",
+          },
+        },
+      },
       item2: DataTypes.INTEGER,
       status1: DataTypes.BOOLEAN,
       status2: DataTypes.BOOLEAN,
