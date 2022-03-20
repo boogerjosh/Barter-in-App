@@ -13,10 +13,12 @@ const Stack = createNativeStackNavigator();
 const HomeRouter = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} options={{
+      <Stack.Screen name="HomeRouter" component={HomeScreen} options={{
         headerShown: false
       }} />
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Login" component={Login}  options={{
+        headerShown: false
+      }}/>
       <Stack.Screen name="MyItem" component={MyItemScreen} />
       <Stack.Screen name="BarterRoom" component={BarterRoomScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />

@@ -37,11 +37,13 @@ class userControllers {
   }
 
   static async postItems(req, res, next) {
+    console.log(req.files)
+    console.log(req.body)
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
       const { files } = req;
-      console.log(files)
+      console.log(req.file.path, '====, ini files')
       const {
         title,
         category,
@@ -49,7 +51,7 @@ class userControllers {
         brand,
         yearOfPurchase
       } = req.body;
-      console.log(req.body)
+      // console.log(req.body)
       const createItems = await Item.create(
         {
           title,
@@ -113,6 +115,7 @@ class userControllers {
       await t.commit();
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
+      console.log(error)
       await t.rollback();
       next(error);
     }
