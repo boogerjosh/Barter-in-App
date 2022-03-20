@@ -4,8 +4,10 @@ const request = require("supertest");
 const ImageKit = require("imagekit");
 const { signToken } = require("../helpers/jwt");
 const { hashPassword } = require("../helpers/bcrypt");
+
 const { queryInterface } = sequelize;
 const nodemailer = require("nodemailer");
+const uploadFile = require("../helpers/uploadFile");
 const sendMailMock = jest.fn();
 // const fileMock = jest.fn();
 
@@ -34,8 +36,8 @@ beforeAll((done) => {
           updatedAt: new Date(),
         },
         {
-          username: "admin1",
-          email: "admin1@mail.com",
+          username: "admin11",
+          email: "admin11@mail.com",
           password: hashPassword("123456"),
           address: "-",
           role: "Admin",
@@ -62,6 +64,7 @@ beforeAll((done) => {
               "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
             category: "pakaian",
             brand: "H&M",
+            statusBarter: false,
             yearOfPurchase: "2021",
             statusPost: "Review",
             createdAt: new Date(),
@@ -74,6 +77,7 @@ beforeAll((done) => {
               "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
             category: "pakaian",
             brand: "H&M",
+            statusBarter: false,
             yearOfPurchase: "2021",
             statusPost: "Review",
             createdAt: new Date(),
@@ -134,57 +138,58 @@ beforeAll((done) => {
     });
 });
 
-// afterAll((done) => {
-//   queryInterface
-//     .bulkDelete(
-//       "RoomBarters",
-//       {},
-//       {
-//         truncate: true,
-//         restartIdentity: true,
-//         cascade: true,
-//       }
-//     )
-//     .then(() => {
-//       return queryInterface.bulkDelete(
-//         "Images",
-//         {},
-//         {
-//           truncate: true,
-//           restartIdentity: true,
-//           cascade: true,
-//         }
-//       );
-//     })
-//     .then(() => {
-//       return queryInterface.bulkDelete(
-//         "Items",
-//         {},
-//         {
-//           truncate: true,
-//           restartIdentity: true,
-//           cascade: true,
-//         }
-//       );
-//     })
-//     .then(() => {
-//       return queryInterface.bulkDelete(
-//         "Users",
-//         {},
-//         {
-//           truncate: true,
-//           restartIdentity: true,
-//           cascade: true,
-//         }
-//       );
-//     })
-//     .then(() => {
-//       done();
-//     })
-//     .catch((err) => {
-//       done(err);
-//     });
-// });
+afterAll((done) => {
+  queryInterface
+    .bulkDelete(
+      "RoomBarters",
+      {},
+      {
+        truncate: true,
+        restartIdentity: true,
+        cascade: true,
+      }
+    )
+    .then(() => {
+      return queryInterface.bulkDelete(
+        "Images",
+        {},
+        {
+          truncate: true,
+          restartIdentity: true,
+          cascade: true,
+        }
+      );
+    })
+    .then(() => {
+      return queryInterface.bulkDelete(
+        "Items",
+        {},
+        {
+          truncate: true,
+          restartIdentity: true,
+          cascade: true,
+        }
+      );
+    })
+    .then(() => {
+      return queryInterface.bulkDelete(
+        "Users",
+        {},
+        {
+          truncate: true,
+          restartIdentity: true,
+          cascade: true,
+        }
+      );
+    })
+    .then(() => {
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
+});
+
 //GET ITEM
 describe("GET items", () => {
   describe("GET /users/items -  success test", () => {
@@ -313,24 +318,9 @@ describe("GET items", () => {
   });
 
   describe("GET /users/items/:id -  failed test", () => {
-    // it("should return an object with status 401 - input without access_token as headers", (done) => {
-    //   request(app)
-    //     .get("/users/items/1")
-    //     .then((res) => {
-    //       expect(res.status).toBe(401);
-    //       expect(res.body).toBeInstanceOf(Object);
-    //       expect(res.body).toHaveProperty("message", expect.any(String));
-    //       done();
-    //     })
-    //     .catch((err) => {
-    //       done(err);
-    //     });
-    // });
-
     it("should return an object with status 404 - item not found", (done) => {
       request(app)
         .get("/users/items/100")
-        // .set("access_token", access_token)
         .then((res) => {
           expect(res.status).toBe(404);
           expect(res.body).toBeInstanceOf(Object);
@@ -356,7 +346,6 @@ describe("GET items/homes", () => {
           done();
         })
         .catch((err) => {
-          console.log(err);
           done(err);
         });
     });
@@ -378,6 +367,12 @@ describe("POST items", () => {
       };
     });
   });
+
+  // describe("", () => {
+  //   it("should return an Array", (done) => {
+  //     expect(uploadFile("assets/JK5OICOiE54.jpg"));
+  //   });
+  // });
 
   describe("POST /users/items -  success test", () => {
     const newItem = {
@@ -521,57 +516,6 @@ describe("POST googleLogin", () => {
   });
 });
 
-//PATCH RoomBarter
-describe("PATCH RoomBarters", () => {
-  describe("PATCH room-barters/:id - success test", () => {
-    it("should return an object with status 200", (done) => {
-      request(app)
-        .patch("/users/room-barters/1")
-        .set("access_token", access_token)
-        .then((res) => {
-          expect(res.status).toBe(200);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
-    });
-  });
-
-  describe("PATCH /items/:id -  failed test", () => {
-    it("should return an object with status 401 - input without access_token as headers", (done) => {
-      request(app)
-        .patch("/users/room-barters/1")
-        .then((res) => {
-          expect(res.status).toBe(401);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
-    });
-
-    it("should return an object with status 404 - item not found", (done) => {
-      request(app)
-        .patch("/users/room-barters/100")
-        .set("access_token", access_token)
-        .then((res) => {
-          expect(res.status).toBe(404);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
-    });
-  });
-});
-
 //DELETE ITEM
 describe("DELETE items", () => {
   describe("DELETE users/items/:id - success test", () => {
@@ -594,7 +538,7 @@ describe("DELETE items", () => {
   describe("DELETE /items/:id -  failed test", () => {
     it("should return an object with status 401 - input without access_token as headers", (done) => {
       request(app)
-        .delete("/users/items/2")
+        .delete("/users/items/1")
         .then((res) => {
           expect(res.status).toBe(401);
           expect(res.body).toBeInstanceOf(Object);

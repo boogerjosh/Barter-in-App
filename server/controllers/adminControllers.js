@@ -41,7 +41,6 @@ class adminControllers {
       };
       res.status(200).send({ access_token: signToken(payload) });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -70,7 +69,6 @@ class adminControllers {
       await Item.update({ status }, { where: { id } });
       res.status(200).json({ message: "Item status successfully updated" });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

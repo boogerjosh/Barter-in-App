@@ -1,5 +1,5 @@
 const app = require("../app.js");
-const { Item } = require("../models");
+const { Item, RoomBarter } = require("../models");
 const { sequelize } = require("../models");
 const request = require("supertest");
 const { signToken } = require("../helpers/jwt.js");
@@ -14,8 +14,8 @@ beforeAll((done) => {
       "Users",
       [
         {
-          username: "admin",
-          email: "admin@mail.com",
+          username: "admin12",
+          email: "admin12@mail.com",
           password: hashPassword("123456"),
           address: "-",
           role: "Admin",
@@ -33,6 +33,27 @@ beforeAll((done) => {
         email: "admin@mail.com",
         role: "Admin",
       });
+      return queryInterface.bulkInsert(
+        "Items",
+        [
+          {
+            title: "test",
+            description:
+              "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+            category: "pakaian",
+            brand: "H&M",
+            statusBarter: false,
+            yearOfPurchase: "2021",
+            statusPost: "Review",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userId: 1,
+          },
+        ],
+        {}
+      );
+    })
+    .then(() => {
       done();
     })
     .catch((err) => {
@@ -52,6 +73,17 @@ afterAll((done) => {
       }
     )
     .then(() => {
+      return queryInterface.bulkDelete(
+        "Items",
+        {},
+        {
+          truncate: true,
+          restartIdentity: true,
+          cascade: true,
+        }
+      );
+    })
+    .then(() => {
       done();
     })
     .catch((err) => {
@@ -59,7 +91,7 @@ afterAll((done) => {
     });
 });
 
-describe("GET items", () => {
+describe("GET Error", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
@@ -121,6 +153,66 @@ describe("GET items", () => {
       jest.spyOn(Item, "findAll").mockRejectedValue("Error");
       request(app)
         .get("/users/items-barters")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(500);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /users/roomBarter -  failed test", () => {
+    it("should return an object with status 500", (done) => {
+      jest.spyOn(RoomBarter, "findAll").mockRejectedValue("Error");
+      request(app)
+        .get("/users/roomBarter")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(500);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /admins/items -  failed test", () => {
+    it("should return an object with status 500", (done) => {
+      jest.spyOn(Item, "findAll").mockRejectedValue("Error");
+      request(app)
+        .get("/admins/items")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(500);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+describe("GET Error", () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe("PATCH /admins/items/:id -  failed test", () => {
+    it("should return an object with status 500", (done) => {
+      jest.spyOn(Item, "update").mockRejectedValue("Error");
+      request(app)
+        .patch("/admins/items/1")
         .set("access_token", access_token)
         .then((res) => {
           expect(res.status).toBe(500);

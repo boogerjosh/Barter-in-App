@@ -13,7 +13,7 @@ jest.mock("cron");
 let access_token;
 const customerToken = signToken({
   id: 2,
-  email: "customer@mail.com",
+  email: "ustomer@customer.customer",
   role: "Customer",
 });
 
@@ -57,7 +57,7 @@ beforeAll(() => {
               "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
             brand: "H&M",
             yearOfPurchase: "2021",
-            dateExpired: "-",
+            statusBarter: false,
             statusPost: "Reviewed",
             userId: 1,
             createdAt: new Date(),
@@ -70,7 +70,7 @@ beforeAll(() => {
               "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
             brand: "H&M",
             yearOfPurchase: "2021",
-            dateExpired: "-",
+            statusBarter: false,
             statusPost: "Reviewed",
             userId: 1,
             createdAt: new Date(),
@@ -117,6 +117,7 @@ describe("Admin Route Test", () => {
           done(err);
         });
     });
+
     test("400 Error register - should not create duplicate email", (done) => {
       request(app)
         .post("/admins/register")

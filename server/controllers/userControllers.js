@@ -25,7 +25,6 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-      console.log(tokenServer)
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
@@ -43,16 +42,8 @@ class userControllers {
     try {
       const userId = req.userLogin.id;
       const { files } = req;
-      console.log(req.file.path, '====, ini files')
-      const {
-        title,
-        category,
-        description,
-        brand,
-        yearOfPurchase
-      } = req.body;
-      // console.log(req.body)
-      const createItems = await Item.create(
+      const { title, category, description, brand, yearOfPurchase } = req.body;
+      await Item.create(
         {
           title,
           category,
@@ -60,7 +51,7 @@ class userControllers {
           brand,
           yearOfPurchase,
           statusPost: "Reviewed",
-          statusBarter: 'Not bartered yet',
+          statusBarter: "Not bartered yet",
           userId,
         },
         { transaction: t }
@@ -85,27 +76,61 @@ class userControllers {
       //   })
       // );
 
-      const mappedArray = new Promise((resolve) => {
-        resolve(() => {
-          files.map((file) => {
-            return uploadFile(file).then((data) => {
-              let tags = [];
-              if (data.AITags) {
-                data.AITags.forEach((e) => {
-                  tags.push(e.name);
-                });
-              }
-              console.log(data);
-              let temp = {
-                imageUrl: data.url,
-                itemId: createItems.id,
-                tag: tags.join(", "),
-              };
-              return temp;
-            });
+      // const mappedArray = await Promise.all(
+      //   files.map((file) => {
+      //     let data = uploadFile(file);
+      //     console.log(data, "<<<<<<");
+      //     let tags = [];
+      //     if (data.AITags) {
+      //       data.AITags.forEach((e) => {
+      //         tags.push(e.name);
+      //       });
+      //     }
+      //     let temp = {
+      //       imageUrl: data.url,
+      //       itemId: createItems.id,
+      //       tag: tags.join(", "),
+      //     };
+      //     return temp;
+      //   })
+      // );
+
+      // const mappedArray = Promise.all(
+      //   files.map((file) => {
+      //     return uploadFile(file).then((data) => {
+      //       let tags = [];
+      //       if (data.AITags) {
+      //         data.AITags.forEach((e) => {
+      //           tags.push(e.name);
+      //         });
+      //       }
+      //       let temp = {
+      //         imageUrl: data.url,
+      //         itemId: createItems.id,
+      //         tag: tags.join(", "),
+      //       };
+      //       return temp;
+      //     });
+      //   })
+      // )
+      let mappedArray = [];
+      for (const file of files) {
+        let data = await uploadFile(file);
+        let tags = [];
+        if (data.AITags) {
+          data.AITags.forEach((e) => {
+            tags.push(e.name);
           });
-        });
-      });
+        }
+        let temp = {
+          imageUrl: data.url,
+          itemId: createItems.id,
+          tag: tags.join(", "),
+        };
+        console.log(data, ">>>>>");
+        mappedArray.push(temp);
+      }
+      console.log(mappedArray);
 
       await Image.bulkCreate(mappedArray, {
         returning: true,
@@ -115,7 +140,7 @@ class userControllers {
       await t.commit();
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       await t.rollback();
       next(error);
     }
@@ -123,10 +148,20 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
+      let { filterByTitle, filterByCategory } = req.query;
+      if (!filterByTitle) filterByTitle = "";
+      if (!filterByCategory) filterByCategory = "";
+
       let items = await Item.findAll({
         include: [Image],
         where: {
           statusPost: "Approve",
+          title: {
+            [Op.iLike]: `%${filterByTitle}%`,
+          },
+          category: {
+            [Op.iLike]: `%${filterByCategory}%`,
+          },
         },
       });
       res.status(200).json(items);
@@ -225,7 +260,6 @@ class userControllers {
   static async postRoomBarter(req, res, next) {
     try {
       const UserId = req.userLogin.id;
-      console.log(req.body)
       const { user2, item1, item2 } = req.body;
       const batch = {
         user1: UserId,
@@ -233,14 +267,14 @@ class userControllers {
         item1,
         item2,
         status1: false,
-        status2: false
+        status2: false,
       };
       const response = await RoomBarter.create(batch);
       res.status(201).json(response);
-     } catch (error) {
-       next(error);
+    } catch (error) {
+      next(error);
     }
-  }  
+  }
 
   static async patchRoomBarter(req, res, next) {
     try {
@@ -256,19 +290,28 @@ class userControllers {
       }
 
       if (roomBarter.user1 === userId) {
-        await RoomBarter.update({ status1: true });
+        await RoomBarter.update({ status1: true }, { where: { id } });
       } else if (roomBarter.user2 === userId) {
-        await RoomBarter.update({ status2: true });
+        await RoomBarter.update({ status2: true }, { where: { id } });
       }
 
-      if (roomBarter.status1 && roomBarter.status2) {
-        await RoomBarter.destroy({ where: { id } });
-        await Item.destroy({ where: { id: roomBarter.item1 } });
-        await Item.destroy({ where: { id: roomBarter.item2 } });
-        console.log(">>>>");
+      let newRoomBarter = await RoomBarter.findByPk(+id, {
+        include: [Item],
+      });
+
+      if (newRoomBarter.status1 && newRoomBarter.status2) {
+        await Item.update(
+          { statusBarter: true },
+          { where: { id: roomBarter.item1 } }
+        );
+
+        await Item.update(
+          { statusBarter: true },
+          { where: { id: roomBarter.item2 } }
+        );
+
         res.status(200).json({ message: "Item terbarter" });
       } else {
-        console.log("<<<<,");
         res.status(200).json({ message: "Wait for another user to confirm" });
       }
     } catch (error) {
@@ -277,6 +320,19 @@ class userControllers {
     }
   }
 
+  static async getRoomBarter(req, res, next) {
+    try {
+      const UserId = req.userLogin.id;
+      const response1 = await RoomBarter.findAll({
+        where: {
+          [Op.or]: [{ user1: UserId }, { user2: UserId }],
+        },
+      });
+      res.status(200).json(response1);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   //   static async googleLogin(req, res, next) {
   //     try {
@@ -342,21 +398,6 @@ class userControllers {
   //     next(error);
   //   }
   // }
-
-  static async getRoomBarter(req, res, next) {
-    try {
-      const UserId = req.userLogin.id;
-      const response1 = await RoomBarter.findAll({
-        where: {
-           [Op.or]: [{user1: UserId}, {user2: UserId}]
-        }
-      })
-      res.status(200).json(response1)
-    } catch (error) {
-      next(error);
-    }
-  }
-  
 }
 
 module.exports = userControllers;
