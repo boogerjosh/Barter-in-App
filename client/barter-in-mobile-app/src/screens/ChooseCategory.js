@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as ImagePicker from 'expo-image-picker';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { StackActions } from '@react-navigation/native';
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
@@ -72,6 +73,7 @@ const ChooseCategory = () => {
         allowsEditing: true,
       });
       console.log(response, 'ini image')
+      const base64 = await FileSystem.readAsStringAsync(response.uri, { encoding: 'base64' });
 
       if (!response.cancelled) {
         setProfileImage(response.uri);
@@ -140,6 +142,7 @@ const ChooseCategory = () => {
         // description: inputs.description,
         // brand: inputs.brand,
         // yearOfPurchase: inputs.yearOfPurchase,
+        name: '',
         uri: Platform.OS === 'android' ? adsImage : adsImage.replace('file://', ''),
         type: 'image/jpg'
       });
