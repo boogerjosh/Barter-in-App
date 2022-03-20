@@ -39,10 +39,11 @@ const Login = () => {
           const { email, name, photoUrl } = user
           axios({
             method: 'post',
-            url: 'https://b117-2001-448a-1061-10b7-4c0-ae07-68ea-205f.ngrok.io/users/googleLogin',
+            url: 'https://9eac-125-160-235-225.ngrok.io/users/googleLogin',
             data: user
           })
             .then(data => {
+              console.log(data.data)
               AsyncStorage.setItem('access_token', data.data.access_token)
               AsyncStorage.setItem('id', data.data.id)
               AsyncStorage.setItem('username', data.data.username)

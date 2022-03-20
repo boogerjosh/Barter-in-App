@@ -16,21 +16,43 @@ app.use(express.json());
 app.use(router);
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
 
-// const messageArray = [];
-// io.on("connection", (socket) => {
-//   console.log(socket.id);
-//   socket.on("chatMessage", (message) => {
-//     messageArray.push(message);
-//     console.log(messageArray);
-//     io.emit("chatMessage", messageArray);
-//   });
-// });
+const messageArray = [];
+io.on("connection", (socket) => {
+  console.log(socket.id);
+  socket.on("chatMessage", (message) => {
+    messageArray.push(message);
+    console.log(messageArray)
+    io.emit("getMessage", messageArray);
+  });
+});
 
 module.exports = app;
-// server.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`);
-// });
+server.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
+
+// const dummyDataArrayMessage = 
+// [
+//   {
+//     message: 'Dari Glenn',
+//     senderId: '1',
+//     receiverId: '2',
+//     username: 'Leonardus Glenn'
+//   },
+//   {
+//     message: 'Dari YangKeluar',
+//     senderId: '2',
+//     receiverId: '1',
+//     username: 'YangKeluar'
+//   },
+//   {
+//     message: 'Dari YangGaKeluar',
+//     senderId: '3',
+//     receiverId: '1',
+//     username: 'YangGaKeluar'
+//   }
+// ]
