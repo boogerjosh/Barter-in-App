@@ -36,6 +36,8 @@ class userControllers {
   }
 
   static async postItems(req, res, next) {
+    console.log(req.files)
+    console.log(req.body)
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;

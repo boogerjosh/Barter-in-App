@@ -35,25 +35,21 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarShowLabel: false,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-
-            if (route.name === "HomeRouter") {
+            if (route.name === "EXPLORE") {
               iconName = focused ? "home-sharp" : "home-outline";
-            } else if (route.name === "Profile") {
+            } else if (route.name === "MY ACCOUNT") {
               iconName = focused ? "person" : "person-outline";
-            } else if (route.name === "PostItemRouter") {
+            } else if (route.name === "ADD ADS") {
               iconName = focused
                 ? "md-add-circle-sharp"
                 : "md-add-circle-outline";
-            } else if (route.name === "MyItem") {
+            } else if (route.name === "MY ADS") {
               iconName = focused ? "archive-sharp" : "archive-outline";
-            } else if (route.name === "BarterRouter") {
+            } else if (route.name === "BARTER") {
               iconName = focused ? "basket-sharp" : "basket-outline";
-            } else if (route.name === "InputItem") {
-              iconName = focused ? "add-circle" : "add-circle-outline";
-            }
+            } 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: COLORS.PRIMARY_LIGHT,
@@ -63,24 +59,22 @@ export default function App() {
         })}
       >
         <Tab.Screen
-          name="HomeRouter"
+          name="EXPLORE"
           component={HomeRouter}
           options={{ headerShown: false }}
         />
-        <Tab.Screen name="MyItem" component={MyItemScreen} />
-        <Tab.Screen name="InputItem" component={InputItem} />
+        <Tab.Screen name="MY ADS" component={MyItemScreen} />
         <Tab.Screen
-          name="PostItemRouter"
+          name="ADD ADS"
           component={PostItemRouter}
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="BarterRouter"
+          name="BARTER"
           component={BarterRouter}
           options={{ headerShown: false }}
         />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="ChatRoomScreen" component={ChatRoomScreen} />
+        <Tab.Screen name="MY ACCOUNT" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   ) : (

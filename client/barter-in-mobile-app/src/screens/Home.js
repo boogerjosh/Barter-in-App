@@ -9,9 +9,7 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  TextInput,
   Button,
-  ActivityIndicator
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -23,57 +21,11 @@ import categories from "../../data/categories";
 import Highlight from "../components/Highlight";
 import Categories from "../components/Categories";
 import ItemSpace from "../components/ItemSpace";
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import axios from 'axios';
-import * as Google from 'expo-google-app-auth';
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 3;
 const HomeScreen = () => {
-  // console.log(categories);
   const navigation = useNavigation();
-  const [googleSubmitting, setGoogleSubmitting] = useState(false)
-  const handleGoogleSignIn = () => {
-    setGoogleSubmitting(true)
-    const config = {
-      iosClientId: `844458367499-o26lt12vj3hmr4l995o11q3dosv0meav.apps.googleusercontent.com`,
-      androidClientId: `844458367499-c1pqe2nh4on96u7go5oc5r0bum5c05dv.apps.googleusercontent.com`,
-      scopes: ['profile', 'email']
-    };
-    Google
-      .logInAsync(config)
-      .then((result) => {
-        const { type, user } = result;
-        console.log(user)
-        if (type === 'success') {
-          const { email, name, photoUrl } = user
-          axios({
-            method: 'post',
-            url: 'https://2c97-2001-448a-1061-10b7-645d-3da0-3efa-9e25.ngrok.io/users/googleLogin',
-            data: user
-          })
-            .then(data => {
-              AsyncStorage.setItem('access_token', data.data.access_token)
-              AsyncStorage.setItem('id', data.data.id)
-              AsyncStorage.setItem('username', data.data.username)
-            })
-            .catch(err => console.log('GAGAL MASUK SERVER'))
-
-          console.log('Google signin successfull', 'SUCCESS');
-          setTimeout(() => navigation.navigate('MyItem', { 
-            email, name, photoUrl 
-          }), 1000);
-        } else {
-           console.log('Google signin was canceled');
-        }
-          setGoogleSubmitting(false);
-       })
-      .catch((err) => {
-        console.log(err);
-        console.log('An error occurred. Check your network and try again');
-        setGoogleSubmitting(false);
-      })
-  }
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -200,24 +152,6 @@ const HomeScreen = () => {
         >
           <Text style={styles.buttonText}>List Item</Text>
         </TouchableOpacity>
-        {!googleSubmitting && (
-          <Button
-            google={true}
-            style={styles.button}
-            onPress={handleGoogleSignIn}
-            title="Google Sign In"
-            color="#841584"
-          />
-        )}
-        {googleSubmitting && (
-          <TouchableOpacity
-          google={true}
-          style={styles.button}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.buttonText}>We dit it</Text>
-        </TouchableOpacity>
-        )}
         
       </View>
     </ScrollView>

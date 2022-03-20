@@ -9,7 +9,9 @@ const Stack = createNativeStackNavigator();
 const HomeRouter = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ChooseCategory" component={ChooseCategoryScreen} />
+      <Stack.Screen name="ChooseCategory" component={ChooseCategoryScreen} options={{
+        headerShown: false
+      }} />
       <Stack.Screen name="InputItem" component={InputItemScreen} />
     </Stack.Navigator>
   );
