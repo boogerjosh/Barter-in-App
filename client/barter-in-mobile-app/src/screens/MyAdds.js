@@ -37,21 +37,6 @@ const MyAddsScreen = () => {
     } catch (error) {
       console.log(error);
     }
-    // .then((response) => {
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! Status: ${response.status}`);
-    //   }
-    //   return response.json();
-    // })
-    // .then((data) => {
-    //   setItems(data);
-    //   console.log("🚀 ~ file: MyAdds.js ~ line 38 ~ .then ~ data", data);
-
-    //   // console.log("🚀 ~ file: Home.js ~ line 33 ~ .then ~ data", data);
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    // });
   };
 
   useEffect(() => {
