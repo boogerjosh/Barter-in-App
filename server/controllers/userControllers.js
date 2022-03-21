@@ -4,11 +4,18 @@ const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, RoomBarter, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
+const Redis = require("ioredis");
+const redis = new Redis({
+  port: 10199,
+  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
+  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+});
 
 class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
+      console.log(payload)
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -25,6 +32,7 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
+
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
@@ -36,14 +44,13 @@ class userControllers {
   }
 
   static async postItems(req, res, next) {
-    console.log(req.files)
-    console.log(req.body)
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
       console.log(userId)
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
+
       const createItem = await Item.create(
         {
           title,
@@ -58,24 +65,24 @@ class userControllers {
         { transaction: t }
       );
 
-      // const mappedArray = await Promise.all(
-      //   files.map((file) => {
-      //     return uploadFile(file).then((data) => {
-      //       let tags = [];
-      //       if (data.AITags) {
-      //         data.AITags.forEach((e) => {
-      //           tags.push(e.name);
-      //         });
-      //       }
-      //       let temp = {
-      //         imageUrl: data.url,
-      //         itemId: createItems.id,
-      //         tag: tags.join(", "),
-      //       };
-      //       return temp;
-      //     });
-      //   })
-      // );
+      const mappedArray = await Promise.all(
+        files.map((file) => {
+          return uploadFile(file).then((data) => {
+            let tags = [];
+            if (data.AITags) {
+              data.AITags.forEach((e) => {
+                tags.push(e.name);
+              });
+            }
+            let temp = {
+              imageUrl: data.url,
+              itemId: createItems.id,
+              tag: tags.join(", "),
+            };
+            return temp;
+          });
+        })
+      );
 
       // const mappedArray = await Promise.all(
       //   files.map((file) => {
@@ -114,6 +121,7 @@ class userControllers {
       //     });
       //   })
       // )
+
       let mappedArray = [];
       for (const file of files) {
         let data = await uploadFile(file);
@@ -139,6 +147,7 @@ class userControllers {
       });
       await sendEmail({ email: req.userLogin.email });
       await t.commit();
+      await redis.del('items')
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
       console.log(error);
@@ -149,6 +158,10 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
+
+
+      const cache = await redis.get('items')
+      if (cache) res.status(200).json(JSON.parse(cache));
       let { filterByTitle, filterByCategory } = req.query;
       if (!filterByTitle) filterByTitle = "";
       if (!filterByCategory) filterByCategory = "";
@@ -165,8 +178,14 @@ class userControllers {
           },
         },
       });
+      await redis.set('items', JSON.stringify(items))
+
       res.status(200).json(items);
+
+
+
     } catch (error) {
+      console.log("?????");
       next(error);
     }
   }
@@ -200,6 +219,7 @@ class userControllers {
         throw new Error("NOT_FOUND");
       }
       await Item.destroy({ where: { id } });
+      await redis.del('items')
       res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
       next(error);

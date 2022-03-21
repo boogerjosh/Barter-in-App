@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,71 +7,117 @@ import {
   FlatList,
   TouchableOpacity,
   Dimensions,
+  SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
+import MuBarterRoomComp from "../components/MyBarterRoomComp";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+import ItemSpace from "../components/ItemSpace";
+import axios from "axios";
 
 const BarterRoomScreen = () => {
   const navigation = useNavigation();
+  const [roomBarters, setRoomBarters] = useState([]);
+  const getRoomBarters = async () => {
+    console.log("masuk RoomBarter");
+    try {
+      const data = await axios.get(
+        "https://33f9-110-138-93-44.ngrok.io/myRoomBarters"
+      );
+
+      setRoomBarters(data.data);
+      // console.log(
+      //   "🚀 ~ file: BarterRoom.js ~ line 33 ~ getRoomBarters ~ data.data",
+      //   data.data
+      // );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getRoomBarters();
+  }, []);
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Text>Ini Barter Room Screen</Text>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.header}>
+        <View style={styles.headerWrapper}>
+          <View style={styles.headerDetails}>
+            <View>
+              <Text style={styles.nameText}>My Room Barter</Text>
+            </View>
+          </View>
+          <View>
+            {/* <Image
+              source={require("../../assets/person.jpg")}
+              style={styles.headerImage}
+            /> */}
+          </View>
+        </View>
+      </SafeAreaView>
+      <View>
+        <FlatList
+          contentContainerStyle={styles.listItem}
+          data={roomBarters}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={() => <ItemSpace width={10} />}
+          ListHeaderComponent={() => <ItemSpace width={10} />}
+          ListFooterComponent={() => <ItemSpace width={10} />}
+          renderItem={({ item }) => <MuBarterRoomComp item={item} />}
+          // numColumns={numColumns}
+        />
       </View>
-      <View style={styles.containerButton}>
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={() => navigation.push("Home", {})}
-        >
-          <Text style={styles.buttonText}>Confirm Barter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={() => navigation.push("ChatRoom", {})}
-        >
-          <Text style={styles.buttonText}>Chat Owner</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
     backgroundColor: "#fff",
+    // alignItems: "center",
+    // justifyContent: "center",
+  },
+  listItem: {
+    padding: 10,
+    paddingTop: StatusBar.currentHeight || 42,
+  },
+  header: {
+    backgroundColor: COLORS.BASIC_BACKGROUND,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
     alignItems: "center",
     justifyContent: "center",
   },
-  containerButton: {
-    flex: 1,
+  headerWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "#fff",
+    alignItems: "center",
+    padding: 20,
+    paddingBottom: 30,
+  },
+  headerImage: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    // borderColor: COLORS.WHITE,
+    borderWidth: 2,
+  },
+  headerDetails: {
+    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  button: {
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    backgroundColor: COLORS.PRIMARY,
-    paddingVertical: 8,
-    elevation: 3,
-    marginVertical: 2,
-    width: setWidth(25),
+  iconWrapper: {
+    marginLeft: 10,
   },
-  buttonText: {
-    fontSize: 13,
-    color: COLORS.DARK_GREY,
+  nameText: {
+    fontSize: 20,
+    color: COLORS.EXTRA_LIGHT_GRAY,
     fontFamily: FONTS.BOLD,
   },
 });

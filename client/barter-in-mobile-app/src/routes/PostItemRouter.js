@@ -6,15 +6,19 @@ import InputItemScreen from "../screens/InputItem";
 
 const Stack = createNativeStackNavigator();
 
-const HomeRouter = () => {
+const PostItemRouter = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ChooseCategory" component={ChooseCategoryScreen} options={{
-        headerShown: false
-      }} />
+      <Stack.Screen
+        name="ChooseCategory"
+        component={ChooseCategoryScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="InputItem" component={InputItemScreen} />
     </Stack.Navigator>
   );
 };
 
-export default HomeRouter;
+export default PostItemRouter;
