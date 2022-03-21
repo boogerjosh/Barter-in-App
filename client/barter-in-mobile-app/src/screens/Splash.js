@@ -1,67 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   Dimensions,
   Image,
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Google from "expo-google-app-auth";
-import axios from "axios";
 const windowHeight = Dimensions.get("window").height;
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-const Login = () => {
-  const [googleSubmitting, setGoogleSubmitting] = useState(false);
-  const navigation = useNavigation();
-  const handleGoogleSignIn = () => {
-    setGoogleSubmitting(true);
-    const config = {
-      iosClientId: `844458367499-o26lt12vj3hmr4l995o11q3dosv0meav.apps.googleusercontent.com`,
-      androidClientId: `844458367499-c1pqe2nh4on96u7go5oc5r0bum5c05dv.apps.googleusercontent.com`,
-      scopes: ["profile", "email"],
-    };
-    Google.logInAsync(config)
-      .then((result) => {
-        const { type, user } = result;
-        console.log(user);
-        if (type === "success") {
-          const { email, name, photoUrl } = user;
-          axios({
-            method: "post",
-            url: "https://9eac-125-160-235-225.ngrok.io/users/googleLogin",
-            data: user,
-          })
-            .then((data) => {
-              console.log(data.data);
-              AsyncStorage.setItem("access_token", data.data.access_token);
-              AsyncStorage.setItem("id", data.data.id);
-              AsyncStorage.setItem("username", data.data.username);
-            })
-            .catch((err) => console.log("GAGAL MASUK SERVER"));
+const Splash = ({ navigation }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.replace("MainApp");
+    }, 3000);
+  }, [navigation]);
 
-          console.log("Google signin successfull", "SUCCESS");
-          setTimeout(() => navigation.navigate("HomeRouter"), 1000);
-        } else {
-          console.log("Google signin was canceled");
-        }
-        setGoogleSubmitting(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("An error occurred. Check your network and try again");
-        setGoogleSubmitting(false);
-      });
-  };
   return (
     <View>
       <StatusBar
@@ -73,43 +32,25 @@ const Login = () => {
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.welcomeText}>LOGIN</Text>
+              <Text style={styles.welcomeText}>WELCOME</Text>
               <Text style={styles.toText}>to</Text>
             </View>
           </View>
           <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Image
-              source={require("../../assets/images/Barterin-logos_white.png")}
+              source={require("../../assets/images/splash3.png")}
               style={styles.headerImage}
             />
             <Text style={styles.communityText}>
               The trusted community of barterers.
             </Text>
           </View>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            activeOpacity={0.8}
-            google={true}
-            onPress={handleGoogleSignIn}
-          >
-            <View style={styles.iconWrapper}>
-              <Ionicons
-                name="logo-google"
-                style={styles.icon}
-                size={24}
-                color="white"
-              />
-            </View>
-            <View style={styles.btnTxtWrapper}>
-              <Text style={styles.buttonText}>Continue with Google</Text>
-            </View>
-          </TouchableOpacity>
-          <Text style={styles.acceptText}>
-            If you continue, you are accepting
+          {/* <Text style={styles.acceptText}>
+            Barter Anywhere 
           </Text>
           <Text style={styles.termText}>
             Barter.In Terms and Conditions and Privacy Policy
-          </Text>
+          </Text> */}
         </View>
       </SafeAreaView>
     </View>
@@ -153,12 +94,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
-    height: setWidth(120),
-    paddingBottom: 200,
+    height: setWidth(80),
+    paddingBottom: 340,
   },
   headerImage: {
-    height: 100,
-    width: 240,
+    height: 240,
+    width: 280,
   },
   headerDetails: {
     alignItems: "center",
@@ -170,7 +111,7 @@ const styles = StyleSheet.create({
   welcomeText: {
     paddingTop: 70,
     fontSize: 46,
-    color: "white",
+    color: COLORS.EXTRA_LIGHT_GRAY,
     fontFamily: FONTS.BOLD,
   },
   toText: {
@@ -181,9 +122,10 @@ const styles = StyleSheet.create({
   },
   communityText: {
     marginTop: 10,
-    fontSize: 17,
+    fontSize: 20,
     marginBottom: 35,
     color: COLORS.EXTRA_LIGHT_GRAY,
+    fontFamily: FONTS.BOLD,
     textAlign: "center",
   },
   acceptText: {
@@ -208,4 +150,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Splash;

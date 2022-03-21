@@ -5,31 +5,15 @@ import {
   View,
   ScrollView,
   SafeAreaView,
-  Keyboard,
-  Alert,
   Dimensions,
-  TouchableOpacity,
-  Image,
+  FlatList,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import * as ImagePicker from "expo-image-picker";
-import { launchImageLibrary } from "react-native-image-picker";
-
-import * as FileSystem from "expo-file-system";
-import { StackActions } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
-import Input from "../constants/Input";
-import TextInputDesc from "../constants/TextInputDesc";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Button from "../constants/Button";
-import Loader from "../constants/Loader";
-import axios from "axios";
 
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-
 
 import categoryAdd from "../../data/categoryAdd";
 import CategoryInputCard from "../components/CategoryInputCard";
