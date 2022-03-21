@@ -30,7 +30,6 @@ const MainApp = () => {
     Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
   });
   return fontsLoaded ? (
-    // <NavigationContainer>
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -76,14 +75,13 @@ const MainApp = () => {
         component={BarterRouter}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="MY ACCOUNT" component={ProfileScreen} />
+      <Tab.Screen
+        name="MY ACCOUNT"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   ) : (
-    // </NavigationContainer>
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    //   <StatusBar style="auto" />
-    // </View>
     <AppLoading />
   );
 };

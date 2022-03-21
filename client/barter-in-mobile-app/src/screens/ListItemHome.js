@@ -3,14 +3,11 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   FlatList,
-  TouchableOpacity,
   TextInput,
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import ItemSpace from "../components/ItemSpace";
@@ -18,7 +15,7 @@ import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Items from "../components/Items";
 import items from "../../data/items";
-const { height, width } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 2;
 const ListItemHomeScreen = () => {
@@ -28,11 +25,7 @@ const ListItemHomeScreen = () => {
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-            <View>
               <Text style={styles.nameText}>Category Name</Text>
-            </View>
-          </View>
-          <View>
           </View>
         </View>
       </SafeAreaView>

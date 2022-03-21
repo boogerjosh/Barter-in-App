@@ -399,7 +399,7 @@ const DetailScreen = () => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.navigate("Detail", { id: data.id })}
+            onPress={() => navigation.navigate("ChatRoom")}
           >
             <Text
               style={{
