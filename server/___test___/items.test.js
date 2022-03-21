@@ -7,10 +7,10 @@ const { hashPassword } = require("../helpers/bcrypt");
 
 const { queryInterface } = sequelize;
 const nodemailer = require("nodemailer");
-const uploadFile = require("../helpers/uploadFile");
 const sendMailMock = jest.fn();
-// const fileMock = jest.fn();
 
+jest.mock("../helpers/uploadFile");
+const uploadFile = require("../helpers/uploadFile");
 jest.setTimeout(2000);
 jest.mock("imagekit");
 jest.mock("nodemailer");
@@ -355,36 +355,13 @@ describe("GET items/homes", () => {
 // //POST ITEMS
 describe("POST items", () => {
   beforeAll(() => {
-    ImageKit.mockImplementation(() => {
-      return {
-        upload: () => {
-          return new Promise((resolve) => {
-            resolve({
-              url: "fake-image.png",
-            });
-          });
-        },
-      };
+    uploadFile.mockResolvedValue({
+      url: "fake-image.jpg",
+      AITags: ["fake-tag", "fake-tag", "fake-tag"],
     });
   });
 
-  // describe("", () => {
-  //   it("should return an Array", (done) => {
-  //     expect(uploadFile("assets/JK5OICOiE54.jpg"));
-  //   });
-  // });
-
   describe("POST /users/items -  success test", () => {
-    const newItem = {
-      title: "test post",
-      category: "pakaian",
-      description:
-        "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
-      brand: "Supreme",
-      yearOfPurchase: "2021",
-      usderI: 1,
-    };
-
     it("should return an object with status 201", (done) => {
       request(app)
         .post("/users/items")

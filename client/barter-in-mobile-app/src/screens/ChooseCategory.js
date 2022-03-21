@@ -14,6 +14,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import * as ImagePicker from "expo-image-picker";
 import { launchImageLibrary } from "react-native-image-picker";
+
 import * as FileSystem from "expo-file-system";
 import { StackActions } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
@@ -28,6 +29,8 @@ import axios from "axios";
 
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+
+
 import categoryAdd from "../../data/categoryAdd";
 import CategoryInputCard from "../components/CategoryInputCard";
 import ItemSpace from "../components/ItemSpace";
