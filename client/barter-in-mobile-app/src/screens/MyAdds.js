@@ -11,27 +11,27 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
-import MuBarterRoomComp from "../components/MyBarterRoomComp";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
-
-const BarterRoomScreen = () => {
+// const numColumns = 1;
+const MyAddsScreen = () => {
   const navigation = useNavigation();
-  const [roomBarters, setRoomBarters] = useState([]);
-  const getRoomBarters = async () => {
-    console.log("masuk RoomBarter");
-    try {
-      const data = await axios.get(
-        "https://40eb-110-138-93-44.ngrok.io/myRoomBarters"
-      );
+  const [items, setItems] = useState([]);
+  // console.log("🚀 ~ file: MyAdds.js ~ line 26 ~ MyAddsScreen ~ items", items);
 
-      setRoomBarters(data.data);
+  const getItems = async () => {
+    console.log("masuk");
+    try {
+      const data = await axios.get("https://40eb-110-138-93-44.ngrok.io/items");
+      // console.log("🚀 ~ file: MyAdds.js ~ line 31 ~ getItems ~ data", data);
+      setItems(data.data);
       // console.log(
-      //   "🚀 ~ file: BarterRoom.js ~ line 33 ~ getRoomBarters ~ data.data",
+      //   "🚀 ~ file: MyAdds.js ~ line 33 ~ getItems ~ data",
       //   data.data
       // );
     } catch (error) {
@@ -40,15 +40,16 @@ const BarterRoomScreen = () => {
   };
 
   useEffect(() => {
-    getRoomBarters();
+    getItems();
   }, []);
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.nameText}>My Room Barter</Text>
+              <Text style={styles.nameText}>My Ads</Text>
             </View>
           </View>
           <View>
@@ -62,12 +63,12 @@ const BarterRoomScreen = () => {
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
-          data={roomBarters}
+          data={items}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
-          renderItem={({ item }) => <MuBarterRoomComp item={item} />}
+          renderItem={({ item }) => <MyAddsComp item={item} />}
           // numColumns={numColumns}
         />
       </View>
@@ -122,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BarterRoomScreen;
+export default MyAddsScreen;

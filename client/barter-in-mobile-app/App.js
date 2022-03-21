@@ -11,11 +11,11 @@ import HomeRouter from "./src/routes/HomeRouter";
 import InputItem from "./src/screens/InputItem";
 import BarterRouter from "./src/routes/BarterRouter";
 import ProfileScreen from "./src/screens/Profile";
-import MyItemScreen from "./src/screens/MyItem";
+import MyAddsRouter from "./src/routes/MyAddsRouter";
+import MyItemScreen from "./src/screens/MyAdds";
 import BarterRoomScreen from "./src/screens/BarterRoom";
 import PostItemRouter from "./src/routes/PostItem";
 import ChatRoomScreen from "./src/screens/ChatRoom";
-
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +49,7 @@ export default function App() {
               iconName = focused ? "archive-sharp" : "archive-outline";
             } else if (route.name === "BARTER") {
               iconName = focused ? "basket-sharp" : "basket-outline";
-            } 
+            }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: COLORS.PRIMARY_LIGHT,
@@ -63,7 +63,11 @@ export default function App() {
           component={HomeRouter}
           options={{ headerShown: false }}
         />
-        <Tab.Screen name="MY ADS" component={MyItemScreen} />
+        <Tab.Screen
+          name="MY ADS"
+          component={MyAddsRouter}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen
           name="ADD ADS"
           component={PostItemRouter}
