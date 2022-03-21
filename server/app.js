@@ -14,22 +14,22 @@ app.use(express.json());
 app.use(router);
 app.use(errorHandler);
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`);
-// });
+
 
 // const messageArray = [];
 // io.on("connection", (socket) => {
 //   console.log(socket.id);
 //   socket.on("chatMessage", (message) => {
 //     messageArray.push(message);
-//     console.log(messageArray);
-//     io.emit("chatMessage", messageArray);
+//     console.log(messageArray)
+//     io.emit("getMessage", messageArray);
 //   });
 // });
+
 
 // server.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`);
 // });
 // exports.server = http.listen(port);
 module.exports = app;
+

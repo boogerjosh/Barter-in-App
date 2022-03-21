@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Image
+  Image,
 } from "react-native";
 import { io } from "socket.io-client";
-socket = io("http://33d6-125-160-235-225.ngrok.io");
+socket = io("https://9eac-125-160-235-225.ngrok.io");
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
@@ -19,39 +19,38 @@ import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const messageArray = [];
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+socket.on("connect", () => {
+  console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+});
 
 const ChatRoomScreen = () => {
   const navigation = useNavigation();
   const [message, setMessage] = useState("");
   const [messageData, setMessageData] = useState("");
-  const [senderId, setSenderId] = useState('')
-  const [username, setUsername] = useState('')
-  const [receiverId, setReceiverId] = useState('1000')
+  const [senderId, setSenderId] = useState("");
+  const [username, setUsername] = useState("");
+  const [receiverId, setReceiverId] = useState("2");
 
   useEffect(async () => {
-    socket.on("connect", () => {
-      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-    });
-    setUsername(await AsyncStorage.getItem('username'))
-    setSenderId(await AsyncStorage.getItem('id'))
-  }, []);
+    setUsername(await AsyncStorage.getItem("username"));
+    setSenderId(await AsyncStorage.getItem("id"));
+  }, [username, senderId]);
 
   useEffect(() => {
-    socket.on("chatMessage", (message) => {
+    socket.on("getMessage", (message) => {
       setMessageData(message);
     });
   }, [messageData]);
 
   function submitChatMessage(text, eventCount, target) {
-    socket.emit("chatMessage", {message, senderId, receiverId, username});
+    socket.emit("chatMessage", { message, senderId, receiverId, username });
     setMessageData(messageData);
     setMessage("");
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-
       <View style={styles.receiverView}>
         <Image
           style={styles.receiverImage}
@@ -63,9 +62,16 @@ const ChatRoomScreen = () => {
       </View>
       <ScrollView style={styles.scrollView}>
         {messageData
-          ? messageData.map((e, i) => <Text style={styles.messageText} key={i}>{e.message}</Text>)
+          ? messageData.map((e, i) =>
+              e.senderId === senderId ? (
+                <Text style={styles.messageTextSender} key={i}>
+                  {e.username}: {e.message}
+                </Text>
+              ) : e.receiverId === senderId &&  receiverId === e.senderId?
+                <Text style={styles.messageText} key={i}>{e.receiverId}:{e.message}</Text>
+                : null
+            )
           : null}
-          <Text style={styles.messageTextSender}>From Right</Text>
       </ScrollView>
       <TextInput
         keyboardShouldPersistTaps="always"
@@ -130,23 +136,23 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   messageText: {
-    backgroundColor: 'green',
-    alignSelf:'flex-start',
+    backgroundColor: "green",
+    alignSelf: "flex-start",
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginLeft: 10,
     margin: 2,
-    borderRadius: 10
+    borderRadius: 10,
   },
   messageTextSender: {
-    backgroundColor: '#92a8d1',
-    alignSelf:'flex-end',
+    backgroundColor: "#92a8d1",
+    alignSelf: "flex-end",
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginRight: 10,
     margin: 2,
-    borderRadius: 10
-  }
+    borderRadius: 10,
+  },
 });
 
 export default ChatRoomScreen;
