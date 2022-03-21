@@ -7,8 +7,14 @@ const redis = new Redis({
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
 });
+const {
+  GraphQLUpload,
+  graphqlUploadExpress, // A Koa implementation is also exported.
+} = require('graphql-upload');
+const { finished } = require('stream/promises');
 
 const typeDefs = gql`
+scalar Upload
   type Item {
     id: ID
     title: String
@@ -35,6 +41,11 @@ const typeDefs = gql`
     status1: Boolean
     status2: Boolean
   }
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
   type Query {
     getItems: [Item]
     getItemsHome: [Item]
@@ -52,10 +63,13 @@ const typeDefs = gql`
       item2: ID
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
+    singleUpload(file: Upload!): File
   }
 `;
 
 const resolvers = {
+  Upload: GraphQLUpload,
+
   Query: {
     getItems: async () => {
       try {
@@ -122,6 +136,13 @@ const resolvers = {
     },
   },
   Mutation: {
+    singleUpload: async (parent, { args, file }) => {
+      console.log(args)
+      const { createReadStream, filename, mimetype, encoding } = await file;
+      const base64 = createReadStream({ encoding: 'base64' });
+      // console.log(base64)
+      return { filename, mimetype, encoding };
+    },
     deleteItem: async (_, args) => {
       try {
         const { data } = await axios({
