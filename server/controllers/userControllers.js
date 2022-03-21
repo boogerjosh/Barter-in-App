@@ -25,6 +25,7 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
+
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
@@ -36,14 +37,12 @@ class userControllers {
   }
 
   static async postItems(req, res, next) {
-    console.log(req.files)
-    console.log(req.body)
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
-      await Item.create(
+      const createItems = await Item.create(
         {
           title,
           category,
@@ -57,24 +56,24 @@ class userControllers {
         { transaction: t }
       );
 
-      // const mappedArray = await Promise.all(
-      //   files.map((file) => {
-      //     return uploadFile(file).then((data) => {
-      //       let tags = [];
-      //       if (data.AITags) {
-      //         data.AITags.forEach((e) => {
-      //           tags.push(e.name);
-      //         });
-      //       }
-      //       let temp = {
-      //         imageUrl: data.url,
-      //         itemId: createItems.id,
-      //         tag: tags.join(", "),
-      //       };
-      //       return temp;
-      //     });
-      //   })
-      // );
+      const mappedArray = await Promise.all(
+        files.map((file) => {
+          return uploadFile(file).then((data) => {
+            let tags = [];
+            if (data.AITags) {
+              data.AITags.forEach((e) => {
+                tags.push(e.name);
+              });
+            }
+            let temp = {
+              imageUrl: data.url,
+              itemId: createItems.id,
+              tag: tags.join(", "),
+            };
+            return temp;
+          });
+        })
+      );
 
       // const mappedArray = await Promise.all(
       //   files.map((file) => {
@@ -113,24 +112,24 @@ class userControllers {
       //     });
       //   })
       // )
-      let mappedArray = [];
-      for (const file of files) {
-        let data = await uploadFile(file);
-        let tags = [];
-        if (data.AITags) {
-          data.AITags.forEach((e) => {
-            tags.push(e.name);
-          });
-        }
-        let temp = {
-          imageUrl: data.url,
-          itemId: createItems.id,
-          tag: tags.join(", "),
-        };
-        console.log(data, ">>>>>");
-        mappedArray.push(temp);
-      }
-      console.log(mappedArray);
+      // let mappedArray = [];
+      // for (const file of files) {
+      //   let data = await uploadFile(file);
+      //   let tags = [];
+      //   if (data.AITags) {
+      //     data.AITags.forEach((e) => {
+      //       tags.push(e.name);
+      //     });
+      //   }
+      //   let temp = {
+      //     imageUrl: data.url,
+      //     itemId: createItems.id,
+      //     tag: tags.join(", "),
+      //   };
+      //   console.log(data, ">>>>>");
+      //   mappedArray.push(temp);
+      // }
+      // console.log(mappedArray);
 
       await Image.bulkCreate(mappedArray, {
         returning: true,
@@ -148,6 +147,7 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
+      console.log("??????");
       let { filterByTitle, filterByCategory } = req.query;
       if (!filterByTitle) filterByTitle = "";
       if (!filterByCategory) filterByCategory = "";
@@ -166,6 +166,7 @@ class userControllers {
       });
       res.status(200).json(items);
     } catch (error) {
+      console.log("?????");
       next(error);
     }
   }

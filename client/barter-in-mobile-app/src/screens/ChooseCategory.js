@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,69 +9,68 @@ import {
   Alert,
   Dimensions,
   TouchableOpacity,
-  Image
+  Image,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import * as ImagePicker from 'expo-image-picker';
-import {launchImageLibrary} from 'react-native-image-picker';
-import { StackActions } from '@react-navigation/native';
+import * as ImagePicker from "expo-image-picker";
+import { launchImageLibrary } from "react-native-image-picker";
+import { StackActions } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Input from "../constants/Input";
-import TextInputDesc from '../constants/TextInputDesc';
+import TextInputDesc from "../constants/TextInputDesc";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../constants/Button";
 import Loader from "../constants/Loader";
-import axios from 'axios';
+import axios from "axios";
 
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-
 const ChooseCategory = () => {
   const options = {
-     title: 'Select Image',
-      type: 'Library',
-      options: {
-        maxHeight: 200,
-        maxWidth: 200,
-        selectionLimit: 1,
-        mediaType: 'photo',
-        includeBase64: false
-      },
-  }
+    title: "Select Image",
+    type: "Library",
+    options: {
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 1,
+      mediaType: "photo",
+      includeBase64: false,
+    },
+  };
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
-    title: '',
-    description: '',
-    brand: '',
-    yearOfPurchase: '',
+    title: "",
+    description: "",
+    brand: "",
+    yearOfPurchase: "",
     // adsImage: ''
   });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
-  const [adsImage, setProfileImage] = useState('');
+  const [adsImage, setProfileImage] = useState("");
   // const [progress, setProgress] = useState(0);
 
   const openGallery = async () => {
     const images = await launchImageLibrary(options);
-    console.log(images)
-  }
+    console.log(images);
+  };
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
     }
 
-    if (status === 'granted') {
+    if (status === "granted") {
       const response = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
-      console.log(response, 'ini image')
+      console.log(response, "ini image");
 
       if (!response.cancelled) {
         setProfileImage(response.uri);
@@ -80,13 +79,12 @@ const ChooseCategory = () => {
     }
   };
 
-
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
 
     if (!inputs.title) {
-      handleError('Title is required', 'title');
+      handleError("Title is required", "title");
       isValid = false;
     }
     // } else if (inputs.title.length < 15) {
@@ -98,7 +96,7 @@ const ChooseCategory = () => {
     // }
 
     if (!inputs.description) {
-      handleError('Description is required', 'description');
+      handleError("Description is required", "description");
       isValid = false;
     }
     // } else if (inputs.description.length < 20) {
@@ -110,17 +108,17 @@ const ChooseCategory = () => {
     // }
 
     if (!inputs.brand) {
-      handleError('Brand is required', 'brand');
+      handleError("Brand is required", "brand");
       isValid = false;
     }
 
     if (!inputs.yearOfPurchase) {
-      handleError('Year Purchase is required', 'yearOfPurchase');
+      handleError("Year Purchase is required", "yearOfPurchase");
       isValid = false;
     }
 
     if (!adsImage) {
-      handleError('Image is required', 'adsImage');
+      handleError("Image is required", "adsImage");
       isValid = false;
     }
 
@@ -132,65 +130,79 @@ const ChooseCategory = () => {
   const addAds = () => {
     setLoading(true);
     setTimeout(async () => {
-
       const formData = new FormData();
-        
-      formData.append('image', {
-        // title: inputs.title,
-        // description: inputs.description,
-        // brand: inputs.brand,
-        // yearOfPurchase: inputs.yearOfPurchase,
-        uri: Platform.OS === 'android' ? adsImage : adsImage.replace('file://', ''),
-        type: 'image/jpg'
-      });
+      let filename = adsImage.split("/").pop();
 
-      console.log(formData)
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      formData.append("image", {
+        uri: adsImage,
+        name: "test.jpg",
+        type,
+      });
+      formData.append("image", {
+        uri: adsImage,
+        name: "test.jpg",
+        type,
+      });
+      formData.append("title", inputs.title);
+      formData.append("description", inputs.description);
+      formData.append("brand", inputs.brand);
+      formData.append("yearOfPurchase", inputs.yearOfPurchase);
+
       try {
-        let data = {
-          title: inputs.title,
-          description: inputs.description,
-          brand: inputs.brand,
-          yearOfPurchase: inputs.yearOfPurchase,
+        let token = await AsyncStorage.getItem("access_token");
+        let response = await fetch(
+          `http://da67-139-193-79-181.ngrok.io/users/items`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "multipart/form-data",
+              access_token: token,
+            },
+            body: formData,
+          }
+        );
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`;
+          throw new Error(message);
         }
-        console.log(data)
-        const response = await axios.post('https://b117-2001-448a-1061-10b7-4c0-ae07-68ea-205f.ngrok.io/users/items',   data, {
-          headers: {
-          // Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
-          access_token: await AsyncStorage.getItem('access_token')
-         }})
+        let item = response.json();
+        console.log(item);
         setLoading(false);
-        console.log(response)
         // navigation.navigate('LoginScreen');
       } catch (error) {
-        Alert.alert('Error', 'Something went wrong');
+        Alert.alert("Error", "Something went wrong");
         setLoading(false);
       }
     }, 3000);
   };
 
   const handleOnchange = (text, input) => {
-    setInputs(prevState => ({ ...prevState, [input]: text }));
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
   const handleError = (error, input) => {
-    setErrors(prevState => ({ ...prevState, [input]: error }));
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.WHITE, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
       <Loader visible={loading} />
       <ScrollView
-        contentContainerStyle={{paddingTop: 50, paddingHorizontal: 20}}>
-        <Text style={{color: COLORS.BLACK, fontSize: 40, fontWeight: 'bold'}}>
+        contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}
+      >
+        <Text style={{ color: COLORS.BLACK, fontSize: 40, fontWeight: "bold" }}>
           Add Your Ads
         </Text>
-        <Text style={{color: COLORS.GRAY, fontSize: 18, marginVertical: 10}}>
+        <Text style={{ color: COLORS.GRAY, fontSize: 18, marginVertical: 10 }}>
           Enter Your Offer to Ads
         </Text>
-        <View style={{marginVertical: 20}}>
+        <View style={{ marginVertical: 20 }}>
           <Input
-            onChangeText={text => handleOnchange(text, 'title')}
-            onFocus={() => handleError(null, 'title')}
+            onChangeText={(text) => handleOnchange(text, "title")}
+            onFocus={() => handleError(null, "title")}
             iconName="format-title"
             label="Title"
             placeholder="Enter your title ads"
@@ -200,8 +212,8 @@ const ChooseCategory = () => {
           <TextInputDesc
             multiline={true}
             numberOfLines={4}
-            onChangeText={text => handleOnchange(text, 'description')}
-            onFocus={() => handleError(null, 'description')}
+            onChangeText={(text) => handleOnchange(text, "description")}
+            onFocus={() => handleError(null, "description")}
             iconName="card-text-outline"
             label="Description"
             placeholder="Enter your description ads"
@@ -210,8 +222,8 @@ const ChooseCategory = () => {
 
           <Input
             // keyboardType="numeric"
-            onChangeText={text => handleOnchange(text, 'brand')}
-            onFocus={() => handleError(null, 'brand')}
+            onChangeText={(text) => handleOnchange(text, "brand")}
+            onFocus={() => handleError(null, "brand")}
             iconName="tshirt-v-outline"
             label="Brand"
             placeholder="Enter your brand ads"
@@ -219,31 +231,30 @@ const ChooseCategory = () => {
           />
 
           <Input
-            onChangeText={text => handleOnchange(text, 'yearOfPurchase')}
-            onFocus={() => handleError(null, 'yearOfPurchase')}
+            onChangeText={(text) => handleOnchange(text, "yearOfPurchase")}
+            onFocus={() => handleError(null, "yearOfPurchase")}
             iconName="update"
             label="Year Purchase"
             placeholder="Enter your year purchase ads"
             error={errors.yearOfPurchase}
           />
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              // onFocus={() => handleError(null, 'adsImage')}
+              onPress={openImageLibrary}
+              style={styles.uploadBtnContainer}
+            >
+              {adsImage ? (
+                <Image
+                  source={{ uri: adsImage }}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              ) : (
+                <Text style={styles.uploadBtn}>Upload Profile Image</Text>
+              )}
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            // onFocus={() => handleError(null, 'adsImage')}
-            onPress={openImageLibrary}
-            style={styles.uploadBtnContainer}
-          >
-            {adsImage ? (
-              <Image
-                source={{ uri: adsImage }}
-                style={{ width: '100%', height: '100%' }}
-              />
-            ) : (
-              <Text style={styles.uploadBtn}>Upload Profile Image</Text>
-            )}
-          </TouchableOpacity>
-          
-          {/* <TouchableOpacity
+            {/* <TouchableOpacity
             onPress={openImageLibrary}
             style={styles.uploadBtnContainer}
           >
@@ -256,10 +267,9 @@ const ChooseCategory = () => {
               <Text style={styles.uploadBtn}>Upload Profile Image</Text>
             )}
           </TouchableOpacity> */}
-        
           </View>
           <Text style={styles.skip}>Skip</Text>
-          
+
           {/* {profileImage ? (
             <Text
               onPress={uploadProfileImage}
@@ -288,7 +298,6 @@ const ChooseCategory = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -315,24 +324,24 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 125 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderStyle: 'dashed',
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "dashed",
     borderWidth: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   uploadBtn: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
     opacity: 0.3,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   skip: {
-    textAlign: 'center',
+    textAlign: "center",
     padding: 10,
     fontSize: 16,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
+    fontWeight: "bold",
+    textTransform: "uppercase",
     letterSpacing: 2,
     opacity: 0.5,
   },

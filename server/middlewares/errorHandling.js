@@ -1,7 +1,7 @@
 const errorHandler = (err, req, res, next) => {
   let code = 500;
-  let msg = err;
-  // console.log(err);
+  let msg = "Internal server error";
+  console.log(err);
   if (
     err.name === "SequelizeValidationError" ||
     err.name === "SequelizeUniqueConstraintError"
@@ -14,9 +14,6 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.message === "NOT_FOUND") {
     code = 404;
     msg = "Item not found";
-  } else if (err.message === "CANNOT_EDIT") {
-    code = 401;
-    msg = "You cannot edit this item";
   } else if (err.message === "FORBIDDEN") {
     code = 403;
     msg = "Forbidden to access source";
