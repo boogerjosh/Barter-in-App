@@ -41,9 +41,10 @@ class userControllers {
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
+      console.log(userId)
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
-      await Item.create(
+      const createItem = await Item.create(
         {
           title,
           category,
@@ -124,7 +125,7 @@ class userControllers {
         }
         let temp = {
           imageUrl: data.url,
-          itemId: createItems.id,
+          itemId: createItem.id,
           tag: tags.join(", "),
         };
         console.log(data, ">>>>>");

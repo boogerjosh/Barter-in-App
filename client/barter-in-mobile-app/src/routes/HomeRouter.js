@@ -12,14 +12,19 @@ import COLORS from '../constants/Colors'
 const Stack = createNativeStackNavigator();
 
 const HomeRouter = () => {
+  // if (route.state && route.state.routeNames[route.state.index] === 'Login') {
+  //   navigation.setOptions({tabBarVisible: false})
+  // } else {
+  //   navigation.setOptions({tabBarVisible: true})
+  // }
   return (
     <Stack.Navigator>
       <Stack.Screen name="HomeRouter" component={HomeScreen} options={{
         headerShown: false
       }} />
-      <Stack.Screen name="Login" component={Login}  options={{
+      <Stack.Screen name="Login" component={Login} options={{
         headerShown: false
-      }}/>
+      }} />
       <Stack.Screen name="MyItem" component={MyItemScreen} />
       <Stack.Screen name="BarterRoom" component={BarterRoomScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
