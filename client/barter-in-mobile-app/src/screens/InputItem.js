@@ -22,18 +22,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../constants/Button";
 import Loader from "../constants/Loader";
 
-const { height, width } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 
-const InputItem = () => {
+const InputItem = ({ route }) => {
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     title: '',
     description: '',
     brand: '',
     yearOfPurchase: '',
-    category: ''
+    category: route.params.id
   });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
@@ -62,7 +62,7 @@ const InputItem = () => {
     }
   };
 
-    const openImageLibrary2 = async () => {
+  const openImageLibrary2 = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       alert('Sorry, we need camera roll permissions to make this work!');
@@ -92,10 +92,10 @@ const InputItem = () => {
         allowsEditing: true,
       });
       if (!response.cancelled) {
-             setProfileImage(prevState => ({
+          setProfileImage(prevState => ({
             ...prevState,
             image3: response.uri
-         }));
+          }));
       }
     }
   };
@@ -108,24 +108,26 @@ const InputItem = () => {
     if (!inputs.title) {
       handleError('Title is required', 'title');
       isValid = false;
-    } else if (inputs.title.length < 15) {
-      handleError('Min title length of 15', 'title');
-      isValid = false;
-    } else if (inputs.title.length > 70) {
-      handleError('Length maximum is 70 characters', 'title');
-      isValid = false;
     }
+    // } else if (inputs.title.length < 15) {
+    //   handleError('Min title length of 15', 'title');
+    //   isValid = false;
+    // } else if (inputs.title.length > 70) {
+    //   handleError('Length maximum is 70 characters', 'title');
+    //   isValid = false;
+    // }
 
     if (!inputs.description) {
       handleError('Description is required', 'description');
       isValid = false;
-    } else if (inputs.description.length < 20) {
-      handleError('Min description length of 20', 'description');
-      isValid = false;
-    } else if (inputs.description.length > 4096) {
-      handleError('Length maximum is 4096 characters', 'description');
-      isValid = false;
     }
+    // } else if (inputs.description.length < 20) {
+    //   handleError('Min description length of 20', 'description');
+    //   isValid = false;
+    // } else if (inputs.description.length > 4096) {
+    //   handleError('Length maximum is 4096 characters', 'description');
+    //   isValid = false;
+    // }
 
     if (!inputs.brand) {
       handleError('Brand is required', 'brand');
@@ -138,16 +140,16 @@ const InputItem = () => {
     }
 
     if (!adsImage.image1) {
-      handleError('3 photos must be selected', 'image1');
+      handleError('3 photos must be selected', 'imageUrl');
       isValid = false;
     } else if (!adsImage.image2) {
-      handleError('3 photos must be selected', 'image2');
+      handleError('3 photos must be selected', 'imageUrl');
       isValid = false;
     } else if (!adsImage.image3) {
-      handleError('3 photos must be selected', 'image3');
+      handleError('3 photos must be selected', 'imageUrl');
       isValid = false;
     } else if (!adsImage.image1 && !adsImage.image2 && !adsImage.image3) {
-      handleError('3 photos must be selected', 'image3');
+      handleError('3 photos must be selected', 'imageUrl');
       isValid = false;
     }
 
@@ -195,6 +197,8 @@ const InputItem = () => {
       formData.append("yearOfPurchase", inputs.yearOfPurchase);
       formData.append("category", inputs.category);
 
+      console.log(formData)
+
       try {
         let token = await AsyncStorage.getItem("access_token");
         let response = await fetch(
@@ -208,7 +212,6 @@ const InputItem = () => {
             body: formData,
           }
         );
-        console.log(response, '======')
         if (!response.ok) {
           const message = `An error has occured: ${response.status}`;
           throw new Error(message);
@@ -216,7 +219,21 @@ const InputItem = () => {
         let item = response.json();
         console.log(item);
         setLoading(false);
-        // navigation.navigate('LoginScreen');
+         setProfileImage(prevState => ({
+            ...prevState,
+           image1: '',
+           image2: '',
+           image3: ''
+         }));
+         setInputs(prevState => ({
+            ...prevState,
+           title: '',
+           description: '',
+           brand: '',
+           yearOfPurchase: '',
+           category: ''
+         }));
+        navigation.navigate('MyAdds');
       } catch (error) {
         Alert.alert("Error", "Something went wrong");
         setLoading(false);
@@ -235,7 +252,7 @@ const InputItem = () => {
     <SafeAreaView style={{backgroundColor: COLORS.WHITE, flex: 1}}>
       <Loader visible={loading} />
       <ScrollView
-        contentContainerStyle={{paddingTop: 50, paddingHorizontal: 20}}>
+        contentContainerStyle={{paddingTop: 25, paddingHorizontal: 20}}>
         <Text style={{color: COLORS.BLACK, fontSize: 40, fontWeight: 'bold'}}>
           Include some details
         </Text>
@@ -286,7 +303,7 @@ const InputItem = () => {
 
           <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
-            onFocus={() => handleError(null, 'image1')}
+            onFocus={() => handleError(null, 'imageUrl')}
             onPress={openImageLibrary}
             style={styles.uploadBtnContainer}
             error={errors.image1}  
@@ -302,7 +319,7 @@ const InputItem = () => {
           </TouchableOpacity>
           
             <TouchableOpacity
-            onFocus={() => handleError(null, 'image2')}
+            onFocus={() => handleError(null, 'imageUrl')}
             onPress={openImageLibrary2}
             error={errors.image2}
             style={styles.uploadBtnContainer}
@@ -318,7 +335,7 @@ const InputItem = () => {
             </TouchableOpacity>
             
             <TouchableOpacity
-            onFocus={() => handleError(null, 'image3')}  
+            onFocus={() => handleError(null, 'imageUrl')}  
             onPress={openImageLibrary3}
             error={errors.image3}
             style={styles.uploadBtnContainer}
@@ -333,9 +350,9 @@ const InputItem = () => {
             )}
           </TouchableOpacity>
           </View>
-        {errors.image1 && (
+        {errors.imageUrl && (
            <Text style={{marginTop: 7, color: COLORS.PERSIAN_RED, fontSize: 12}}>
-        {errors.image1}
+        {errors.imageUrl}
         </Text>
          )}
           <Button title="Submit" onPress={validate} />

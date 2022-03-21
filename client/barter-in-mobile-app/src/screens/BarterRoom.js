@@ -3,9 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   FlatList,
-  TouchableOpacity,
   Dimensions,
   SafeAreaView,
 } from "react-native";
@@ -23,17 +21,11 @@ const BarterRoomScreen = () => {
   const navigation = useNavigation();
   const [roomBarters, setRoomBarters] = useState([]);
   const getRoomBarters = async () => {
-    console.log("masuk RoomBarter");
     try {
       const data = await axios.get(
         "https://33f9-110-138-93-44.ngrok.io/myRoomBarters"
       );
-
       setRoomBarters(data.data);
-      // console.log(
-      //   "🚀 ~ file: BarterRoom.js ~ line 33 ~ getRoomBarters ~ data.data",
-      //   data.data
-      // );
     } catch (error) {
       console.log(error);
     }
@@ -50,12 +42,6 @@ const BarterRoomScreen = () => {
             <View>
               <Text style={styles.nameText}>My Room Barter</Text>
             </View>
-          </View>
-          <View>
-            {/* <Image
-              source={require("../../assets/person.jpg")}
-              style={styles.headerImage}
-            /> */}
           </View>
         </View>
       </SafeAreaView>
@@ -79,12 +65,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   listItem: {
     padding: 10,
-    paddingTop: StatusBar.currentHeight || 42,
+    paddingTop: StatusBar.currentHeight || 25,
   },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,
@@ -100,15 +84,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 30,
   },
-  headerImage: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-    // borderColor: COLORS.WHITE,
-    borderWidth: 2,
-  },
   headerDetails: {
-    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },

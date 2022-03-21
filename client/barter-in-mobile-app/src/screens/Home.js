@@ -72,15 +72,6 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.categoryTitle}>Categories</Text>
           </View>
-          <View>
-            <TouchableOpacity
-              style={styles.button}
-              activeOpacity={0.8}
-              onPress={() => navigation.navigate("Login", {})}
-            >
-              <Text style={styles.buttonText}>Ke Login</Text>
-            </TouchableOpacity>
-          </View>
         </View>
         <View style={{ marginTop: 10 }}>
           {categories.map((chunk, index) => {

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,6 +14,8 @@ import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 const SPACING = 20;
 const ITEM_SIZE = 30;
+const { height, width } = Dimensions.get("screen");
+const setWidth = (w) => (width / 100) * w;
 
 const MyAddsComp = ({ item }) => {
   // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
@@ -60,8 +63,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    // width: ITEM_SIZE,
-    // height: ITEM_SIZE,
     borderRadius: 70,
     marginRight: 10,
   },
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     // width: 140,
   },
   itemSubTitle: {
-    fontSize: 18,
+    fontSize: setWidth(4),
     fontFamily: FONTS.MEDIUM,
     color: COLORS.LIGHT_GRAY,
   },

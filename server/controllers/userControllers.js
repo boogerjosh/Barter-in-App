@@ -4,12 +4,12 @@ const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, RoomBarter, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
-const Redis = require("ioredis");
-const redis = new Redis({
-  port: 10199,
-  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
-  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-});
+// // const Redis = require("ioredis");
+// const redis = new Redis({
+//   port: 10199,
+//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
+//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+// });
 
 class userControllers {
   static async loginGoogle(req, res, next) {
@@ -76,7 +76,7 @@ class userControllers {
             }
             let temp = {
               imageUrl: data.url,
-              itemId: createItems.id,
+              itemId: createItem.id,
               tag: tags.join(", "),
             };
             return temp;
@@ -122,24 +122,25 @@ class userControllers {
       //   })
       // )
 
-      let mappedArray = [];
-      for (const file of files) {
-        let data = await uploadFile(file);
-        let tags = [];
-        if (data.AITags) {
-          data.AITags.forEach((e) => {
-            tags.push(e.name);
-          });
-        }
-        let temp = {
-          imageUrl: data.url,
-          itemId: createItem.id,
-          tag: tags.join(", "),
-        };
-        console.log(data, ">>>>>");
-        mappedArray.push(temp);
-      }
-      console.log(mappedArray);
+      // let mappedArray = [];
+      // for (const file of files) {
+      //   let data = await uploadFile(file);
+      //   let tags = [];
+      //   if (data.AITags) {
+      //     data.AITags.forEach((e) => {
+      //       tags.push(e.name);
+      //     });
+      //   }
+      //   let temp = {
+      //     imageUrl: data.url,
+      //     itemId: createItem.id,
+      //     tag: tags.join(", "),
+      //   };
+      //   console.log(data, ">>>>>");
+      //   mappedArray.push(temp);
+      // }
+      // console.log(mappedArray);
+
 
       await Image.bulkCreate(mappedArray, {
         returning: true,
@@ -147,7 +148,6 @@ class userControllers {
       });
       await sendEmail({ email: req.userLogin.email });
       await t.commit();
-      await redis.del('items')
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
       console.log(error);

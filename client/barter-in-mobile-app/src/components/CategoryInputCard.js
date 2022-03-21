@@ -7,18 +7,16 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import categories from "../../data/categories";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 
-const CategoryInputCard = ({ item }) => {
-  const navigation = useNavigation();
+const CategoryInputCard = ({ item, navigation }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.push("Detail")}
+      onPress={() => navigation.navigate('InputItem', {
+        id: item.title,
+      })}
     >
       <View style={styles.container}>
         <ImageBackground
@@ -37,7 +35,7 @@ const CategoryInputCard = ({ item }) => {
               height: 40,
             }}
           />
-          <Text style={styles.itemTitle} numberOfLines={3}>
+          <Text style={styles.itemTitle}>
             {item.title}
           </Text>
         </ImageBackground>
@@ -72,21 +70,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     width: 140,
     textAlign: "center",
-  },
-  itemSubTitle: {
-    fontSize: 14,
-    fontFamily: FONTS.MEDIUM,
-    color: COLORS.LIGHT_GRAY,
-  },
-  itemSubtitleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  rowAndCenter: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  }
 });
 
 export default CategoryInputCard;

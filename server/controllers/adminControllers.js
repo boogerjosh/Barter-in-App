@@ -2,12 +2,12 @@ const { comparePassword } = require("../helpers/bcrypt");
 const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");
-const Redis = require("ioredis");
-const redis = new Redis({
-  port: 10199,
-  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
-  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-});
+// const Redis = require("ioredis");
+// const redis = new Redis({
+//   port: 10199,
+//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
+//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+// });
 
 class adminControllers {
   static async register(req, res, next) {

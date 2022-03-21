@@ -18,22 +18,16 @@ const setWidth = (w) => (width / 100) * w;
 import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
-// const numColumns = 1;
+
 const MyAddsScreen = () => {
   const navigation = useNavigation();
+
   const [items, setItems] = useState([]);
-  // console.log("🚀 ~ file: MyAdds.js ~ line 26 ~ MyAddsScreen ~ items", items);
 
   const getItems = async () => {
-    console.log("masuk");
     try {
       const data = await axios.get("https://33f9-110-138-93-44.ngrok.io/items");
-      console.log("🚀 ~ file: MyAdds.js ~ line 31 ~ getItems ~ data", data);
       setItems(data.data);
-      // console.log(
-      //   "🚀 ~ file: MyAdds.js ~ line 33 ~ getItems ~ data",
-      //   data.data
-      // );
     } catch (error) {
       console.log(error);
     }
@@ -44,19 +38,11 @@ const MyAddsScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={{flex: 1}}>
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-            <View>
               <Text style={styles.nameText}>My Ads</Text>
-            </View>
-          </View>
-          <View>
-            {/* <Image
-              source={require("../../assets/person.jpg")}
-              style={styles.headerImage}
-            /> */}
           </View>
         </View>
       </SafeAreaView>
@@ -65,11 +51,11 @@ const MyAddsScreen = () => {
           contentContainerStyle={styles.listItem}
           data={items}
           keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <MyAddsComp item={item} />}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
-          renderItem={({ item }) => <MyAddsComp item={item} />}
-          // numColumns={numColumns}
+          numColumns={1}
         />
       </View>
     </View>
@@ -77,15 +63,9 @@ const MyAddsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-  },
   listItem: {
     padding: 10,
-    paddingTop: StatusBar.currentHeight || 42,
+    paddingTop: StatusBar.currentHeight || 25,
   },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,
@@ -101,15 +81,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 30,
   },
-  headerImage: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-    // borderColor: COLORS.WHITE,
-    borderWidth: 2,
-  },
   headerDetails: {
-    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
