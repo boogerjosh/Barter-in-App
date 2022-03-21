@@ -26,7 +26,7 @@ const BarterRoomScreen = () => {
     console.log("masuk RoomBarter");
     try {
       const data = await axios.get(
-        "https://40eb-110-138-93-44.ngrok.io/myRoomBarters"
+        "https://33f9-110-138-93-44.ngrok.io/myRoomBarters"
       );
 
       setRoomBarters(data.data);

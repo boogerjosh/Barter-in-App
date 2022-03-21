@@ -27,8 +27,8 @@ const MyAddsScreen = () => {
   const getItems = async () => {
     console.log("masuk");
     try {
-      const data = await axios.get("https://40eb-110-138-93-44.ngrok.io/items");
-      // console.log("🚀 ~ file: MyAdds.js ~ line 31 ~ getItems ~ data", data);
+      const data = await axios.get("https://33f9-110-138-93-44.ngrok.io/items");
+      console.log("🚀 ~ file: MyAdds.js ~ line 31 ~ getItems ~ data", data);
       setItems(data.data);
       // console.log(
       //   "🚀 ~ file: MyAdds.js ~ line 33 ~ getItems ~ data",
