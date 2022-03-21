@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   SafeAreaView,
   Dimensions,
   FlatList,
@@ -11,30 +10,22 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
-
-const { height, width } = Dimensions.get("screen");
-const setWidth = (w) => (width / 100) * w;
-
 import categoryAdd from "../../data/categoryAdd";
 import CategoryInputCard from "../components/CategoryInputCard";
 import ItemSpace from "../components/ItemSpace";
-const numColumns = 2;
+const { height, width } = Dimensions.get("screen");
+const setWidth = (w) => (width / 100) * w;
+
 const ChooseCategory = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <SafeAreaView style={styles.header}>
+    <View style={{flex: 1}}>   
+     <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.nameText}>Choose Item category</Text>
+              <Text style={styles.nameText}>Category Name</Text>
             </View>
-          </View>
-          <View>
-            {/* <Image
-              source={require("../../assets/person.jpg")}
-              style={styles.headerImage}
-            /> */}
           </View>
         </View>
       </SafeAreaView>
@@ -46,10 +37,10 @@ const ChooseCategory = () => {
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
           renderItem={({ item }) => <CategoryInputCard item={item} />}
-          numColumns={numColumns}
+          numColumns={2}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -78,11 +69,9 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 50,
-    // borderColor: COLORS.WHITE,
     borderWidth: 2,
   },
   headerDetails: {
-    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },

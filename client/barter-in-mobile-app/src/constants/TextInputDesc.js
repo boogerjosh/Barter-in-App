@@ -14,7 +14,7 @@ const Input = ({
   const [hidePassword, setHidePassword] = React.useState(password);
   const [isFocused, setIsFocused] = React.useState(false);
   return (
-    <View style={{marginBottom: 20}}>
+    <View style={{marginBottom: 10}}>
       <Text style={style.label}>{label}</Text>
       <View
         style={[

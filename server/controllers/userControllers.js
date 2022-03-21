@@ -47,9 +47,11 @@ class userControllers {
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
+      console.log(userId)
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
-      const createItems = await Item.create(
+
+      const createItem = await Item.create(
         {
           title,
           category,
@@ -119,24 +121,25 @@ class userControllers {
       //     });
       //   })
       // )
-      // let mappedArray = [];
-      // for (const file of files) {
-      //   let data = await uploadFile(file);
-      //   let tags = [];
-      //   if (data.AITags) {
-      //     data.AITags.forEach((e) => {
-      //       tags.push(e.name);
-      //     });
-      //   }
-      //   let temp = {
-      //     imageUrl: data.url,
-      //     itemId: createItems.id,
-      //     tag: tags.join(", "),
-      //   };
-      //   console.log(data, ">>>>>");
-      //   mappedArray.push(temp);
-      // }
-      // console.log(mappedArray);
+
+      let mappedArray = [];
+      for (const file of files) {
+        let data = await uploadFile(file);
+        let tags = [];
+        if (data.AITags) {
+          data.AITags.forEach((e) => {
+            tags.push(e.name);
+          });
+        }
+        let temp = {
+          imageUrl: data.url,
+          itemId: createItem.id,
+          tag: tags.join(", "),
+        };
+        console.log(data, ">>>>>");
+        mappedArray.push(temp);
+      }
+      console.log(mappedArray);
 
       await Image.bulkCreate(mappedArray, {
         returning: true,
