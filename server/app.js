@@ -6,8 +6,6 @@ const app = express();
 const cors = require("cors");
 const router = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandling");
-// const { Server } = require("socket.io");
-// const io = new Server(server);
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
