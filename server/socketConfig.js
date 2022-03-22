@@ -13,10 +13,13 @@ const messageArray = [];
 io.on("connection", (socket) => {
   console.log(socket.id);
   socket.on("chatMessage", (message) => {
-    messageArray.push(message);
+    messageArray.unshift(message);
     console.log(messageArray);
-    io.emit("chatMessage", messageArray);
-  });
+    socket.broadcast.emit("getMessage", messageArray);
+  });  
+  socket.on("firstConnect", () => {
+    socket.emit("getMessage", messageArray);
+  })
 });
 
 module.exports = io;
