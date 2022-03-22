@@ -1,30 +1,95 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { GiftedChat, Bubble, Send } from "react-native-gifted-chat";
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
-  FlatList,
-  TouchableOpacity,
   Dimensions,
   TextInput,
   Image,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
 } from "react-native";
 import { io } from "socket.io-client";
-socket = io("https://9eac-125-160-235-225.ngrok.io");
-import { StatusBar } from "expo-status-bar";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-const messageArray = [];
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+socket = io("http://ac5f-139-193-79-181.ngrok.io");
 socket.on("connect", () => {
-  console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+  console.log(socket.id, ">>>>>adsa"); // x8WIv7-mJelg7on_ALbx
 });
 
 const ChatRoomScreen = () => {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: "Hello developer",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://placeimg.com/140/140/any",
+        },
+      },
+    ]);
+  }, []);
+
+  const onSend = useCallback((messages = []) => {
+    console.log(message);
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, messages)
+    );
+  }, []);
+
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: COLORS.PRIMARY,
+          },
+        }}
+        textStyle={{
+          right: {
+            color: "#fff",
+          },
+        }}
+      />
+    );
+  };
+
+  const renderSend = (props) => {
+    return (
+      <Send {...props}>
+        <View>
+          <MaterialCommunityIcons
+            name="send-circle"
+            size={32}
+            style={{ marginBottom: 5, marginRight: 5 }}
+            color="black"
+          />
+        </View>
+      </Send>
+    );
+  };
+
+  const scrollToBottomComponent = () => {
+    return <FontAwesome name="angle-double-down" size={22} color="#333" />;
+  };
+
   const navigation = useNavigation();
   const [message, setMessage] = useState("");
   const [messageData, setMessageData] = useState("");
@@ -41,117 +106,38 @@ const ChatRoomScreen = () => {
     socket.on("getMessage", (message) => {
       setMessageData(message);
     });
-  }, [messageData]);
+  }, []);
 
-  function submitChatMessage(text, eventCount, target) {
+  function submitChatMessage() {
+    console.log(message);
     socket.emit("chatMessage", { message, senderId, receiverId, username });
     setMessageData(messageData);
     setMessage("");
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.receiverView}>
-        <Image
-          style={styles.receiverImage}
-          source={{
-            uri: "https://blue.kumparan.com/image/upload/fl_progressive,fl_lossy,c_fill,q_auto:best,w_640/v1578620671/wwa6sd5wyp1wxjrder5i.png",
-          }}
-        />
-        <Text>RECEIVER NAME</Text>
-      </View>
-      <ScrollView style={styles.scrollView}>
-        {messageData
-          ? messageData.map((e, i) =>
-              e.senderId === senderId ? (
-                <Text style={styles.messageTextSender} key={i}>
-                  {e.username}: {e.message}
-                </Text>
-              ) : e.receiverId === senderId &&  receiverId === e.senderId?
-                <Text style={styles.messageText} key={i}>{e.receiverId}:{e.message}</Text>
-                : null
-            )
-          : null}
-      </ScrollView>
-      <TextInput
-        keyboardShouldPersistTaps="always"
-        value={message}
-        style={styles.textInputStyle}
-        onSubmitEditing={() => {
-          submitChatMessage();
+    <SafeAreaView style={styles.viewContainer}>
+      <GiftedChat
+        loadEarlier={true}
+        messages={messages}
+        onSend={(messages) => onSend(messages)}
+        user={{
+          _id: 1,
         }}
-        blurOnSubmit={false}
-        onChangeText={(e) => {
-          setMessage(e);
-        }}
-        placeholder="Message"
+        // onSubmit={submitChatMessage}
+        renderBubble={renderBubble}
+        alwaysShowSend
+        renderSend={renderSend}
+        scrollToBottom
+        scrollToBottomComponent={scrollToBottomComponent}
       />
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  viewContainer: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    backgroundColor: COLORS.PRIMARY,
-    paddingVertical: 8,
-    elevation: 3,
-    marginVertical: 2,
-    width: setWidth(25),
-  },
-  buttonText: {
-    fontSize: 13,
-    color: COLORS.DARK_GREY,
-    fontFamily: FONTS.BOLD,
-  },
-  textInputStyle: {
-    padding: 10,
-    width: Dimensions.get("window").width,
-    height: 40,
-    borderWidth: 2,
-    borderRadius: 20,
-    backgroundColor: "red",
-  },
-  scrollView: {
-    width: Dimensions.get("window").width,
-  },
-  receiverImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 1000,
-  },
-  receiverView: {
-    width: Dimensions.get("window").width,
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 2,
-    padding: 10,
-  },
-  messageText: {
-    backgroundColor: "green",
-    alignSelf: "flex-start",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginLeft: 10,
-    margin: 2,
-    borderRadius: 10,
-  },
-  messageTextSender: {
-    backgroundColor: "#92a8d1",
-    alignSelf: "flex-end",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginRight: 10,
-    margin: 2,
-    borderRadius: 10,
   },
 });
 
