@@ -14,7 +14,7 @@ export default [
     },
     {
       id: "3",
-      title: "Books",
+      title: "Book",
       image: require("../assets/images/books.png"),
       backgroundColor: "#F6D860",
     },
@@ -22,19 +22,19 @@ export default [
   [
     {
       id: "4",
-      title: "Electronics",
+      title: "Electronic",
       image: require("../assets/images/electronics.png"),
       backgroundColor: "#95CD41",
     },
     {
       id: "5",
-      title: "Automotives",
+      title: "Automotive",
       image: require("../assets/images/automotives.png"),
       backgroundColor: "#16a085",
     },
     {
       id: "6",
-      title: "Othes",
+      title: "Others",
       image: require("../assets/images/others.png"),
       backgroundColor: "#F54748",
     },

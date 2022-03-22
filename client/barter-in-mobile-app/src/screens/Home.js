@@ -20,6 +20,7 @@ import highlights from "../../data/banner";
 import categories from "../../data/categories";
 import Highlight from "../components/Highlight";
 import Categories from "../components/Categories";
+import categoryAdd from "../../data/categoryAdd";
 import ItemSpace from "../components/ItemSpace";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
@@ -27,7 +28,7 @@ const numColumns = 3;
 const HomeScreen = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView
+    <SafeAreaView
       contentContainerStyle={styles.container}
       options={{ headerShown: false }}
     >
@@ -36,7 +37,7 @@ const HomeScreen = () => {
         translucent={false}
         backgroundColor={COLORS.EXTRA_LIGHT_GRAY}
       />
-      <SafeAreaView style={styles.header}>
+      <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
@@ -53,7 +54,7 @@ const HomeScreen = () => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </View>
       {/* Search Bar */}
       <View style={styles.highlightWrapper}>
         <FlatList
@@ -74,80 +75,29 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
-          {categories.map((chunk, index) => {
-            return (
-              <View
-                key={index}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  marginTop: 10,
-                  marginBottom: 10,
-                }}
-              >
-                {chunk.map((category) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => navigation.push("ListItemHome")}
-                    >
-                      <View
-                        key={category.id}
-                        style={{
-                          width: width / 3 - 30,
-                          marginHorizontal: 12,
-                          justifyContent: "center",
-                          marginBottom: 20,
-                        }}
-                      >
-                        <View
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            backgroundColor: category.backgroundColor,
-                            borderRadius: 10,
-                            width: width / 3 - 30,
-                            height: width / 3 - 30,
-                          }}
-                        />
-                        <View>
-                          <Image
-                            source={category.image}
-                            style={{
-                              width: width / 5 - 30,
-                              height: width / 5 - 30,
-                            }}
-                          />
-                          <Text
-                            style={{
-                              textAlign: "center",
-                              fontFamily: FONTS.MEDIUM,
-                              marginTop: 10,
-                              fontSize: 17,
-                            }}
-                          >
-                            {category.title}
-                          </Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            );
-          })}
+          <FlatList
+            data={categoryAdd}
+            contentContainerStyle={styles.listCategory}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <Categories item={item} />}
+            numColumns={numColumns}
+          />
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: COLORS.WHITE,
     // alignItems: "center",
     // justifyContent: "center",
+  },
+  listCategory: {
+    justifyContent: "center",
+    paddingBottom: 20,
   },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,
@@ -176,11 +126,13 @@ const styles = StyleSheet.create({
   },
   highlightWrapper: {
     marginTop: 20,
+    // backgroundColor: COLORS.WHITE,
   },
   categoryWrapper: {
     paddingHorizontal: 20,
     marginTop: 20,
-    flex: 1,
+    // flex: 1,
+    // backgroundColor: COLORS.PRIMARY_LIGHT,
   },
   category: {
     flexDirection: "row",

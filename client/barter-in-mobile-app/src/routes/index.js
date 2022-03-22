@@ -18,18 +18,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
-  const [fontsLoaded] = useFonts({
-    Regular: require("../../assets/fonts/Poppins-Regular.ttf"),
-    Bold: require("../../assets/fonts/Poppins-Bold.ttf"),
-    Black: require("../../assets/fonts/Poppins-Black.ttf"),
-    ExtraBold: require("../../assets/fonts/Poppins-ExtraBold.ttf"),
-    ExtraLight: require("../../assets/fonts/Poppins-ExtraLight.ttf"),
-    Light: require("../../assets/fonts/Poppins-Light.ttf"),
-    SemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
-    Medium: require("../../assets/fonts/Poppins-Medium.ttf"),
-    Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
-  });
-  return fontsLoaded ? (
+  return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -81,8 +70,6 @@ const MainApp = () => {
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
-  ) : (
-    <AppLoading />
   );
 };
 

@@ -26,30 +26,39 @@ const Categories = ({ item }) => {
           marginHorizontal: 10,
           justifyContent: "center",
           marginBottom: 20,
+          marginTop: 10,
         }}
       >
         <View
           style={{
             position: "absolute",
             top: 0,
-            backgroundColor: COLORS.PRIMARY_LIGHT,
+            backgroundColor: item.backgroundColor,
             borderRadius: 10,
             width: width / 3 - 30,
-            height: width / 3 - 60,
+            height: width / 3 - 30,
           }}
         />
-        <View>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Image
             source={item.image}
             style={{
-              width: width / 3 - 30,
-              height: width / 3 - 30,
+              width: width / 5 - 30,
+              height: width / 5 - 30,
+              marginTop: 10,
             }}
           />
           <Text
             style={{
               textAlign: "center",
-              fontFamily: FONTS.BOLD,
+              fontFamily: FONTS.MEDIUM,
+              marginTop: 10,
+              fontSize: 14,
             }}
           >
             {item.title}

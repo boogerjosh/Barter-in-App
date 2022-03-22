@@ -6,17 +6,23 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
+const { height, width } = Dimensions.get("screen");
+const setWidth = (w) => (width / 100) * w;
+const setHeight = (h) => (height / 200) * h;
 
 const CategoryInputCard = ({ item, navigation }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.navigate('InputItem', {
-        id: item.title,
-      })}
+      onPress={() =>
+        navigation.navigate("InputItem", {
+          id: item.title,
+        })
+      }
     >
       <View style={styles.container}>
         <ImageBackground
@@ -31,13 +37,11 @@ const CategoryInputCard = ({ item, navigation }) => {
           <Image
             source={item.image}
             style={{
-              width: 40,
-              height: 40,
+              width: 50,
+              height: 50,
             }}
           />
-          <Text style={styles.itemTitle}>
-            {item.title}
-          </Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
         </ImageBackground>
       </View>
     </TouchableOpacity>
@@ -55,13 +59,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: 140,
-    height: 140,
+    width: setWidth(40),
+    height: setHeight(40),
     borderRadius: 8,
     elevation: 3,
     marginTop: 20,
     marginBottom: 10,
-    marginHorizontal: 23,
+    marginHorizontal: setWidth(5),
   },
   itemTitle: {
     color: COLORS.DARK_GREY,
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     width: 140,
     textAlign: "center",
-  }
+  },
 });
 
 export default CategoryInputCard;
