@@ -10,11 +10,13 @@ const redis = new Redis({
 const {
   GraphQLUpload,
   graphqlUploadExpress, // A Koa implementation is also exported.
-} = require('graphql-upload');
-const { finished } = require('stream/promises');
+} = require("graphql-upload");
+const { finished } = require("stream/promises");
+const FormData = require("form-data");
+const formData = new FormData();
 
 const typeDefs = gql`
-scalar Upload
+  scalar Upload
   type Item {
     id: ID
     title: String
@@ -64,6 +66,16 @@ scalar Upload
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
     singleUpload(file: Upload!): File
+    postItem(
+      image1: String
+      image2: String
+      image3: String
+      title: String
+      description: String
+      brand: String
+      yearOfPurchase: String
+      category: String
+    ): status
   }
 `;
 
@@ -111,17 +123,17 @@ const resolvers = {
       }
     },
     getRoomBarter: async (_, args) => {
-        try {
-          const { data } = await axios(`${url}/roomBarter`, {
-            headers: {
-              access_token: args.access_token,
-            },
-          });
-          return data;
-        } catch (error) {
-          console.log(error);
-        }
-      },
+      try {
+        const { data } = await axios(`${url}/roomBarter`, {
+          headers: {
+            access_token: args.access_token,
+          },
+        });
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     getDataForBarter: async (_, args) => {
       try {
         const { data } = await axios(`${url}/items-barters`, {
@@ -136,10 +148,31 @@ const resolvers = {
     },
   },
   Mutation: {
+    postItem: async (_, args) => {
+      formData.append("image", args.image1);
+      formData.append("image", args.image2);
+      formData.append("image", args.image3);
+
+      formData.append("title", args.title);
+      formData.append("description", args.description);
+      formData.append("brand", args.brand);
+      formData.append("yearOfPurchase", args.yearOfPurchase);
+      formData.append("category", args.category);
+
+      axios({
+        url: 'http://localhost:3000/users/items',
+        method: 'post',
+        headers: {
+          access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ1c2VyNEBnbWFpbC5jb20iLCJpYXQiOjE2NDc4MzgwMjh9.c9EMivPs26p30CM94xH0tNMTtxm6G1pK8JIgxcIrldo'
+        },
+        data: formData
+      })
+      console.log(formData);
+    },
     singleUpload: async (parent, { args, file }) => {
-      console.log(args)
+      console.log(args);
       const { createReadStream, filename, mimetype, encoding } = await file;
-      const base64 = createReadStream({ encoding: 'base64' });
+      const base64 = createReadStream({ encoding: "base64" });
       // console.log(base64)
       return { filename, mimetype, encoding };
     },
