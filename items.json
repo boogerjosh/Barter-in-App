@@ -6,6 +6,7 @@
     "brand": "H&M",
     "yearOfPurchase": "2021",
     "statusPost": "Pending",
+    "statusBarter": "Not bartered yet",
     "userId": 1
   },
   {
@@ -15,96 +16,107 @@
     "brand": "H&M",
     "yearOfPurchase": "2021",
     "statusPost": "Pending",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 2
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Lawson-style Sofa",
+    "description": "The reason for this design is to create a softer, more cushioned sofa with large cushions that aren’t taut within the frame of the sofa.",
     "category": "Decoration",
-    "brand": "H&M",
+    "brand": "Ikea",
     "yearOfPurchase": "2021",
     "statusPost": "Accepted",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 3
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Lawson-style Sofa",
+    "description": "The reason for this design is to create a softer, more cushioned sofa with large cushions that aren’t taut within the frame of the sofa.",
     "category": "Decoration",
-    "brand": "H&M",
+    "brand": "Ikea",
     "yearOfPurchase": "2021",
     "statusPost": "Accepted",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 4
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Harry Potter and Chamber of Secrets",
+    "description": "Harry Potter (Daniel Radcliffe) returns to Hogwarts School of Wizardry for his second year. After a confrontation with a house-elf named Dobby (Toby Jones), Harry escapes to the Weasley house with Ron Weasley (Rupert Grint) in a flying car. They are then late for the train and have to ride it to school.",
     "category": "Book",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
+    "brand": "Bloomsbury Publishing",
+    "yearOfPurchase": "2003",
     "statusPost": "Accepted",
+    "statusBarter": "Not bartered yet",
     "userId": 1
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Harry Potter and Chamber of Secrets",
+    "description": "Harry Potter (Daniel Radcliffe) returns to Hogwarts School of Wizardry for his second year. After a confrontation with a house-elf named Dobby (Toby Jones), Harry escapes to the Weasley house with Ron Weasley (Rupert Grint) in a flying car. They are then late for the train and have to ride it to school.",
     "category": "Book",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
+    "brand": "Bloomsbury Publishing",
+    "yearOfPurchase": "2003",
     "statusPost": "Accepted",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 2
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Xiaomi Mi 8",
+    "description": "using this phone in heave usage,playing cod mobile since 2 years on it and still runing smooth,battery still a beast and just installed android 12 custom rom (pixel experience),easily can go for another year with it.I just love my MI 8 6/128",
     "category": "Electronic",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
+    "brand": "Xiaomi",
+    "yearOfPurchase": "2020",
     "statusPost": "Accepted",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 3
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Xiaomi Mi 8",
+    "description": "using this phone in heave usage,playing cod mobile since 2 years on it and still runing smooth,battery still a beast and just installed android 12 custom rom (pixel experience),easily can go for another year with it.I just love my MI 8 6/128",
     "category": "Electronic",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
+    "brand": "Xiaomi",
+    "yearOfPurchase": "2020",
     "statusPost": "Accepted",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 4
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Nissan Versa Note",
+    "description": "Rear three quarter view of a 2014 Nissan Versa Note SV SL Hatchback2014 Nissan Versa Note SV SL Hatchback.",
     "category": "Automotive",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
+    "brand": "Nissan",
+    "yearOfPurchase": "2014",
+    "statusBarter": "Not bartered yet",
     "statusPost": "Accepted",
-    "userId": 1
+    "userId": 2
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Nissan Versa Note",
+    "description": "Rear three quarter view of a 2014 Nissan Versa Note SV SL Hatchback2014 Nissan Versa Note SV SL Hatchback.",
     "category": "Automotive",
-    "brand": "H&M",
+    "brand": "Nissan",
+    "yearOfPurchase": "2014",
+    "statusPost": "Accepted",
+    "statusBarter": "Not bartered yet",
+    "userId": 3
+  },
+  {
+    "title": "Barbel 5kg",
+    "description": "Batang besi yang pada kedua ujungnya dibubuhi piringan besi dengan berat tertentu yang dapat dilepas, digunakan dalam olahraga angkat besi; halter",
+    "category": "Others",
+    "brand": "Hercules",
     "yearOfPurchase": "2021",
     "statusPost": "Accepted",
+    "statusBarter": "Not bartered yet",
     "userId": 1
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+    "title": "Barbel 5kg",
+    "description": "Batang besi yang pada kedua ujungnya dibubuhi piringan besi dengan berat tertentu yang dapat dilepas, digunakan dalam olahraga angkat besi; halter",
     "category": "Others",
-    "brand": "H&M",
+    "brand": "Hercules",
     "yearOfPurchase": "2021",
     "statusPost": "Accepted",
-    "userId": 1
-  },
-  {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
-    "category": "Others",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
-    "statusPost": "Accepted",
-    "userId": 1
+    "statusBarter": "Not bartered yet",
+    "userId": 3
   }
 ]

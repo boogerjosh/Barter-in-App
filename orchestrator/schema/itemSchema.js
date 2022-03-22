@@ -168,10 +168,11 @@ const resolvers = {
     postItem: async (_, args) => {
       try {
         const { access_token, newItem } = args;
-        const { title, description, category, yearOfPublish, brand } = newItem;
+        const { title, description, category, yearOfPublish, brand, images } =
+          newItem;
         let { data } = await axios.post(
           `${url}/items`,
-          { title, description, category, yearOfPublish, brand },
+          { title, description, category, yearOfPublish, brand, images },
           {
             headers: {
               access_token,

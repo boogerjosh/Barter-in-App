@@ -237,7 +237,7 @@ describe("GET Error", () => {
         .patch("/admins/items/1")
         .set("access_token", access_token)
         .then((res) => {
-          expect(res.status).toBe(200);
+          expect(res.status).toBe(500);
           expect(res.body).toBeInstanceOf(Object);
           expect(res.body).toHaveProperty("message", expect.any(String));
           done();
