@@ -28,11 +28,11 @@ const {
   graphqlUploadExpress,
 } = require('graphql-upload');
 const { finished } = require('stream/promises');
-
+const adminSchema = require("./schema/adminSchema");
 async function startServer() {
   const server = new ApolloServer({
-    typeDefs: [movieSchema.typeDefs],
-    resolvers: [movieSchema.resolvers]
+    typeDefs: [movieSchema.typeDefs, adminSchema.typeDefs],
+    resolvers: [movieSchema.resolvers, adminSchema.resolvers]
   });
 
   await server.start();
@@ -49,3 +49,4 @@ async function startServer() {
 }
 
 startServer();
+

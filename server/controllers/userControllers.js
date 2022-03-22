@@ -4,18 +4,12 @@ const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, RoomBarter, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
-// // const Redis = require("ioredis");
-// const redis = new Redis({
-//   port: 10199,
-//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
-//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-// });
+
 
 class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
-      console.log(payload)
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -142,15 +136,16 @@ class userControllers {
       // console.log(mappedArray);
 
 
+
       await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
       });
       await sendEmail({ email: req.userLogin.email });
       await t.commit();
+
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
-      console.log(error);
       await t.rollback();
       next(error);
     }
@@ -158,10 +153,8 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
-
-
-      const cache = await redis.get('items')
-      if (cache) res.status(200).json(JSON.parse(cache));
+      // const cache = await redis.get("items");
+      // if (cache) res.status(200).json(JSON.parse(cache));
       let { filterByTitle, filterByCategory } = req.query;
       if (!filterByTitle) filterByTitle = "";
       if (!filterByCategory) filterByCategory = "";
@@ -169,7 +162,7 @@ class userControllers {
       let items = await Item.findAll({
         include: [Image],
         where: {
-          statusPost: "Approve",
+          statusPost: "Approved",
           title: {
             [Op.iLike]: `%${filterByTitle}%`,
           },
@@ -178,14 +171,10 @@ class userControllers {
           },
         },
       });
-      await redis.set('items', JSON.stringify(items))
+      // await redis.set("items", JSON.stringify(items));
 
       res.status(200).json(items);
-
-
-
     } catch (error) {
-      console.log("?????");
       next(error);
     }
   }
@@ -219,7 +208,7 @@ class userControllers {
         throw new Error("NOT_FOUND");
       }
       await Item.destroy({ where: { id } });
-      await redis.del('items')
+      // await redis.del("items");
       res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
       next(error);
@@ -244,9 +233,6 @@ class userControllers {
         Where: {
           [Op.and]: [
             {
-              status: {
-                [Op.ne]: "Review",
-              },
               userId: req.userLogin.id,
             },
           ],
@@ -265,7 +251,7 @@ class userControllers {
           [Op.and]: [
             {
               status: {
-                [Op.eq]: "Approve",
+                [Op.eq]: "Approved",
               },
               userId: req.userLogin.id,
             },
@@ -325,18 +311,15 @@ class userControllers {
           { statusBarter: true },
           { where: { id: roomBarter.item1 } }
         );
-
         await Item.update(
           { statusBarter: true },
           { where: { id: roomBarter.item2 } }
         );
-
         res.status(200).json({ message: "Item terbarter" });
       } else {
         res.status(200).json({ message: "Wait for another user to confirm" });
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

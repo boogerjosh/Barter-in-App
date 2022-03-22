@@ -2,16 +2,10 @@ const { comparePassword } = require("../helpers/bcrypt");
 const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");
-// const Redis = require("ioredis");
-// const redis = new Redis({
-//   port: 10199,
-//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
-//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-// });
 
 class adminControllers {
   static async register(req, res, next) {
-    const { username, email, password, photoUrl, address } = req.body;
+    const { username, email, password, address } = req.body;
     try {
       const response = await User.create({
         username,
@@ -69,11 +63,12 @@ class adminControllers {
     try {
       let { id } = req.params;
       let { status } = req.body;
-      if (status === "Approve") {
+
+      if (status === "Approved") {
         deleteItem(+id);
+        await Item.update({ statusPost: status }, { where: { id } });
       }
-      await Item.update({ status }, { where: { id } });
-      await redis.del('items')
+      // await redis.del("items");
       res.status(200).json({ message: "Item status successfully updated" });
     } catch (error) {
       next(error);
