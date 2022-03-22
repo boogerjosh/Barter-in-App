@@ -97,17 +97,17 @@ const resolvers = {
       }
     },
     getRoomBarter: async (_, args) => {
-        try {
-          const { data } = await axios(`${url}/roomBarter`, {
-            headers: {
-              access_token: args.access_token,
-            },
-          });
-          return data;
-        } catch (error) {
-          console.log(error);
-        }
-      },
+      try {
+        const { data } = await axios(`${url}/roomBarter`, {
+          headers: {
+            access_token: args.access_token,
+          },
+        });
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     getDataForBarter: async (_, args) => {
       try {
         const { data } = await axios(`${url}/items-barters`, {

@@ -1,8 +1,6 @@
 const imagekit = require("./imagekit");
 
 function uploadFile(file) {
-  // console.log(file, ">>>>");
-  console.log(imagekit.upload(), ">>>>>");
   return new Promise((resolve) => {
     imagekit
       .upload({

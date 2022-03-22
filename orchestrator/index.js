@@ -1,12 +1,13 @@
 require("dotenv").config();
-const { ApolloServer } = require('apollo-server');
-const movieSchema = require('./schema/itemSchema')
+const { ApolloServer } = require("apollo-server");
+const itemSchema = require("./schema/itemSchema");
+const adminSchema = require("./schema/adminSchema");
 
 const server = new ApolloServer({
-    typeDefs: [movieSchema.typeDefs],
-    resolvers: [movieSchema.resolvers]
+  typeDefs: [itemSchema.typeDefs, adminSchema.typeDefs],
+  resolvers: [itemSchema.resolvers, adminSchema.resolvers],
 });
 
 server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
+  console.log(`🚀  Server ready at ${url}`);
 });
