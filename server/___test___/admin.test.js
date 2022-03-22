@@ -353,7 +353,7 @@ describe("Admin Route Test", () => {
 
     test("200 Success patch items - should return success message", (done) => {
       let payload = {
-        status: "Approved",
+        status: "Accepted",
       };
       request(app)
         .patch("/admins/items/1")
