@@ -51,7 +51,7 @@ class userControllers {
           description,
           brand,
           yearOfPurchase,
-          statusPost: "Reviewed",
+          statusPost: "Pending",
           statusBarter: "Not bartered yet",
           userId,
         },
@@ -161,7 +161,7 @@ class userControllers {
           description,
           brand,
           yearOfPurchase,
-          statusPost: "Reviewed",
+          statusPost: "Pending",
           statusBarter: "Not bartered yet",
           userId,
         },
@@ -193,7 +193,7 @@ class userControllers {
       let items = await Item.findAll({
         include: [Image],
         where: {
-          statusPost: "Approved",
+          statusPost: "Accepted",
           title: {
             [Op.iLike]: `%${filterByTitle}%`,
           },
@@ -250,6 +250,16 @@ class userControllers {
     try {
       let items = await Item.findAll({
         order: [["updatedAt", "DESC"]],
+        where: {
+          [Op.and]: [
+            {
+              statusPost: "Accepted",
+            },
+            {
+              statusBarter: "Not bartered yet",
+            },
+          ],
+        },
         limit: 10,
       });
       res.status(200).json(items);
@@ -282,7 +292,7 @@ class userControllers {
           [Op.and]: [
             {
               status: {
-                [Op.eq]: "Approved",
+                [Op.eq]: "Accepted",
               },
               userId: req.userLogin.id,
             },
@@ -339,13 +349,14 @@ class userControllers {
 
       if (newRoomBarter.status1 && newRoomBarter.status2) {
         await Item.update(
-          { statusBarter: true },
+          { statusBarter: "Barter" },
           { where: { id: roomBarter.item1 } }
         );
         await Item.update(
-          { statusBarter: true },
+          { statusBarter: "Barter" },
           { where: { id: roomBarter.item2 } }
         );
+
         res.status(200).json({ message: "Item terbarter" });
       } else {
         res.status(200).json({ message: "Wait for another user to confirm" });

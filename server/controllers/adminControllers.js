@@ -49,9 +49,6 @@ class adminControllers {
     try {
       const items = await Item.findAll({
         include: [Image, User],
-        where: {
-          statusPost: "Reviewed",
-        },
       });
       res.status(200).json(items);
     } catch (error) {
@@ -64,11 +61,11 @@ class adminControllers {
       let { id } = req.params;
       let { status } = req.body;
 
-      if (status === "Approved") {
+      if (status === "Accepted") {
         deleteItem(+id);
-        await Item.update({ statusPost: status }, { where: { id } });
       }
       // await redis.del("items");
+      await Item.update({ statusPost: status }, { where: { id } });
       res.status(200).json({ message: "Item status successfully updated" });
     } catch (error) {
       next(error);
