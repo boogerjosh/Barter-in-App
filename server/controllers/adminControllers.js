@@ -48,7 +48,7 @@ class adminControllers {
   static async getItems(req, res, next) {
     try {
       const items = await Item.findAll({
-        include: [Image],
+        include: [Image, User],
         where: {
           statusPost: "Reviewed",
         },

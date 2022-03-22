@@ -21,10 +21,17 @@ const typeDefs = gql`
     userId: ID
     createdAt: String
     updatedAt: String
-    user: User
+    User: UserType
+    Images: [Image]
   }
 
-  type User {
+  type Image {
+    id: ID
+    imageUrl: String
+    tag: String
+  }
+
+  type UserType {
     id: ID
     username: String
     email: String
@@ -55,7 +62,7 @@ const typeDefs = gql`
 
   type Mutation {
     login(email: String, password: String): token
-    register(newUser: inputRegister, token: String): User
+    register(newUser: inputRegister, token: String): UserType
     patchItem(token: String, itemId: ID, status: String): status
   }
 `;
@@ -68,6 +75,7 @@ const resolvers = {
         if (cache) {
           return JSON.parse(cache);
         }
+
         const { data } = await axios.get(`${url}/items`, {
           headers: {
             access_token: token,

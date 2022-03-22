@@ -7,16 +7,15 @@ const redis = new Redis({
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
 });
-const {
-  GraphQLUpload,
-  graphqlUploadExpress, // A Koa implementation is also exported.
-} = require("graphql-upload");
-const { finished } = require("stream/promises");
+// const {
+//   GraphQLUpload,
+//   graphqlUploadExpress, // A Koa implementation is also exported.
+// } = require("graphql-upload");
+// const { finished } = require("stream/promises");
 const FormData = require("form-data");
 const formData = new FormData();
 
 const typeDefs = gql`
-  scalar Upload
   type Item {
     id: ID
     title: String
@@ -43,11 +42,6 @@ const typeDefs = gql`
     status1: Boolean
     status2: Boolean
   }
-  type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  }
   type Query {
     getItems: [Item]
     getItemsHome: [Item]
@@ -65,7 +59,6 @@ const typeDefs = gql`
       item2: ID
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
-    singleUpload(file: Upload!): File
     postItem(
       image1: String
       image2: String
@@ -80,8 +73,6 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Upload: GraphQLUpload,
-
   Query: {
     getItems: async () => {
       try {
@@ -149,33 +140,31 @@ const resolvers = {
   },
   Mutation: {
     postItem: async (_, args) => {
-      formData.append("image", args.image1);
-      formData.append("image", args.image2);
-      formData.append("image", args.image3);
-
-      formData.append("title", args.title);
-      formData.append("description", args.description);
-      formData.append("brand", args.brand);
-      formData.append("yearOfPurchase", args.yearOfPurchase);
-      formData.append("category", args.category);
-
-      axios({
-        url: 'http://localhost:3000/users/items',
-        method: 'post',
-        headers: {
-          access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ1c2VyNEBnbWFpbC5jb20iLCJpYXQiOjE2NDc4MzgwMjh9.c9EMivPs26p30CM94xH0tNMTtxm6G1pK8JIgxcIrldo'
-        },
-        data: formData
-      })
-      console.log(formData);
+      // formData.append("image", args.image1);
+      // formData.append("image", args.image2);
+      // formData.append("image", args.image3);
+      // formData.append("title", args.title);
+      // formData.append("description", args.description);
+      // formData.append("brand", args.brand);
+      // formData.append("yearOfPurchase", args.yearOfPurchase);
+      // formData.append("category", args.category);
+      // axios({
+      //   url: "http://localhost:3000/users/items",
+      //   method: "post",
+      //   headers: {
+      //     access_token:
+      //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ1c2VyNEBnbWFpbC5jb20iLCJpYXQiOjE2NDc4MzgwMjh9.c9EMivPs26p30CM94xH0tNMTtxm6G1pK8JIgxcIrldo",
+      //   },
+      //   data: formData,
+      // });
+      // console.log(formData);
     },
-    singleUpload: async (parent, { args, file }) => {
-      console.log(args);
-      const { createReadStream, filename, mimetype, encoding } = await file;
-      const base64 = createReadStream({ encoding: "base64" });
-      // console.log(base64)
-      return { filename, mimetype, encoding };
-    },
+    // singleUpload: async (parent, { args, file }) => {
+    //   console.log(args);
+    //   const { createReadStream, filename, mimetype, encoding } = await file;
+    //   const base64 = createReadStream({ encoding: "base64" });
+    //   return { filename, mimetype, encoding };
+    // },
     deleteItem: async (_, args) => {
       try {
         const { data } = await axios({

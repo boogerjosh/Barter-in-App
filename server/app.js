@@ -1,8 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const server = require("http").createServer(app);
-const port = process.env.PORT || 3000;
+// const server = require("http").createServer(app);
+// const port = process.env.PORT || 3000;
 const cors = require("cors");
 const router = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandling");
@@ -14,8 +14,6 @@ app.use(express.json());
 app.use(router);
 app.use(errorHandler);
 
-
-
 // const messageArray = [];
 // io.on("connection", (socket) => {
 //   console.log(socket.id);
@@ -26,10 +24,8 @@ app.use(errorHandler);
 //   });
 // });
 
-
-server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// server.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
 // exports.server = http.listen(port);
-// module.exports = app;
-
+module.exports = app;

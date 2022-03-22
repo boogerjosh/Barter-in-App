@@ -18,6 +18,11 @@ userRouter.post(
   multerImage().array("image"),
   userControllers.postItems
 );
+userRouter.post(
+  "/items-client",
+  multerImage().array("image"),
+  userControllers.postItems
+);
 
 userRouter.post("/roomBarter", userControllers.postRoomBarter);
 
