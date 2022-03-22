@@ -26,7 +26,7 @@ const MyAddsScreen = () => {
 
   const getItems = async () => {
     try {
-      const data = await axios.get("https://33f9-110-138-93-44.ngrok.io/items");
+      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
       setItems(data.data);
     } catch (error) {
       console.log(error);
@@ -38,14 +38,14 @@ const MyAddsScreen = () => {
   }, []);
 
   return (
-    <View style={{flex: 1}}>
-      <SafeAreaView style={styles.header}>
+    <SafeAreaView>
+      <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-              <Text style={styles.nameText}>My Ads</Text>
+            <Text style={styles.nameText}>My Ads</Text>
           </View>
         </View>
-      </SafeAreaView>
+      </View>
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
@@ -58,7 +58,7 @@ const MyAddsScreen = () => {
           numColumns={1}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -66,6 +66,8 @@ const styles = StyleSheet.create({
   listItem: {
     padding: 10,
     paddingTop: StatusBar.currentHeight || 25,
+    paddingBottom: setWidth(45),
+    // paddingBottom: 200,
   },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,

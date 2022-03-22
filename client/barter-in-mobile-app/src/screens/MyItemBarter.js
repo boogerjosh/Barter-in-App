@@ -3,70 +3,67 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   FlatList,
+  TouchableOpacity,
   Dimensions,
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
-import MuBarterRoomComp from "../components/MyBarterRoomComp";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+import MyAddsComp from "../components/MyAddsComp";
+import MyItemComp from "../components/MyItemComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
 
-const BarterRoomScreen = () => {
+const MyItemBarter = () => {
   const navigation = useNavigation();
-  const [roomBarters, setRoomBarters] = useState([]);
-  const getRoomBarters = async () => {
+
+  const [items, setItems] = useState([]);
+
+  const getItems = async () => {
     try {
-      const data = await axios.get(
-        "https://8dea-110-138-93-44.ngrok.io/myRoomBarters"
-      );
-      setRoomBarters(data.data);
+      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+      setItems(data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getRoomBarters();
+    getItems();
   }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <View style={{ flex: 1 }}>
+      <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-            <View>
-              <Text style={styles.nameText}>My Room Barter</Text>
-            </View>
+            <Text style={styles.nameText}>My Items</Text>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
-          data={roomBarters}
+          data={items}
           keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <MyItemComp item={item} />}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
-          renderItem={({ item }) => <MuBarterRoomComp item={item} />}
-          // numColumns={numColumns}
+          numColumns={1}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight || 25,
-    marginBottom: setWidth(20),
-  },
   listItem: {
     padding: 10,
     paddingTop: StatusBar.currentHeight || 25,
@@ -99,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BarterRoomScreen;
+export default MyItemBarter;

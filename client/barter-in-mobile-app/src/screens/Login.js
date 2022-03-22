@@ -38,7 +38,7 @@ const Login = () => {
           const { email, name, photoUrl } = user;
           axios({
             method: "post",
-            url: "https://ac5f-139-193-79-181.ngrok.io/users/googleLogin",
+            url: "https://8dea-110-138-93-44.ngrok.io/users/googleLogin",
             data: user,
           })
             .then((data) => {

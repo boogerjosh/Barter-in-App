@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   icon: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: FONTS.BOLD,
   },
   btnTxtWrapper: {
     flex: 1,
@@ -112,11 +113,13 @@ const styles = StyleSheet.create({
     paddingTop: 70,
     fontSize: 46,
     color: COLORS.EXTRA_LIGHT_GRAY,
+    fontFamily: FONTS.BOLD,
   },
   toText: {
     fontSize: 30,
     color: COLORS.EXTRA_LIGHT_GRAY,
     textAlign: "center",
+    fontFamily: FONTS.BOLD,
   },
   communityText: {
     marginTop: 10,
@@ -124,6 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 35,
     color: COLORS.EXTRA_LIGHT_GRAY,
     textAlign: "center",
+    fontFamily: FONTS.MEDIUM,
   },
   acceptText: {
     marginTop: 50,

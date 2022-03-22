@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
+const { height, width } = Dimensions.get("screen");
+const setWidth = (w) => (width / 100) * w;
+const setHeight = (h) => (height / 200) * h;
 
 const Items = ({ item }) => {
   const navigation = useNavigation();
@@ -27,7 +31,7 @@ const Items = ({ item }) => {
         <ImageBackground
           style={styles.imageContainer}
           imageStyle={{ borderRadius: 12 }}
-          source={{ uri: item.Images.imageUrl }}
+          source={{ uri: item?.Images[0].imageUrl }}
         >
           {/* <View style={{ ...styles.container }}>
           <Image
@@ -49,15 +53,15 @@ const Items = ({ item }) => {
             <Text style={styles.itemSubTitle}>
               Purchased on {item.yearOfPurchase}
             </Text>
-            <View style={styles.rowAndCenter}>
+            {/* <View style={styles.rowAndCenter}>
               <Ionicons
                 style={{ marginRight: 5 }}
                 name="star"
                 size={17}
                 color={COLORS.YELLOW}
               />
-              {/* <Text style={styles.numberRating}>{movie.rating}</Text> */}
-            </View>
+              <Text style={styles.numberRating}>{movie.rating}</Text>
+            </View> */}
           </View>
         </View>
       </View>
@@ -69,20 +73,24 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 10,
   },
   imageContainer: {
     backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
-    width: 160,
-    height: 160,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: setWidth(40),
+    height: setHeight(40),
     borderRadius: 8,
     elevation: 3,
     marginTop: 20,
-    // marginVertical: 20,
-    marginHorizontal: 14,
-    // marginLeft: 15,
+    marginBottom: 10,
+    marginHorizontal: setWidth(5),
   },
   itemTitle: {
-    color: COLORS.LIGHT_GRAY,
+    color: COLORS.DARK_GREY,
+    fontSize: 18,
     fontFamily: FONTS.BOLD,
     paddingVertical: 2,
     width: 140,
@@ -90,7 +98,7 @@ const styles = StyleSheet.create({
   itemSubTitle: {
     fontSize: 14,
     fontFamily: FONTS.MEDIUM,
-    color: COLORS.LIGHT_GRAY,
+    color: COLORS.GRAY,
   },
   itemSubtitleContainer: {
     flexDirection: "row",

@@ -27,7 +27,7 @@ export default [
     id: "5",
     title: "Automotive",
     image: require("../assets/images/automotives.png"),
-    backgroundColor: "#16a085",
+    backgroundColor: "#56C7D6",
   },
   {
     id: "6",
