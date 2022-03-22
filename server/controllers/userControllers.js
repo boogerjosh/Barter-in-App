@@ -5,7 +5,6 @@ const { Item, Image, User, RoomBarter, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
 
-
 class userControllers {
   static async loginGoogle(req, res, next) {
     try {
@@ -41,7 +40,7 @@ class userControllers {
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
-      console.log(userId)
+      console.log(userId);
       const { files } = req;
       const { title, category, description, brand, yearOfPurchase } = req.body;
 
@@ -135,9 +134,41 @@ class userControllers {
       // }
       // console.log(mappedArray);
 
-
-
       await Image.bulkCreate(mappedArray, {
+        returning: true,
+        transaction: t,
+      });
+      await sendEmail({ email: req.userLogin.email });
+      await t.commit();
+
+      res.status(201).send({ message: "Item has been created" });
+    } catch (error) {
+      await t.rollback();
+      next(error);
+    }
+  }
+
+  static async postItemClient() {
+    const t = await sequelize.transaction();
+    try {
+      const userId = req.userLogin.id;
+      const { title, category, description, brand, yearOfPurchase, imagesUrl } =
+        req.body;
+      const createItem = await Item.create(
+        {
+          title,
+          category,
+          description,
+          brand,
+          yearOfPurchase,
+          statusPost: "Reviewed",
+          statusBarter: "Not bartered yet",
+          userId,
+        },
+        { transaction: t }
+      );
+
+      await Image.bulkCreate(imagesUrl, {
         returning: true,
         transaction: t,
       });
