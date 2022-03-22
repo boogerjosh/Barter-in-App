@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 const Redis = require("ioredis");
-const url = "http://localhost:3000/users";
+const url = "http://localhost:3001/users";
 const redis = new Redis({
   port: 10199,
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
@@ -28,11 +28,29 @@ const typeDefs = gql`
     userId: ID
     createdAt: String
     updatedAt: String
+    Images: [Image]
+    User: UserType
   }
+
+  type Image {
+    id: ID
+    imageUrl: String
+    tag: String
+  }
+
+  type UserType {
+    id: ID
+    username: String
+    email: String
+    role: String
+    address: String
+    photoUrl: String
+  }
+
   type status {
-    status: String
     message: String
   }
+
   type RoomBarter {
     id: ID
     user1: ID
@@ -42,6 +60,21 @@ const typeDefs = gql`
     status1: Boolean
     status2: Boolean
   }
+
+  input inputItem {
+    title: String
+    description: String
+    brand: String
+    yearOfPurchase: String
+    category: String
+    images: [image]
+  }
+
+  input image {
+    imageUrl: String
+    tag: String
+  }
+
   type Query {
     getItems: [Item]
     getItemsHome: [Item]
@@ -50,6 +83,7 @@ const typeDefs = gql`
     getDataForBarter(access_token: String): [Item]
     getRoomBarter(access_token: String): [RoomBarter]
   }
+
   type Mutation {
     deleteItem(itemId: ID, access_token: String): status
     postRoomBarter(
@@ -59,16 +93,7 @@ const typeDefs = gql`
       item2: ID
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
-    postItem(
-      image1: String
-      image2: String
-      image3: String
-      title: String
-      description: String
-      brand: String
-      yearOfPurchase: String
-      category: String
-    ): status
+    postItem(newItem: inputItem, access_token: String): status
   }
 `;
 
@@ -77,7 +102,8 @@ const resolvers = {
     getItems: async () => {
       try {
         const cache = await redis.get("items");
-        if (cache) return JSON.parse(cache);
+        redis.del("items");
+        if (cache && cache.length > 0) return JSON.parse(cache);
         const { data } = await axios(`${url}/items`);
         await redis.set("items", JSON.stringify(data));
         return data;
@@ -140,6 +166,22 @@ const resolvers = {
   },
   Mutation: {
     postItem: async (_, args) => {
+      try {
+        const { access_token, newItem } = args;
+        const { title, description, category, yearOfPublish, brand } = newItem;
+        let { data } = await axios.post(
+          `${url}/items`,
+          { title, description, category, yearOfPublish, brand },
+          {
+            headers: {
+              access_token,
+            },
+          }
+        );
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
       // formData.append("image", args.image1);
       // formData.append("image", args.image2);
       // formData.append("image", args.image3);
@@ -159,12 +201,6 @@ const resolvers = {
       // });
       // console.log(formData);
     },
-    // singleUpload: async (parent, { args, file }) => {
-    //   console.log(args);
-    //   const { createReadStream, filename, mimetype, encoding } = await file;
-    //   const base64 = createReadStream({ encoding: "base64" });
-    //   return { filename, mimetype, encoding };
-    // },
     deleteItem: async (_, args) => {
       try {
         const { data } = await axios({
