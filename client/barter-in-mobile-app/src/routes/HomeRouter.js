@@ -8,6 +8,7 @@ import DetailScreen from "../screens/Detail";
 import ListItemHomeScreen from "../screens/ListItemHome";
 import Login from "../screens/Login";
 import COLORS from "../constants/Colors";
+import MyItemScreen from '../screens/MyItem'
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const HomeRouter = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen name="MyItem" component={MyItemScreen} />
       <Stack.Screen
         name="Login"
         component={Login}
@@ -35,17 +37,23 @@ const HomeRouter = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="BarterRoom" component={BarterRoomScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen
-        name="Detail"
-        component={DetailScreen}
+          name="Detail"
+          component={DetailScreen}
+          options={{
+            headerBackTitleVisible: false,
+            title: "",
+            headerTintColor: COLORS.PRIMARY,
+          }}
+        />
+      <Stack.Screen
+        name="BarterRoom"
+        component={BarterRoomScreen}
         options={{
-          headerBackTitleVisible: false,
-          title: "",
-          headerTintColor: COLORS.PRIMARY,
+           headerShown: false,
         }}
       />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen
         name="ListItemHome"
         component={ListItemHomeScreen}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -72,15 +72,6 @@ const HomeScreen = () => {
           <View>
             <Text style={styles.categoryTitle}>Categories</Text>
           </View>
-          <View>
-            <TouchableOpacity
-              style={styles.button}
-              activeOpacity={0.8}
-              onPress={() => navigation.navigate("Login", {})}
-            >
-              <Text style={styles.buttonText}>Ke Login</Text>
-            </TouchableOpacity>
-          </View>
         </View>
         <View style={{ marginTop: 10 }}>
           {categories.map((chunk, index) => {
@@ -91,6 +82,7 @@ const HomeScreen = () => {
                   flexDirection: "row",
                   justifyContent: "center",
                   marginTop: 10,
+                  marginBottom: 10,
                 }}
               >
                 {chunk.map((category) => {
@@ -103,7 +95,7 @@ const HomeScreen = () => {
                         key={category.id}
                         style={{
                           width: width / 3 - 30,
-                          marginHorizontal: 10,
+                          marginHorizontal: 12,
                           justifyContent: "center",
                           marginBottom: 20,
                         }}
@@ -112,18 +104,18 @@ const HomeScreen = () => {
                           style={{
                             position: "absolute",
                             top: 0,
-                            backgroundColor: COLORS.PRIMARY_LIGHT,
+                            backgroundColor: category.backgroundColor,
                             borderRadius: 10,
                             width: width / 3 - 30,
-                            height: width / 3 - 60,
+                            height: width / 3 - 30,
                           }}
                         />
                         <View>
                           <Image
                             source={category.image}
                             style={{
-                              width: width / 4 - 30,
-                              height: width / 4 - 30,
+                              width: width / 5 - 30,
+                              height: width / 5 - 30,
                             }}
                           />
                           <Text
@@ -131,7 +123,7 @@ const HomeScreen = () => {
                               textAlign: "center",
                               fontFamily: FONTS.MEDIUM,
                               marginTop: 10,
-                              fontSize: 16,
+                              fontSize: 17,
                             }}
                           >
                             {category.title}
@@ -145,14 +137,6 @@ const HomeScreen = () => {
             );
           })}
         </View>
-      <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={() => navigation.push("ListItemHome")}
-        >
-          <Text style={styles.buttonText}>List Item</Text>
-        </TouchableOpacity>
-        
       </View>
     </ScrollView>
   );
@@ -181,7 +165,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 50,
-    // borderColor: COLORS.WHITE,
+    borderColor: COLORS.EXTRA_LIGHT_GRAY,
     borderWidth: 2,
   },
   headerDetails: {

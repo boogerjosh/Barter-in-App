@@ -37,19 +37,20 @@ const Login = () => {
         if (type === "success") {
           const { email, name, photoUrl } = user;
           axios({
-            method: "post",
-            url: " http://da67-139-193-79-181.ngrok.io/users/googleLogin",
-            data: user,
+            method: 'post',
+            url: 'https://6085-2001-448a-1061-10b7-51be-a27c-aa8c-bde2.ngrok.io/users/googleLogin',
+            data: user
           })
             .then((data) => {
+              console.log(data.data);
               AsyncStorage.setItem("access_token", data.data.access_token);
               AsyncStorage.setItem("id", data.data.id);
               AsyncStorage.setItem("username", data.data.username);
-              console.log("Google signin successfull", "SUCCESS");
-              navigation.navigate("HomeRouter");
-              // setTimeout(() => navigation.navigate("HomeRouter"), 1000);
             })
             .catch((err) => console.log("GAGAL MASUK SERVER"));
+
+          console.log("Google signin successfull", "SUCCESS");
+          setTimeout(() => navigation.navigate("HomeRouter"), 1000);
         } else {
           console.log("Google signin was canceled");
         }
@@ -72,7 +73,7 @@ const Login = () => {
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.welcomeText}>Welcome</Text>
+              <Text style={styles.welcomeText}>LOGIN</Text>
               <Text style={styles.toText}>to</Text>
             </View>
           </View>

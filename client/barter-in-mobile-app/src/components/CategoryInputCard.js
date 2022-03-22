@@ -7,18 +7,16 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import categories from "../../data/categories";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 
-const CategoryInputCard = ({ item }) => {
-  const navigation = useNavigation();
+const CategoryInputCard = ({ item, navigation }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.push("Detail")}
+      onPress={() => navigation.navigate('InputItem', {
+        id: item.title,
+      })}
     >
       <View style={styles.container}>
         <ImageBackground
@@ -29,7 +27,6 @@ const CategoryInputCard = ({ item }) => {
             flexDirection: "row",
             alignItems: "flex-end",
           }}
-          // source={item.image}
         >
           <Image
             source={item.image}
@@ -38,18 +35,7 @@ const CategoryInputCard = ({ item }) => {
               height: 40,
             }}
           />
-          {/* <View>
-            <View style={styles.highlightItem}>
-              <View style={styles.chipsContainer}>
-                <Text style={styles.chips}>{item.chips}</Text>
-              </View>
-            </View>
-            <View>
-              <Text style={styles.highlightTitle}>{item.title}</Text>
-            </View>
-          </View> */}
-
-          <Text style={styles.itemTitle} numberOfLines={3}>
+          <Text style={styles.itemTitle}>
             {item.title}
           </Text>
         </ImageBackground>
@@ -61,7 +47,7 @@ const CategoryInputCard = ({ item }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   imageContainer: {
@@ -69,38 +55,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: 160,
-    height: 160,
+    width: 140,
+    height: 140,
     borderRadius: 8,
     elevation: 3,
     marginTop: 20,
     marginBottom: 10,
-    // marginVertical: 20,
-    marginHorizontal: 14,
-    // marginLeft: 15,
+    marginHorizontal: 23,
   },
   itemTitle: {
     color: COLORS.DARK_GREY,
     fontFamily: FONTS.BOLD,
-    fontSize: 20,
+    fontSize: 15,
     paddingVertical: 2,
     width: 140,
     textAlign: "center",
-  },
-  itemSubTitle: {
-    fontSize: 14,
-    fontFamily: FONTS.MEDIUM,
-    color: COLORS.LIGHT_GRAY,
-  },
-  itemSubtitleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  rowAndCenter: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  }
 });
 
 export default CategoryInputCard;

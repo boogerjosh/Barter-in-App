@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ImageBackground,
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -18,7 +17,6 @@ const SPACING = 20;
 const ITEM_SIZE = 30;
 
 const MuBarterRoomComp = ({ item }) => {
-  // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
   const navigation = useNavigation();
 
   return (
@@ -115,8 +113,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    // width: ITEM_SIZE,
-    // height: ITEM_SIZE,
     borderRadius: 70,
     marginRight: 10,
   },
@@ -173,10 +169,9 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.BOLD,
     fontSize: 22,
     paddingVertical: 2,
-    // width: 140,
   },
   itemSubTitle: {
-    fontSize: 18,
+    fontSize: setWidth(4),
     fontFamily: FONTS.MEDIUM,
     color: COLORS.LIGHT_GRAY,
   },
@@ -207,10 +202,6 @@ const styles = StyleSheet.create({
     color: COLORS.EXTRA_LIGHT_GRAY,
     fontFamily: FONTS.BOLD,
   },
-  // rowAndCenter: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  // },
 });
 
 export default MuBarterRoomComp;
