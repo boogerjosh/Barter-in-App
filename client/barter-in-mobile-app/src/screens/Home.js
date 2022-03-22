@@ -22,11 +22,28 @@ import Highlight from "../components/Highlight";
 import Categories from "../components/Categories";
 import categoryAdd from "../../data/categoryAdd";
 import ItemSpace from "../components/ItemSpace";
+import axios from "axios";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 3;
 const HomeScreen = () => {
   const navigation = useNavigation();
+
+  const [items, setItems] = useState([]);
+
+  const getItems = async () => {
+    try {
+      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+      setItems(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
   return (
     <SafeAreaView
       contentContainerStyle={styles.container}
@@ -58,7 +75,7 @@ const HomeScreen = () => {
       {/* Search Bar */}
       <View style={styles.highlightWrapper}>
         <FlatList
-          data={highlights}
+          data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Highlight item={item} />}
           horizontal

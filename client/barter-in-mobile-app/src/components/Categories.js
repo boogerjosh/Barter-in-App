@@ -27,6 +27,8 @@ const Categories = ({ item }) => {
           justifyContent: "center",
           marginBottom: 20,
           marginTop: 10,
+          elevation: 3,
+          borderRadius: 8,
         }}
       >
         <View

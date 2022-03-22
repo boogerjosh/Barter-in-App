@@ -15,4 +15,5 @@ export default {
   EXTRA_LIGHT_GRAY: "#E5E5E5",
   GREEN: "#95CD41",
   RED_ERROR: "#F54748",
+  NEUTRAL: "#404040",
 };

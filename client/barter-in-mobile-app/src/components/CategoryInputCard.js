@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
     marginHorizontal: setWidth(5),
   },
   itemTitle: {
-    color: COLORS.DARK_GREY,
+    color: COLORS.NEUTRAL,
     fontFamily: FONTS.BOLD,
-    fontSize: 15,
+    fontSize: 18,
     paddingVertical: 2,
     width: 140,
     textAlign: "center",
