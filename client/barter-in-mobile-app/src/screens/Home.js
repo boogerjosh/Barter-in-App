@@ -41,10 +41,12 @@ const HomeScreen = () => {
   });
 
   let items = [];
+
   if (data) {
     console.log(data.getItemsHome, ">>>>>");
     items = data?.getItemsHome;
   }
+  
   if (loading) {
     return <View></View>;
   }
@@ -58,6 +60,7 @@ const HomeScreen = () => {
   //     console.log(error);
   //   }
   // };
+
 
   return (
     <SafeAreaView
