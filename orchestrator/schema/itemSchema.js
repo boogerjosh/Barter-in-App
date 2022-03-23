@@ -1,19 +1,19 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
-const Redis = require("ioredis");
 const url = "http://localhost:3001/users";
-const redis = new Redis({
-  port: 10199,
-  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
-  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-});
+// const Redis = require("ioredis");
+// const redis = new Redis({
+//   port: 10199,
+//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
+//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+// });
 // const {
 //   GraphQLUpload,
 //   graphqlUploadExpress, // A Koa implementation is also exported.
 // } = require("graphql-upload");
 // const { finished } = require("stream/promises");
-const FormData = require("form-data");
-const formData = new FormData();
+// const FormData = require("form-data");
+// const formData = new FormData();
 
 const typeDefs = gql`
   type Item {
@@ -90,8 +90,13 @@ const typeDefs = gql`
     tag: String
   }
 
+  input inputSearch {
+    filterByTitle: String
+    filterByCategory: String
+  }
+
   type Query {
-    getItems: [Item]
+    getItems(search: inputSearch): [Item]
     getItemsHome: [Item]
     getItem(itemId: ID): Item
     getMyAds(access_token: String): [Item]
@@ -115,13 +120,13 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    getItems: async () => {
+    getItems: async (_, args) => {
       try {
-        const cache = await redis.get("items");
-        redis.del("items");
-        if (cache && cache.length > 0) return JSON.parse(cache);
-        const { data } = await axios(`${url}/items`);
-        await redis.set("items", JSON.stringify(data));
+        const { search } = args;
+        const { filterByTitle, filterByCategory } = search;
+        const { data } = await axios.get(
+          `${url}/items?filterByTitle=${filterByTitle}&filterByCategory=${filterByCategory}`
+        );
         return data;
       } catch (error) {
         console.log(error);

@@ -5,6 +5,8 @@ const { signToken } = require("../helpers/jwt");
 const { hashPassword } = require("../helpers/bcrypt");
 const { queryInterface } = sequelize;
 
+jest.mock("ioredis");
+const Redis = require("ioredis");
 jest.setTimeout(2000);
 
 let access_token;
