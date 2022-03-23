@@ -14,22 +14,43 @@ import ItemSpace from "../components/ItemSpace";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Items from "../components/Items";
-import items from "../../data/items";
+// import items from "../../data/items";
+
+import { useQuery } from "@apollo/client";
+import { GET_ITEMS } from "../../lib/apollo/queries/items";
+
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 2;
 const ListItemHomeScreen = () => {
   const navigation = useNavigation();
+
+  const { loading, error, data } = useQuery(GET_ITEMS, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      search: {
+        filterByCategory: "",
+        filterByTitle: "",
+      },
+    },
+  });
+
+  let items;
+  if (data) {
+    items = data?.getItems;
+  }
+
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-              <Text style={styles.nameText}>Category Name</Text>
+            <Text style={styles.nameText}>Category Name</Text>
           </View>
         </View>
       </SafeAreaView>
-       <View style={styles.search}>
+      <View style={styles.search}>
         <View style={styles.searchWrapper}>
           <FontAwesome5
             name="search"
@@ -40,15 +61,15 @@ const ListItemHomeScreen = () => {
           <TextInput placeholder="Search Item" style={styles.searchInput} />
         </View>
       </View>
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <Items item={item} />}
-          ItemSeparatorComponent={() => <ItemSpace width={10} />}
-          ListHeaderComponent={() => <ItemSpace width={10} />}
-          ListFooterComponent={() => <ItemSpace width={10} />}
-          numColumns={numColumns}
-        />
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <Items item={item} />}
+        ItemSeparatorComponent={() => <ItemSpace width={10} />}
+        ListHeaderComponent={() => <ItemSpace width={10} />}
+        ListFooterComponent={() => <ItemSpace width={10} />}
+        numColumns={numColumns}
+      />
     </View>
   );
 };
