@@ -54,9 +54,7 @@ class userControllers {
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
-      console.log(userId);
       const { files } = req;
-      console.log(files)
       const { title, category, description, brand, yearOfPurchase } = req.body;
 
       const createItem = await Item.create(
@@ -91,7 +89,6 @@ class userControllers {
           });
         })
       );
-
 
       // const mappedArray = await Promise.all(
       //   files.map((file) => {
@@ -150,7 +147,6 @@ class userControllers {
       // }
       // console.log(mappedArray);
 
-
       await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
@@ -185,22 +181,25 @@ class userControllers {
           });
         })
       );
-
-      console.log(mappedArray)
-      res.status(200).json(mappedArray);
+      res.status(201).json(mappedArray);
     } catch (error) {
-      console.log(error)
-      next(error)
+      next(error);
     }
   }
 
   static async addItem(req, res, next) {
-
-     const t = await sequelize.transaction();
+    const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
-      const { title, category, description, brand, yearOfPurchase, imageFields } = req.body;
-      console.log(req.body)
+      const {
+        title,
+        category,
+        description,
+        brand,
+        yearOfPurchase,
+        imageFields,
+      } = req.body;
+
       const createItem = await Item.create(
         {
           title,
@@ -213,10 +212,8 @@ class userControllers {
           userId,
         },
         {
-
-          returning: true, 
-          transaction: t
-
+          returning: true,
+          transaction: t,
         }
       );
 
@@ -225,10 +222,10 @@ class userControllers {
           imageUrl: el.imageUrl,
           tag: el.tag,
 
-          itemId: createItem.id
-        }
-        return temp
-      })
+          itemId: createItem.id,
+        };
+        return temp;
+      });
 
       await Image.bulkCreate(imagesData, {
         returning: true,
@@ -239,7 +236,6 @@ class userControllers {
       await t.commit();
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
-      console.log(error);
       await t.rollback();
       next(error);
     }
@@ -247,8 +243,7 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
-
-      const cache = await redis.get('items')
+      const cache = await redis.get("items");
       if (cache) res.status(200).json(JSON.parse(cache));
 
       let { filterByTitle, filterByCategory } = req.query;

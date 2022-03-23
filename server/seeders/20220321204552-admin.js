@@ -15,15 +15,30 @@ module.exports = {
       "Users",
       [
         {
-          username: "admin",
-          email: "admin@mail.com",
-          password: hashPassword("123456"),
+          username: "Haryo",
+          email: "haryosee@gmail.com",
+          password: hashPassword("dewufnbwifr92j9i2"),
           address: "-",
           role: "Admin",
-          photoUrl:
-            "https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png",
+          photoUrl: "-",
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+        {
+          name: "Joshua",
+          email: "joshsudarso19@gmail.com",
+          password: hashPassword("smio28934ng02m"),
+          role: "Customer",
+          address: "-",
+          photoUrl: "-",
+        },
+        {
+          name: "Joshua",
+          email: "joshsmtpng19@gmail.com",
+          password: hashPassword("kdor02jmc9w39"),
+          role: "Customer",
+          address: "-",
+          photoUrl: "-",
         },
       ],
       {}

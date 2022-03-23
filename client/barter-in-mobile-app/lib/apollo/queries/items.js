@@ -1,12 +1,13 @@
 import { gql } from "@apollo/client";
 
 export const GET_ITEMS = gql`
-  query Query {
-    getItems {
+  query GetItems($search: inputSearch) {
+    getItems(search: $search) {
       id
       title
       category
       yearOfPurchase
+      brand
       Images {
         id
         imageUrl
@@ -131,6 +132,16 @@ export const POST_ITEM = gql`
   mutation Mutation($newItem: inputItem) {
     postItem(newItem: $newItem) {
       message
+    }
+  }
+`;
+
+export const POST_GOOGLE_LOGIN = gql`
+  mutation LoginGoogle($newUser: inputUser) {
+    loginGoogle(newUser: $newUser) {
+      access_token
+      id
+      username
     }
   }
 `;
