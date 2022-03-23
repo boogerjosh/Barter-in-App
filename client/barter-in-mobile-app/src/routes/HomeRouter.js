@@ -9,7 +9,7 @@ import ListItemHomeScreen from "../screens/ListItemHome";
 import Login from "../screens/Login";
 import COLORS from "../constants/Colors";
 
-import MyItemScreen from '../screens/MyItem'
+import MyItemScreen from '../screens/MyItemBarter'
 import ChatRoomScreen from "../screens/ChatRoom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -44,7 +44,7 @@ const HomeRouter = () => {
     <Stack.Navigator
       screenListeners={({ route, navigation }) => ({
         state: (e) => {
-          if ((!auth && route.name === 'ChatRoom') || (!auth && route.name === 'MyItem')) {
+          if ((!auth && route.name === 'MyChatRoom') || (!auth && route.name === 'MyItemBarter')) {
             navigation.navigate('Login')
           } 
         },
@@ -68,24 +68,12 @@ const HomeRouter = () => {
           }}
       />
 
-     <Stack.Screen name="ChatRoom" component={ChatRoomScreen}
+     <Stack.Screen name="MyChatRoom" component={ChatRoomScreen}
       options={({ route }) => ({
         title: route.params.userName
       })}
      />
-      
-      
-      <Stack.Screen
-        name="Detail"
-        component={DetailScreen}
-        options={{
-          headerBackTitleVisible: false,
-          title: "",
-          headerTintColor: COLORS.PRIMARY,
-        }}
-      />
 
-      <Stack.Screen name="MyChatRoom" component={ChatRoomScreen} />
       <Stack.Screen
         name="MyItemBarter"
         component={MyItemBarterScreen}

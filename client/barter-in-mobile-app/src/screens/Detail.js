@@ -374,9 +374,7 @@ const DetailScreen = () => {
               justifyContent: "center",
               marginTop: 4,
             }}
-
             onPress={() => navigation.push("MyItemBarter", {})}
-
           >
             <Text
               style={{
@@ -400,11 +398,7 @@ const DetailScreen = () => {
               marginTop: 20,
               marginBottom: 25,
             }}
-
-            onPress={() => navigation.push("MyChatRoom", , {
-              userName: 'Josua', 
-            })}
-
+            onPress={() => navigation.push("MyChatRoom", { userName: 'Josua' })}
           >
             <Text
               style={{
