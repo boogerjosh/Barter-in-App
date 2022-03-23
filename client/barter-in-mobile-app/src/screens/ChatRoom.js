@@ -12,6 +12,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import COLORS from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 Notifications.setNotificationHandler({
@@ -31,7 +32,7 @@ const ChatRoomScreen = () => {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
   const [id, setId] = useState();
-  const [photoUrl, setPhotoUrl] = useState()
+  const [photoUrl, setPhotoUrl] = useState();
   const [receiverId, setReceiverId] = useState(10000);
   const [displayMessage, setDisplayMessage] = useState([]);
 
@@ -43,7 +44,7 @@ const ChatRoomScreen = () => {
     setUsername(await AsyncStorage.getItem("username"));
     setId(Number(await AsyncStorage.getItem("id")));
 
-    setPhotoUrl(await AsyncStorage.getItem("photoUrl"))
+    setPhotoUrl(await AsyncStorage.getItem("photoUrl"));
     if (Number(await AsyncStorage.getItem("id")) === 2) {
       setReceiverId(8);
     } else setReceiverId(2);
@@ -59,7 +60,6 @@ const ChatRoomScreen = () => {
         ) {
           tampung.push(e);
         }
-
       });
       return tampung;
     }

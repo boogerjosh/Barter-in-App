@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  SafeAreaView,
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -23,15 +24,15 @@ const MyItemComp = ({ item }) => {
   const navigation = useNavigation();
   // console.log(stylingStatus());
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.itemWrapper}>
         <View style={styles.mainCardContent}>
           <View style={styles.leftContainer}>
             <Image
               source={{ uri: item?.Images[0].imageUrl }}
               style={{
-                width: 70,
-                height: 70,
+                width: setWidth(20),
+                height: setHeight(20),
                 borderRadius: 10,
                 marginRight: 10,
                 borderColor: COLORS.LIGHT_GRAY,
@@ -44,32 +45,35 @@ const MyItemComp = ({ item }) => {
             <Text style={styles.itemTitle} numberOfLines={3}>
               {item?.title}
             </Text>
-            <Text style={styles.itemSubTitle}>Brand: {item?.brand}</Text>
+            <Text style={styles.itemSubTitle}>{item?.brand}</Text>
             <Text style={styles.itemSubTitle}>
-              Since : {item?.yearOfPurchase} | Category: {item?.category}
+              {item?.yearOfPurchase} | {item?.category}
             </Text>
           </View>
           <TouchableOpacity
-            activeOpacity={1.2}
-            onPress={() =>
-              navigation.push("BarterRoom", {
-                id: item.id,
-              })
-            }
+            style={{
+              backgroundColor: COLORS.ACTIVE,
+              width: setWidth(10),
+              marginLeft: 50,
+              paddingVertical: setWidth(2),
+              borderRadius: 8,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => navigation.push("MyChatRoom")}
           >
-            <View style={styles.addIconContainer}>
-              <Ionicons name="add" size={24} color={COLORS.ACTIVE} />
-            </View>
+            <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // paddingBottom: 10,
   },
   addIconContainer: {
     borderRadius: 6,

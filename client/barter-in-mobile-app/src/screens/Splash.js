@@ -32,8 +32,8 @@ const Splash = ({ navigation }) => {
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.welcomeText}>WELCOME</Text>
-              <Text style={styles.toText}>to</Text>
+              <Text style={styles.welcomeText}></Text>
+              <Text style={styles.toText}></Text>
             </View>
           </View>
           <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -75,8 +75,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   icon: {
-    // fontWeight: "bold",
-    fontFamily: FONTS.BOLD,
+    fontWeight: "bold",
   },
   btnTxtWrapper: {
     flex: 1,
@@ -118,16 +117,16 @@ const styles = StyleSheet.create({
   toText: {
     fontSize: 30,
     color: COLORS.EXTRA_LIGHT_GRAY,
-    textAlign: "center",
     fontFamily: FONTS.BOLD,
+    textAlign: "center",
   },
   communityText: {
     marginTop: 10,
     fontSize: 20,
     marginBottom: 35,
     color: COLORS.EXTRA_LIGHT_GRAY,
+    fontFamily: FONTS.BOLD,
     textAlign: "center",
-    fontFamily: FONTS.MEDIUM,
   },
   acceptText: {
     marginTop: 50,
@@ -146,6 +145,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     color: COLORS.DARK_GREY,
+    fontFamily: FONTS.BOLD,
     color: "white",
   },
 });
