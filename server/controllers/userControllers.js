@@ -325,6 +325,7 @@ class userControllers {
             },
           ],
         },
+        include: [Image],
       });
       res.status(200).json(items);
     } catch (error) {

@@ -171,7 +171,7 @@ const resolvers = {
         const { title, description, category, yearOfPublish, brand, images } =
           newItem;
         let { data } = await axios.post(
-          `${url}/items`,
+          `${url}/additem`,
           { title, description, category, yearOfPublish, brand, images },
           {
             headers: {
@@ -183,24 +183,6 @@ const resolvers = {
       } catch (error) {
         console.log(error);
       }
-      // formData.append("image", args.image1);
-      // formData.append("image", args.image2);
-      // formData.append("image", args.image3);
-      // formData.append("title", args.title);
-      // formData.append("description", args.description);
-      // formData.append("brand", args.brand);
-      // formData.append("yearOfPurchase", args.yearOfPurchase);
-      // formData.append("category", args.category);
-      // axios({
-      //   url: "http://localhost:3000/users/items",
-      //   method: "post",
-      //   headers: {
-      //     access_token:
-      //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ1c2VyNEBnbWFpbC5jb20iLCJpYXQiOjE2NDc4MzgwMjh9.c9EMivPs26p30CM94xH0tNMTtxm6G1pK8JIgxcIrldo",
-      //   },
-      //   data: formData,
-      // });
-      // console.log(formData);
     },
     deleteItem: async (_, args) => {
       try {
