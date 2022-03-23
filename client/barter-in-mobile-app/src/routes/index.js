@@ -6,6 +6,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../constants/Colors";
+import * as Notifications from "expo-notifications";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect } from "react";
 
 import HomeRouter from "./HomeRouter";
 import BarterRouter from "./BarterRouter";
@@ -20,10 +23,25 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
+
+  const navigation = useNavigation()
+  useEffect(()=> {
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      navigation.push(response.notification.request.content.data.navigate)
+    });
+  },[])
   const getTabBarStyle = (route) => {
     const routeName = getFocusedRouteNameFromRoute(route);
     let display =

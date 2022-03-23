@@ -4,6 +4,12 @@ const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, RoomBarter, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
+const Redis = require("ioredis");
+const redis = new Redis({
+  port: 10199,
+  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
+  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+});
 
 class userControllers {
   static async loginGoogle(req, res, next) {
@@ -16,7 +22,7 @@ class userControllers {
         defaults: {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
-          username: payload.givenName,
+          username: payload.name,
           address: "-",
           photoUrl: payload.photoUrl,
         },
@@ -25,11 +31,16 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-
+      const newToken = { id: user[0].dataValues.id, token: req.body.token };
+      await redis.set(
+        `tokenForId${user[0].dataValues.id}`,
+        JSON.stringify(newToken)
+      );
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
         username: user[0].dataValues.username,
+        photoUrl: user[0].dataValues.photoUrl,
       });
     } catch (err) {
       next(err);

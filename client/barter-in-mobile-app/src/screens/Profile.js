@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -31,6 +31,7 @@ const ProfileScreen = () => {
   const toLoginPage = () => {
     navigation.navigate("Login");
   };
+
   const logout = async () => {
     await AsyncStorage.removeItem("access_token");
     setAuth(false);
@@ -53,6 +54,7 @@ const ProfileScreen = () => {
   useFocusEffect(() => {
     getToken();
   });
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.header}>

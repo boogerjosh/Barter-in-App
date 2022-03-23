@@ -23,7 +23,29 @@ const windowHeight = Dimensions.get("window").height;
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
+// COBAAAAAAAAA
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  token = (await Notifications.getExpoPushTokenAsync()).data;
+  return token;
+}
+
 const Login = () => {
+  const [token, setToken] = useState('')
+  useEffect(() => {
+      registerForPushNotificationsAsync().then((data) => setToken(data))
+  }, []);
+
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
   const navigation = useNavigation();
   const handleGoogleSignIn = () => {
@@ -36,20 +58,20 @@ const Login = () => {
     Google.logInAsync(config)
       .then((result) => {
         const { type, user } = result;
-        console.log(user);
         if (type === "success") {
           const { email, name, photoUrl } = user;
+
           axios({
             method: "post",
-            url: "http://0a0c-139-193-79-181.ngrok.io/users/googleLogin",
-            data: user,
+            url: "http://31f6-125-160-237-226.ngrok.io/users/googleLogin",
+            data: { email, name, photoUrl, token: token },
           })
             .then((data) => {
-              console.log(data.data);
               AsyncStorage.setItem("access_token", data.data.access_token);
               AsyncStorage.setItem("id", data.data.id);
               AsyncStorage.setItem("username", data.data.username);
-              console.log("Google signin successfull", "SUCCESS");
+              console.log("Google signin successfull", "SUCCESS");             
+              AsyncStorage.setItem("photoUrl", data.data.photoUrl);
               setTimeout(() => navigation.navigate("HomeRouter"), 1000);
             })
             .catch((err) => console.log("GAGAL MASUK SERVER"));

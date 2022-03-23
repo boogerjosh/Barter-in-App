@@ -12,6 +12,7 @@ import {
   Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+// import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
@@ -37,11 +38,7 @@ const HomeScreen = () => {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
   });
-  // const [items, setItems] = useState([]);
-  // if (data) {
-  //   console.log(data.getItemsHome);
-  //   setItems(data.getItemsHome);
-  // }
+  
   let items;
   if (data) {
     items = data?.getItemsHome;

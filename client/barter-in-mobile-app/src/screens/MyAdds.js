@@ -43,7 +43,7 @@ const MyAddsScreen = () => {
   const getItems = async () => {
     try {
       const data = await axios.get(
-        "http://6cc5-139-193-79-181.ngrok.io/users/myads",
+        "http://7cd3-110-138-93-44.ngrok.io/users/myads",
         {
           headers: {
             access_token: await AsyncStorage.getItem("access_token"),
