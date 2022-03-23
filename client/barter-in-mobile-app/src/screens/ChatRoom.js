@@ -23,10 +23,10 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-socket = io("http://ac5f-139-193-79-181.ngrok.io");
-socket.on("connect", () => {
-  console.log(socket.id, ">>>>>adsa"); // x8WIv7-mJelg7on_ALbx
-});
+// socket = io("https://af93-110-138-93-445.ngrok.io");
+// socket.on("connect", () => {
+//   // console.log(socket.id, ">>>>>adsa"); // x8WIv7-mJelg7on_ALbx
+// });
 
 const ChatRoomScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -103,9 +103,9 @@ const ChatRoomScreen = () => {
   }, [username, senderId]);
 
   useEffect(() => {
-    socket.on("getMessage", (message) => {
-      setMessageData(message);
-    });
+    // socket.on("getMessage", (message) => {
+    //   setMessageData(message);
+    // });
   }, []);
 
   function submitChatMessage() {

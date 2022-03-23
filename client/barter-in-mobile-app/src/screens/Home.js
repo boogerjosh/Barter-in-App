@@ -12,6 +12,7 @@ import {
   Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+// import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
@@ -33,7 +34,7 @@ const HomeScreen = () => {
 
   const getItems = async () => {
     try {
-      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+      const data = await axios.get("https://7cd3-110-138-93-44.ngrok.io/items");
       setItems(data.data);
     } catch (error) {
       console.log(error);

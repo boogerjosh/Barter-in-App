@@ -51,7 +51,7 @@ const MyAddsComp = ({ item }) => {
         <TouchableOpacity
           style={{
             backgroundColor: COLORS.RED_ERROR,
-            width: 80,
+            width: 60,
             paddingVertical: setWidth(2),
             borderRadius: 8,
             justifyContent: "center",
@@ -61,14 +61,15 @@ const MyAddsComp = ({ item }) => {
           }}
           onPress={() => navigation.push("MyChatRoom")}
         >
-          <Text
+          {/* <Text
             style={{
               color: COLORS.EXTRA_LIGHT_GRAY,
               fontFamily: FONTS.MEDIUM,
             }}
           >
             Delete
-          </Text>
+          </Text> */}
+          <Ionicons name="md-trash-outline" size={24} color="white" />
         </TouchableOpacity>
       );
     }
@@ -90,8 +91,8 @@ const MyAddsComp = ({ item }) => {
               <Image
                 source={{ uri: item?.Images[0].imageUrl }}
                 style={{
-                  width: 70,
-                  height: 70,
+                  width: setWidth(25),
+                  height: setHeight(25),
                   borderRadius: 10,
                   marginRight: 10,
                   borderColor: COLORS.LIGHT_GRAY,
@@ -104,11 +105,11 @@ const MyAddsComp = ({ item }) => {
               <Text style={styles.itemTitle} numberOfLines={3}>
                 {item?.title}
               </Text>
-              <Text style={styles.itemSubTitle}>Brand: {item?.brand}</Text>
+              <Text style={styles.itemSubTitle}>{item?.brand}</Text>
               <Text style={styles.itemSubTitle}>
-                Since : {item?.yearOfPurchase} | Category: {item?.category}
+                {item?.yearOfPurchase} | {item?.category}
               </Text>
-              <Text style={styles.itemSubTitle}>Status: {messageStatus()}</Text>
+              <Text style={styles.itemSubTitle}>{messageStatus()}</Text>
             </View>
           </View>
           <View style={styles.buttonAndChips}>
@@ -141,8 +142,8 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
   },
 
   rightContainer: {
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     paddingHorizontal: 20,
+    marginLeft: setWidth(2),
     paddingVertical: setWidth(0.5),
   },
   chips: {

@@ -6,10 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import COLORS from "../constants/Colors";
 import FONTS from "../constants/Fonts";
 import { useNavigation } from "@react-navigation/native";
+const { height, width } = Dimensions.get("screen");
+const setWidth = (w) => (width / 100) * w;
+const setHeight = (h) => (height / 200) * h;
 
 const Highlight = ({ item }) => {
   const navigation = useNavigation();
@@ -56,6 +60,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 5,
     marginVertical: 2,
+    shadowColor: COLORS.GRAY,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
   },
   itemTitle: {
     fontFamily: FONTS.BOLD,

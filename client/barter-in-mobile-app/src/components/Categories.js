@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import COLORS from "../constants/Colors";
 import FONTS from "../constants/Fonts";
 const { height, width } = Dimensions.get("screen");
-
+const setHeight = (h) => (height / 200) * h;
 const setWidth = (w) => (width / 100) * w;
 const Categories = ({ item }) => {
   const navigation = useNavigation();

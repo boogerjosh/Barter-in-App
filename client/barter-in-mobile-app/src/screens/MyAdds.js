@@ -26,7 +26,7 @@ const MyAddsScreen = () => {
 
   const getItems = async () => {
     try {
-      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+      const data = await axios.get("https://7cd3-110-138-93-44.ngrok.io/items");
       setItems(data.data);
     } catch (error) {
       console.log(error);

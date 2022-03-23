@@ -87,6 +87,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     marginHorizontal: setWidth(5),
+    shadowColor: COLORS.GRAY,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
   },
   itemTitle: {
     color: COLORS.DARK_GREY,
