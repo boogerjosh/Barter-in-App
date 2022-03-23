@@ -33,7 +33,7 @@ const MyItemBarter = () => {
       access_token: "",
     },
   });
-  let items;
+  let items = [];
   if (data) {
     items = data?.getDataForBarter;
   }
