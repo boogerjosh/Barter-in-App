@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 const Redis = require("ioredis");
-const url = "http://localhost:3001/users";
+const url = "http://localhost:3000/users";
 const redis = new Redis({
   port: 10199,
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",

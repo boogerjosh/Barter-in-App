@@ -31,8 +31,8 @@ export const GET_ITEMS_HOME = gql`
 `;
 
 export const GET_ITEM = gql`
-  query GetItem {
-    getItem {
+  query GetItem($itemId: ID) {
+    getItem(itemId: $itemId) {
       id
       title
       category

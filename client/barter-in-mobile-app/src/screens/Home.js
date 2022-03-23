@@ -39,21 +39,13 @@ const HomeScreen = () => {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
   });
+  // console.log(loading, error, data)
   
   let items;
   if (data) {
     items = data?.getItemsHome;
   }
   console.log(items);
-  // const getItems = async () => {
-  //   try {
-  //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
-  //     setItems(data.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   return (
     <SafeAreaView
       contentContainerStyle={styles.container}
