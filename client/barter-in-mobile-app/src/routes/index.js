@@ -90,7 +90,6 @@ const MainApp = () => {
       <Tab.Screen
         name="EXPLORE"
         component={HomeRouter}
-
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -103,7 +102,6 @@ const MainApp = () => {
       <Tab.Screen
         name="MY ADS"
         component={MyAddsRouter}
-
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -111,12 +109,10 @@ const MainApp = () => {
           }
           )
         }
-
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-
                navigation.navigate('Login');
             } else if (auth) {
               console.log(auth, 'my adds')
@@ -129,7 +125,6 @@ const MainApp = () => {
       <Tab.Screen
         name="ADD ADS"
         component={PostItemRouter}
-
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -137,12 +132,10 @@ const MainApp = () => {
           }
           )
         }
-
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-
               navigation.navigate('Login');
             } else {
               navigation.navigate('ADD ADS');
@@ -162,7 +155,6 @@ const MainApp = () => {
           }
           )
         }
-
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
@@ -179,7 +171,6 @@ const MainApp = () => {
       <Tab.Screen
         name="MY ACCOUNT"
         component={ProfileScreen}
-
          options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -187,7 +178,6 @@ const MainApp = () => {
           }
           )
         }
-        
 
       />
     </Tab.Navigator>

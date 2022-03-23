@@ -20,7 +20,7 @@ const Highlight = ({ item }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.push("Detail")}
+      onPress={() => navigation.push("Detail", { id: item?.id })}
     >
       <View>
         <ImageBackground
