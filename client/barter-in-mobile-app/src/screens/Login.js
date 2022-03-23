@@ -28,7 +28,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const windowHeight = Dimensions.get("window").height;
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from "../components/context";
 
 // COBAAAAAAAAA
@@ -73,7 +72,7 @@ const Login = () => {
           axios({
 
             method: 'post',
-            url: 'https://8aa3-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io/users/googleLogin',
+            url: 'https://d8d7-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io/users/googleLogin',
             data: user
           })
             .then((data) => {
