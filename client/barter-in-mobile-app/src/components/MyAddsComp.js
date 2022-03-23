@@ -12,6 +12,10 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
+
+import { useQuery } from "@apollo/client";
+import { DELETE_ITEM } from "../../lib/apollo/queries/items";
+
 const SPACING = 20;
 const ITEM_SIZE = 30;
 const { height, width } = Dimensions.get("screen");
@@ -20,6 +24,21 @@ const setHeight = (h) => (height / 200) * h;
 
 const MyAddsComp = ({ item }) => {
   // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
+  //graphql mutation
+  const { loading, error, data } = useQuery(DELETE_ITEM, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      id: item.id,
+      access_token: "",
+    },
+  });
+
+  // let items;
+  // if (data) {
+  //   items = data?.getItemsHome;
+  // }
+
   const navigation = useNavigation();
   const stylingStatus = () => {
     switch (item.statusPost) {

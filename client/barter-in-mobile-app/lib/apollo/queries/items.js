@@ -129,19 +129,17 @@ export const POST_ROOM_BARTER = gql`
 `;
 
 export const POST_ITEM = gql`
-  mutation Mutation($newItem: inputItem) {
-    postItem(newItem: $newItem) {
+  mutation PostItem($newItem: inputItem, $accessToken: String) {
+    postItem(newItem: $newItem, access_token: $accessToken) {
       message
     }
   }
 `;
 
-export const POST_GOOGLE_LOGIN = gql`
-  mutation LoginGoogle($newUser: inputUser) {
-    loginGoogle(newUser: $newUser) {
-      access_token
-      id
-      username
+export const PATCH_ROOM_BARTER = gql`
+  mutation PatchRoomBarter($accessToken: String, $roomId: ID) {
+    patchRoomBarter(access_token: $accessToken, roomId: $roomId) {
+      message
     }
   }
 `;
