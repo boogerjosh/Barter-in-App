@@ -26,6 +26,7 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const ProfileScreen = () => {
+  const [isLogging, setLogging] = useState(false);
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const toLoginPage = () => {
@@ -192,7 +193,8 @@ const ProfileScreen = () => {
         ) : (
           false
         )}
-        <TouchableOpacity
+        { auth ? false :
+             <TouchableOpacity
           style={{
             backgroundColor: COLORS.PRIMARY,
             width: 323,
@@ -215,6 +217,7 @@ const ProfileScreen = () => {
             Login or Register
           </Text>
         </TouchableOpacity>
+        }
       </View>
     </View>
   );

@@ -398,7 +398,7 @@ const DetailScreen = () => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.push("MyChatRoom")}
+            onPress={() => navigation.push("MyChatRoom", { userName: 'Josua' })}
           >
             <Text
               style={{

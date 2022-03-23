@@ -19,6 +19,9 @@ io.on("connection", (socket) => {
   socket.on("firstConnect", () => {
     socket.emit("getMessage", messageArray);
   })
+
 });
+
+
 
 module.exports = io;

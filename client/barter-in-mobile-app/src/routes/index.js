@@ -1,60 +1,32 @@
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
 import AppLoading from "expo-app-loading";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../constants/Colors";
-import * as Notifications from "expo-notifications";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
-
 import HomeRouter from "./HomeRouter";
 import BarterRouter from "./BarterRouter";
 import ProfileScreen from "../screens/Profile";
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
-import ProfileRouter from "./ProfileRouter";
-import { useState } from "react";
-import Login from "../screens/Login";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import Login from "../screens/Login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
 
-  const navigation = useNavigation()
-  useEffect(()=> {
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      navigation.push(response.notification.request.content.data.navigate)
-    });
-  },[])
-  const getTabBarStyle = (route) => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    let display =
-      routeName === "ChatRoom" || routeName === "Login" ? "none" : "flex";
-    return { display };
-  };
-
   const [auth, setAuth] = useState(false);
   async function getToken() {
     try {
-      // await AsyncStorage.removeItem("access_token");
       let token = await AsyncStorage.getItem("access_token");
-      console.log(token, "<<<>>>>>");
       if (token) {
         setAuth(true);
       } else {
@@ -69,7 +41,27 @@ const MainApp = () => {
     getToken();
   });
 
-  return (
+  const [fontsLoaded] = useFonts({
+    Regular: require("../../assets/fonts/Poppins-Regular.ttf"),
+    Bold: require("../../assets/fonts/Poppins-Bold.ttf"),
+    Black: require("../../assets/fonts/Poppins-Black.ttf"),
+    ExtraBold: require("../../assets/fonts/Poppins-ExtraBold.ttf"),
+    ExtraLight: require("../../assets/fonts/Poppins-ExtraLight.ttf"),
+    Light: require("../../assets/fonts/Poppins-Light.ttf"),
+    SemiBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
+    Medium: require("../../assets/fonts/Poppins-Medium.ttf"),
+    Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
+  });
+
+
+  const getTabBarStyle = (route) => {  
+      const routeName = getFocusedRouteNameFromRoute(route);
+      let display = (routeName === 'ChatRoom' || routeName === 'Login') ? 'none':'flex';
+      return {display}
+  }
+
+
+  return fontsLoaded ? (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -98,49 +90,109 @@ const MainApp = () => {
       <Tab.Screen
         name="EXPLORE"
         component={HomeRouter}
-        options={{ headerShown: false }}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
       />
       <Tab.Screen
         name="MY ADS"
         component={MyAddsRouter}
-        options={{ headerShown: false }}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
-            // Prevent default action
             e.preventDefault();
-            console.log(auth);
-            if (auth) {
-              navigation.navigate("MY ADS");
-            } else {
-              navigation.navigate("Login");
+            if (!auth) {
+
+               navigation.navigate('Login');
+            } else if (auth) {
+              console.log(auth, 'my adds')
+              navigation.navigate('MY ADS');
             }
-            // Do something with the `navigation` object
-            // navigation.navigate("MY ACCOUNT");
-          },
-        })}
+        },
+  })}
+
       />
       <Tab.Screen
         name="ADD ADS"
         component={PostItemRouter}
-        options={{ headerShown: false }}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            if (!auth) {
+
+              navigation.navigate('Login');
+            } else {
+              navigation.navigate('ADD ADS');
+            }
+        },
+  })}
+
       />
       <Tab.Screen
         name="BARTER"
         component={BarterRouter}
-        options={{ headerShown: false }}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            if (!auth) {
+
+              navigation.navigate('Login');
+            } else {
+              navigation.navigate('BARTER');
+            }
+        },
+  })}
+
       />
       <Tab.Screen
         name="MY ACCOUNT"
         component={ProfileScreen}
-        options={
-          // { headerShown: false }
+
+         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
-            headerShown: false,
-          })
+            headerShown: false
+          }
+          )
         }
+        
+
       />
     </Tab.Navigator>
+  ) : (
+    <AppLoading />
   );
 };
 
@@ -150,60 +202,53 @@ const Router = () => {
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="MainApp"
         component={MainApp}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="HomeRouter"
         component={HomeRouter}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="MyAddsRouter"
         component={MyAddsRouter}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="PostItemRouter"
-        component={PostItemRouter}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="BarterRouter"
-        component={BarterRouter}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-};
 
-export const AuthRouter = () => {
-  return (
-    <Stack.Navigator initialRouteName="Splash">
+  
       <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{
-          headerShown: false,
-        }}
-      />
+      name="Login"
+      component={Login}
+      options={{
+        headerBackTitleVisible: false,
+        title: "",
+        headerTintColor: COLORS.PRIMARY,
+        headerShown: false,
+      }}
+    /> 
+    
+    <Stack.Screen
+      name="PostItemRouter"
+      component={PostItemRouter}
+      options={{ headerShown: false }}
+    />
+
+    <Stack.Screen
+      name="BarterRouter"
+      component={BarterRouter}
+      options={{ headerShown: false }}
+    />
+
     </Stack.Navigator>
   );
 };
 
 export default Router;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });

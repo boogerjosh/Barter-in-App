@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Title is required",
           },
-           len: {
-            args: [15],
-            msg: "Length minimum must be 15 characters"
-          }
+          //  len: {
+          //   args: [15],
+          //   msg: "Length minimum must be 15 characters"
+          // }
         },
       },
       category: {
@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         allowNull: false,
-        type: DataTypes.STRING(4096),
+        type: DataTypes.TEXT,
         validate: {
           notEmpty: {
             msg: "Description is required",
@@ -54,10 +54,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Description is required",
           },
-          len: {
-            args: [20],
-            msg: "Description minimum length must be 20 characters",
-          },
+          // len: {
+          //   args: [20],
+          //   msg: "Description minimum length must be 20 characters",
+          // },
         },
       },
       brand: {

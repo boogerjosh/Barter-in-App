@@ -9,7 +9,6 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 // import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -30,7 +29,9 @@ import { GET_ITEMS_HOME } from "../../lib/apollo/queries/items";
 
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+
 const numColumns = 3;
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -80,8 +81,10 @@ const HomeScreen = () => {
             />
           </View>
         </View>
+
       </View>
       {/* Search Bar */}
+
       <View style={styles.highlightWrapper}>
         <FlatList
           data={items}
@@ -101,6 +104,7 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
+
           <FlatList
             data={categoryAdd}
             contentContainerStyle={styles.listCategory}
@@ -108,6 +112,7 @@ const HomeScreen = () => {
             renderItem={({ item }) => <Categories item={item} />}
             numColumns={numColumns}
           />
+
         </View>
       </View>
     </SafeAreaView>

@@ -1,9 +1,12 @@
+
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { GiftedChat, Bubble, Send } from "react-native-gifted-chat";
+
 import {
   StyleSheet,
   View,
   Dimensions,
+
   Platform,
   SafeAreaView,
 } from "react-native";
@@ -21,11 +24,13 @@ Notifications.setNotificationHandler({
     shouldPlaySound: false,
     shouldSetBadge: false,
   }),
+
 });
 
-socket = io("http://6cc5-139-193-79-181.ngrok.io");
+socket = io("https://d8d7-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io");
 
 const ChatRoomScreen = () => {
+
   // COBA
   const notificationListener = useRef();
   // ENDCOBA
@@ -130,13 +135,16 @@ const ChatRoomScreen = () => {
         scrollToBottom
         scrollToBottomComponent={scrollToBottomComponent}
       />
+
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   viewContainer: {
+
     flex: 1,
+
   },
 });
 
