@@ -5,6 +5,9 @@ const request = require("supertest");
 const { signToken } = require("../helpers/jwt.js");
 const { hashPassword } = require("../helpers/bcrypt");
 const { queryInterface } = sequelize;
+
+jest.mock("ioredis");
+const Redis = require("ioredis");
 jest.setTimeout(2000);
 let access_token;
 

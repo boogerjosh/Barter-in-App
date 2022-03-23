@@ -36,6 +36,7 @@ class userControllers {
         `tokenForId${user[0].dataValues.id}`,
         JSON.stringify(newToken)
       );
+
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),

@@ -8,6 +8,8 @@ const ImageKit = require("imagekit");
 const nodemailer = require("nodemailer");
 const sendMailMock = jest.fn();
 
+jest.mock("ioredis");
+const Redis = require("ioredis");
 jest.setTimeout(2000);
 jest.mock("imagekit");
 jest.mock("nodemailer");

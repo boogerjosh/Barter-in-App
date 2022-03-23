@@ -6,7 +6,8 @@ const { User } = require("../models");
 const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt.js");
 const CronJob = require("cron").CronJob;
-
+jest.mock("ioredis");
+const Redis = require("ioredis");
 // jest.useFakeTimers();
 jest.mock("cron");
 
