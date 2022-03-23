@@ -19,19 +19,37 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
+import { useQuery } from "@apollo/client";
+import { GET_ROOM_BARTER } from "../../lib/apollo/queries/items";
+
 const BarterRoomScreen = () => {
   const navigation = useNavigation();
-  const [roomBarters, setRoomBarters] = useState([]);
-  const getRoomBarters = async () => {
-    try {
-      const data = await axios.get(
-        "https://af93-110-138-93-44.ngrok.io/myRoomBarters"
-      );
-      setRoomBarters(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //graphql
+  const { loading, error, data } = useQuery(GET_ROOM_BARTER, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      access_token: "",
+    },
+  });
+
+  let roomBarters = [];
+  if (data) {
+    roomBarters = data?.getRoomBarter;
+  }
+  console.log(loading, "/..");
+
+  // const [roomBarters, setRoomBarters] = useState([]);
+  // const getRoomBarters = async () => {
+  //   try {
+  //     const data = await axios.get(
+  //       "https://af93-110-138-93-44.ngrok.io/myRoomBarters"
+  //     );
+  //     setRoomBarters(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const [auth, setAuth] = useState(false);
   async function getToken() {
@@ -51,7 +69,7 @@ const BarterRoomScreen = () => {
 
   useFocusEffect(() => {
     getToken();
-    getRoomBarters();
+    // getRoomBarters();
   });
 
   return (

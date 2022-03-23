@@ -1,12 +1,12 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
-const url = "http://localhost:3001/users";
-// const Redis = require("ioredis");
-// const redis = new Redis({
-//   port: 10199,
-//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
-//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-// });
+const Redis = require("ioredis");
+const url = "http://localhost:3000/users";
+const redis = new Redis({
+  port: 10199,
+  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
+  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+});
 // const {
 //   GraphQLUpload,
 //   graphqlUploadExpress, // A Koa implementation is also exported.
@@ -194,7 +194,7 @@ const resolvers = {
           newItem;
         let { data } = await axios.post(
           `${url}/additem`,
-          { title, description, category, yearOfPublish, brand, images },
+          { title, description, category, yearOfPurchase, brand, imageFields },
           {
             headers: {
               access_token,

@@ -9,9 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 
-import {
-  TouchableRipple,
-} from 'react-native-paper';
+import { TouchableRipple } from "react-native-paper";
 
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
@@ -29,6 +27,9 @@ const windowHeight = Dimensions.get("window").height;
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import { AuthContext } from "../components/context";
+
+import { useMutation } from "@apollo/client";
+import { POST_GOOGLE_LOGIN } from "../../lib/apollo/queries/items";
 
 // COBAAAAAAAAA
 import * as Notifications from "expo-notifications";
@@ -48,9 +49,26 @@ async function registerForPushNotificationsAsync() {
 }
 
 const Login = () => {
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState("");
+
+  //graphql mutation
+  const [loginGoogle, { error, reset }] = useMutation(POST_GOOGLE_LOGIN, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      // newUser: {
+      //   email: null,
+      //   id: null,
+      //   name: null,
+      //   givenName: null,
+      //   familyName: null,
+      //   phoneUrl: null,
+      // },
+    },
+  });
+
   useEffect(() => {
-      registerForPushNotificationsAsync().then((data) => setToken(data))
+    registerForPushNotificationsAsync().then((data) => setToken(data));
   }, []);
 
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
@@ -70,26 +88,27 @@ const Login = () => {
           const { email, name, photoUrl } = user;
 
           axios({
-
-            method: 'post',
-            url: 'http://8f18-125-160-237-226.ngrok.io/users/googleLogin',
-            data: user
+            method: "post",
+            url: "https://d8d7-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io/users/googleLogin",
+            data: user,
           })
             .then((data) => {
-              return AsyncStorage.setItem("access_token", data.data.access_token);
+              return AsyncStorage.setItem(
+                "access_token",
+                data.data.access_token
+              );
               // AsyncStorage.setItem("id", data.data.id);
               // AsyncStorage.setItem("username", data.data.username);
               // signIn(data.data.access_token)
             })
-            .then(result => {
+            .then((result) => {
               navigation.navigate("Profile", {
-                dataUser: user
-              })
+                dataUser: user,
+              });
             })
             .catch((err) => console.log("GAGAL MASUK SERVER"));
 
           console.log("Google signin successfull", "SUCCESS");
-
         } else {
           console.log("Google signin was canceled");
         }
@@ -111,12 +130,13 @@ const Login = () => {
       />
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
-
-          <TouchableRipple style={{alignSelf: "flex-start",}}  onPress={(props) => { navigation.navigate('Profile') }}>
-           
-              <Icon name="close" color="#fff" size={30}/>
-       
-
+          <TouchableRipple
+            style={{ alignSelf: "flex-start" }}
+            onPress={(props) => {
+              navigation.navigate("Profile");
+            }}
+          >
+            <Icon name="close" color="#fff" size={30} />
           </TouchableRipple>
           <View style={styles.headerDetails}>
             <View>

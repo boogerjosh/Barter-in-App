@@ -14,15 +14,40 @@ import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Carousel from "react-native-snap-carousel";
+
+import { useQuery } from "@apollo/client";
+import { GET_ITEM } from "../../lib/apollo/queries/items";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+import { useQuery } from "@apollo/client";
 
-const DetailScreen = () => {
+const DetailScreen = ({ route }) => {
+  const { loading, error, data } = useQuery(GET_ITEM, {
+    variables: {
+      itemId: route.params.id
+    },
+  })
+  console.log(loading, error, data)
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
     setReadMore(value);
   };
+  //graphql
+  const { loading, error, data } = useQuery(GET_ITEM, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+  });
+
+  let detailItem;
+  if (data) {
+    detailItem = data?.getItem;
+  }
+
+  // if(loading){
+  //   return (<></>)
+  // }
+
   const renderItem2 = ({ item, index }) => {
     return (
       <View

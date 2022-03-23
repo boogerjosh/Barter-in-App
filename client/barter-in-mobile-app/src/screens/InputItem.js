@@ -22,10 +22,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../constants/Button";
 import Loader from "../constants/Loader";
 
+import { useMutation } from "@apollo/client";
+import { POST_ITEM } from "../../lib/apollo/queries/items";
+
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const InputItem = ({ route }) => {
+  //graphql
+  const [postItem, { error, data }] = useMutation(POST_ITEM, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      // newItem: {
+      //   title: null,
+      //   description: null,
+      //   brand: null,
+      //   yearOfPurchase: null,
+      //   category: null,
+      //   images: [
+      //     {
+      //       imageUrl: null,
+      //       tag: null,
+      //     },
+      //   ],
+      // },
+      // access_token: "",
+    },
+  });
+
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     title: "",
@@ -110,7 +135,7 @@ const InputItem = ({ route }) => {
     // } else if (inputs.title.length < 15) {
     //   handleError('Min title length of 15', 'title');
     //   isValid = false;
-    // } 
+    // }
 
     if (!inputs.description) {
       handleError("Description is required", "description");
@@ -154,7 +179,7 @@ const InputItem = ({ route }) => {
   };
 
   const addAds = () => {
-    console.log('masuk')
+    console.log("masuk");
     setLoading(true);
     setTimeout(async () => {
       const formData = new FormData();
@@ -184,8 +209,7 @@ const InputItem = ({ route }) => {
         uri: adsImage.image3,
         name: filename3,
         type3,
-
-       });
+      });
 
       try {
         const token = await AsyncStorage.getItem("access_token");
@@ -202,50 +226,50 @@ const InputItem = ({ route }) => {
         );
         if (!responseImage.ok) {
           const message = `An error has occured: ${responseImage.status}`;
-          console.log(responseImage.ok)
+          console.log(responseImage.ok);
           throw new Error(message);
         } else if (responseImage.ok) {
           let itemImage = await responseImage.json();
-          console.log(itemImage, '====')
+          console.log(itemImage, "====");
           const responseItem = await fetch(
             `https://245f-2001-448a-1061-10b7-855e-111e-1bdf-867d.ngrok.io/users/addItem`,
             {
               method: "POST",
               headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json',
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json",
                 access_token: token,
               },
-               body: JSON.stringify({
+              body: JSON.stringify({
                 title: inputs.title,
                 category: inputs.category,
                 description: inputs.description,
                 brand: inputs.brand,
                 yearOfPurchase: inputs.yearOfPurchase,
                 imageFields: itemImage,
-              })
+              }),
             }
           );
           if (!responseItem.ok) {
             const message = `An error has occured: ${responseItem.status}`;
-            console.log(responseItem.ok, 'item Ok')
+            console.log(responseItem.ok, "item Ok");
             throw new Error(message);
           }
-          console.log('?????')
-           setLoading(false);
-           setProfileImage({
-             image1: '',
-             image2: '',
-             image3: ''
-           });
-           setInputs({
-             title: '',
-             description: '',
-             brand: '',
-             yearOfPurchase: '',
-             category: ''
-           });
-           navigation.navigate('MyAdds');
+          console.log("?????");
+          setLoading(false);
+          setProfileImage({
+            image1: "",
+            image2: "",
+            image3: "",
+          });
+          setInputs({
+            title: "",
+            description: "",
+            brand: "",
+            yearOfPurchase: "",
+            category: "",
+          });
+          navigation.navigate("MyAdds");
         }
 
         let item = response.json();
@@ -266,9 +290,8 @@ const InputItem = ({ route }) => {
           category: "",
         }));
         navigation.navigate("MyAdds");
-
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Alert.alert("Error", "Something went wrong");
         setLoading(false);
       }

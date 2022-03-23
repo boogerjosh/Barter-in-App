@@ -32,19 +32,26 @@ const setWidth = (w) => (width / 100) * w;
 
 const numColumns = 3;
 
-
 const HomeScreen = () => {
   const navigation = useNavigation();
+  //graphql
   const { loading, error, data } = useQuery(GET_ITEMS_HOME, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
   });
-  
-  let items;
+
+  let items = [];
+
   if (data) {
+    console.log(data.getItemsHome, ">>>>>");
     items = data?.getItemsHome;
   }
-  console.log(items);
+  
+  if (loading) {
+    return <View></View>;
+  }
+  console.log(items, ">>>>>");
+  console.log(loading, ">>>>>");
   // const getItems = async () => {
   //   try {
   //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
@@ -53,6 +60,7 @@ const HomeScreen = () => {
   //     console.log(error);
   //   }
   // };
+
 
   return (
     <SafeAreaView
@@ -81,7 +89,6 @@ const HomeScreen = () => {
             />
           </View>
         </View>
-
       </View>
       {/* Search Bar */}
 
@@ -104,7 +111,6 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
-
           <FlatList
             data={categoryAdd}
             contentContainerStyle={styles.listCategory}
@@ -112,7 +118,6 @@ const HomeScreen = () => {
             renderItem={({ item }) => <Categories item={item} />}
             numColumns={numColumns}
           />
-
         </View>
       </View>
     </SafeAreaView>

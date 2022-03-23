@@ -1,27 +1,19 @@
 [
-  {
-    "title": "Man T-Shirt",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
-    "category": "Fashion",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
+   {
+    "title": "Sofa Kursi Meja",
+    "description":
+      "Bahan Jati, Sudah terpakai selama 18 tahun",
+    "category": "Decoration",
+    "brand": "-",
+    "yearOfPurchase": "2004",
     "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
     "userId": 1
   },
   {
-    "title": "Man Clothes",
-    "description": "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
-    "category": "Fashion",
-    "brand": "H&M",
-    "yearOfPurchase": "2021",
-    "statusPost": "Pending",
-    "statusBarter": "Not bartered yet",
-    "userId": 2
-  },
-  {
-    "title": "Lawson-style Sofa",
-    "description": "The reason for this design is to create a softer, more cushioned sofa with large cushions that aren’t taut within the frame of the sofa.",
+    "title": "Meja Tv Koin Kayu Jati",
+    "description":
+      "Bahan baku kayu jati super (tpk) ",
     "category": "Decoration",
     "brand": "Ikea",
     "yearOfPurchase": "2021",
@@ -37,7 +29,7 @@
     "yearOfPurchase": "2021",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 3
   },
   {
     "title": "Harry Potter and Chamber of Secrets",
@@ -50,34 +42,26 @@
     "userId": 1
   },
   {
-    "title": "Harry Potter and Chamber of Secrets",
-    "description": "Harry Potter (Daniel Radcliffe) returns to Hogwarts School of Wizardry for his second year. After a confrontation with a house-elf named Dobby (Toby Jones), Harry escapes to the Weasley house with Ron Weasley (Rupert Grint) in a flying car. They are then late for the train and have to ride it to school.",
-    "category": "Book",
-    "brand": "Bloomsbury Publishing",
-    "yearOfPurchase": "2003",
+    "title": "Patung Babi Abstrak",
+    "description":
+      "Patung hiasan rumah bahan porcelin kondisi masih seperti baru",
+    "category": "Decoration",
+    "brand": "-",
+    "yearOfPurchase": "2020",
+    "statusPost": "Pending",
+    "statusBarter": "Not bartered yet",
+    "userId": 1
+  },
+  {
+    "title": "Patung Dewa Fu Lu Shou",
+    "description":
+      "Dewa keberuntungan, dewa panjang umur",
+    "category": "Decoration",
+    "brand": "-",
+    "yearOfPurchase": "2020",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
     "userId": 2
-  },
-  {
-    "title": "Xiaomi Mi 8",
-    "description": "using this phone in heave usage,playing cod mobile since 2 years on it and still runing smooth,battery still a beast and just installed android 12 custom rom (pixel experience),easily can go for another year with it.I just love my MI 8 6/128",
-    "category": "Electronic",
-    "brand": "Xiaomi",
-    "yearOfPurchase": "2020",
-    "statusPost": "Accepted",
-    "statusBarter": "Not bartered yet",
-    "userId": 3
-  },
-  {
-    "title": "Xiaomi Mi 8",
-    "description": "using this phone in heave usage,playing cod mobile since 2 years on it and still runing smooth,battery still a beast and just installed android 12 custom rom (pixel experience),easily can go for another year with it.I just love my MI 8 6/128",
-    "category": "Electronic",
-    "brand": "Xiaomi",
-    "yearOfPurchase": "2020",
-    "statusPost": "Accepted",
-    "statusBarter": "Not bartered yet",
-    "userId": 4
   },
   {
     "title": "Nissan Versa Note",
@@ -96,27 +80,30 @@
     "brand": "Nissan",
     "yearOfPurchase": "2014",
     "statusPost": "Accepted",
-    "statusBarter": "Not bartered yet",
-    "userId": 3
-  },
-  {
-    "title": "Barbel 5kg",
-    "description": "Batang besi yang pada kedua ujungnya dibubuhi piringan besi dengan berat tertentu yang dapat dilepas, digunakan dalam olahraga angkat besi; halter",
-    "category": "Others",
-    "brand": "Hercules",
-    "yearOfPurchase": "2021",
-    "statusPost": "Accepted",
+
     "statusBarter": "Not bartered yet",
     "userId": 1
   },
   {
-    "title": "Barbel 5kg",
-    "description": "Batang besi yang pada kedua ujungnya dibubuhi piringan besi dengan berat tertentu yang dapat dilepas, digunakan dalam olahraga angkat besi; halter",
-    "category": "Others",
-    "brand": "Hercules",
-    "yearOfPurchase": "2021",
-    "statusPost": "Accepted",
+    "title": "Karpet Hiasan Dinding",
+    "description":
+      "Kondisi masih seperti baru, bahan terbuat dari kain",
+    "category": "Decoration",
+    "brand": "-",
+    "yearOfPurchase": "2017",
+    "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
+  },
+  {
+    "title": "Lukisan Le Maeyeur",
+    "description":
+      "Lukisan otentik Maestro Le Mayeur / Belgia 1888 - 1958, dari th 1932 tinggal dibali & Married dgn penari Bali , sering jadi modelnya ( Ni Pollok ), size 35 x 48 , 250 jt otentik kolektor , murah BU",
+    "category": "Decoration",
+    "brand": "-",
+    "yearOfPurchase": "2001",
+    "statusPost": "Pending",
+    "statusBarter": "Not bartered yet",
+    "userId": 1
   }
 ]
