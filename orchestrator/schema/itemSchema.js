@@ -194,7 +194,7 @@ const resolvers = {
           newItem;
         let { data } = await axios.post(
           `${url}/additem`,
-          { title, description, category, yearOfPublish, brand, images },
+          { title, description, category, yearOfPurchase, brand, imageFields },
           {
             headers: {
               access_token,
