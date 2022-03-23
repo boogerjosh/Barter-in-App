@@ -4,18 +4,17 @@ const uploadFile = require("../helpers/uploadFile");
 const { Item, Image, User, RoomBarter, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { signToken } = require("../helpers/jwt");
-// // const Redis = require("ioredis");
-// const redis = new Redis({
-//   port: 10199,
-//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com", 
-//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-// });
+const Redis = require("ioredis");
+const redis = new Redis({
+  port: 10199,
+  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
+  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+});
 
 class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
-      console.log(payload)
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -23,7 +22,7 @@ class userControllers {
         defaults: {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
-          username: payload.givenName,
+          username: payload.name,
           address: "-",
           photoUrl: payload.photoUrl,
         },
@@ -32,7 +31,13 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-      console.log(tokenServer)
+
+      const newToken = { id: user[0].dataValues.id, token: req.body.token };
+      await redis.set(
+        `tokenForId${user[0].dataValues.id}`,
+        JSON.stringify(newToken)
+      );
+
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
@@ -49,7 +54,7 @@ class userControllers {
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
-      console.log(userId)
+      console.log(userId);
       const { files } = req;
       console.log(files)
       const { title, category, description, brand, yearOfPurchase } = req.body;
@@ -61,7 +66,7 @@ class userControllers {
           description,
           brand,
           yearOfPurchase,
-          statusPost: "Reviewed",
+          statusPost: "Pending",
           statusBarter: "Not bartered yet",
           userId,
         },
@@ -87,15 +92,74 @@ class userControllers {
         })
       );
 
+
+      // const mappedArray = await Promise.all(
+      //   files.map((file) => {
+      //     let data = uploadFile(file);
+      //     console.log(data, "<<<<<<");
+      //     let tags = [];
+      //     if (data.AITags) {
+      //       data.AITags.forEach((e) => {
+      //         tags.push(e.name);
+      //       });
+      //     }
+      //     let temp = {
+      //       imageUrl: data.url,
+      //       itemId: createItems.id,
+      //       tag: tags.join(", "),
+      //     };
+      //     return temp;
+      //   })
+      // );
+
+      // const mappedArray = Promise.all(
+      //   files.map((file) => {
+      //     return uploadFile(file).then((data) => {
+      //       let tags = [];
+      //       if (data.AITags) {
+      //         data.AITags.forEach((e) => {
+      //           tags.push(e.name);
+      //         });
+      //       }
+      //       let temp = {
+      //         imageUrl: data.url,
+      //         itemId: createItems.id,
+      //         tag: tags.join(", "),
+      //       };
+      //       return temp;
+      //     });
+      //   })
+      // )
+
+      // let mappedArray = [];
+      // for (const file of files) {
+      //   let data = await uploadFile(file);
+      //   let tags = [];
+      //   if (data.AITags) {
+      //     data.AITags.forEach((e) => {
+      //       tags.push(e.name);
+      //     });
+      //   }
+      //   let temp = {
+      //     imageUrl: data.url,
+      //     itemId: createItem.id,
+      //     tag: tags.join(", "),
+      //   };
+      //   console.log(data, ">>>>>");
+      //   mappedArray.push(temp);
+      // }
+      // console.log(mappedArray);
+
+
       await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
       });
       await sendEmail({ email: req.userLogin.email });
       await t.commit();
+
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
-      console.log(error);
       await t.rollback();
       next(error);
     }
@@ -104,7 +168,6 @@ class userControllers {
   static async postImage(req, res, next) {
     try {
       const { files } = req;
-      console.log(req.files, '=====')
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -122,6 +185,7 @@ class userControllers {
           });
         })
       );
+
       console.log(mappedArray)
       res.status(200).json(mappedArray);
     } catch (error) {
@@ -131,6 +195,7 @@ class userControllers {
   }
 
   static async addItem(req, res, next) {
+
      const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
@@ -148,8 +213,10 @@ class userControllers {
           userId,
         },
         {
+
           returning: true, 
           transaction: t
+
         }
       );
 
@@ -157,6 +224,7 @@ class userControllers {
         let temp = {
           imageUrl: el.imageUrl,
           tag: el.tag,
+
           itemId: createItem.id
         }
         return temp
@@ -170,7 +238,6 @@ class userControllers {
       await sendEmail({ email: req.userLogin.email });
       await t.commit();
       res.status(201).send({ message: "Item has been created" });
-
     } catch (error) {
       console.log(error);
       await t.rollback();
@@ -180,8 +247,10 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
+
       const cache = await redis.get('items')
       if (cache) res.status(200).json(JSON.parse(cache));
+
       let { filterByTitle, filterByCategory } = req.query;
       if (!filterByTitle) filterByTitle = "";
       if (!filterByCategory) filterByCategory = "";
@@ -189,7 +258,7 @@ class userControllers {
       let items = await Item.findAll({
         include: [Image],
         where: {
-          statusPost: "Approve",
+          statusPost: "Accepted",
           title: {
             [Op.iLike]: `%${filterByTitle}%`,
           },
@@ -198,14 +267,10 @@ class userControllers {
           },
         },
       });
-      await redis.set('items', JSON.stringify(items))
+      // await redis.set("items", JSON.stringify(items));
 
       res.status(200).json(items);
-
-
-
     } catch (error) {
-      console.log("?????");
       next(error);
     }
   }
@@ -239,7 +304,7 @@ class userControllers {
         throw new Error("NOT_FOUND");
       }
       await Item.destroy({ where: { id } });
-      await redis.del('items')
+      // await redis.del("items");
       res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
       next(error);
@@ -250,6 +315,16 @@ class userControllers {
     try {
       let items = await Item.findAll({
         order: [["updatedAt", "DESC"]],
+        where: {
+          [Op.and]: [
+            {
+              statusPost: "Accepted",
+            },
+            {
+              statusBarter: "Not bartered yet",
+            },
+          ],
+        },
         limit: 10,
       });
       res.status(200).json(items);
@@ -264,13 +339,11 @@ class userControllers {
         Where: {
           [Op.and]: [
             {
-              status: {
-                [Op.ne]: "Review",
-              },
               userId: req.userLogin.id,
             },
           ],
         },
+        include: [Image],
       });
       res.status(200).json(items);
     } catch (error) {
@@ -285,7 +358,7 @@ class userControllers {
           [Op.and]: [
             {
               status: {
-                [Op.eq]: "Approve",
+                [Op.eq]: "Accepted",
               },
               userId: req.userLogin.id,
             },
@@ -342,12 +415,11 @@ class userControllers {
 
       if (newRoomBarter.status1 && newRoomBarter.status2) {
         await Item.update(
-          { statusBarter: true },
+          { statusBarter: "Barter" },
           { where: { id: roomBarter.item1 } }
         );
-
         await Item.update(
-          { statusBarter: true },
+          { statusBarter: "Barter" },
           { where: { id: roomBarter.item2 } }
         );
 
@@ -356,7 +428,6 @@ class userControllers {
         res.status(200).json({ message: "Wait for another user to confirm" });
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

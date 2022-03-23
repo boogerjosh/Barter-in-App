@@ -14,7 +14,6 @@ import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Carousel from "react-native-snap-carousel";
-
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
@@ -58,19 +57,19 @@ const DetailScreen = () => {
             "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
           ]}
           renderItem={renderItem2}
-          sliderWidth={width}
+          sliderWidth={width * 1}
           itemWidth={width * 0.8}
           layout={"default"}
         />
         <View>
           <Text
             style={{
-              fontWeight: "bold",
-              fontSize: 17,
+              fontFamily: FONTS.BOLD,
+              fontSize: 18,
               marginTop: 15,
               marginLeft: 15,
               marginRight: 15,
-              borderBottomWidth: 2,
+              // borderBottomWidth: 2,
               borderColor: "#C0C0C0",
             }}
           >
@@ -83,31 +82,31 @@ const DetailScreen = () => {
           <View
             style={{
               flex: 1,
-              height: 4,
+              height: 6,
               backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
             }}
           />
         </View>
-        <View>
+        {/* <View>
           <Text
             style={{
-              fontWeight: "bold",
+              fontFamily: FONTS.BOLD,
               fontSize: 17,
               marginTop: 15,
               marginLeft: 15,
               marginRight: 15,
-              borderBottomWidth: 2,
-              borderColor: "#C0C0C0",
+              borderBottomWidth: 3,
+              borderColor: COLORS.EXTRA_LIGHT_GRAY,
             }}
           >
             Details
           </Text>
-        </View>
+        </View> */}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text
             style={{
               fontSize: 17,
-              color: "black",
+              color: COLORS.DARK_GREY,
               fontFamily: FONTS.SEMI_BOLD,
               marginTop: 15,
               marginLeft: 15,
@@ -121,8 +120,8 @@ const DetailScreen = () => {
               marginTop: 15,
               marginLeft: 15,
               marginRight: 15,
-              borderBottomWidth: 2,
-              color: COLORS.GRAY,
+              fontFamily: FONTS.MEDIUM,
+              color: COLORS.LIGHT_GRAY,
             }}
           >
             Calvin Klein
@@ -144,10 +143,10 @@ const DetailScreen = () => {
           <Text
             style={{
               fontSize: 17,
-              color: "black",
               marginTop: 15,
               marginLeft: 15,
               fontFamily: FONTS.SEMI_BOLD,
+              color: COLORS.DARK_GREY,
             }}
           >
             Year
@@ -158,8 +157,8 @@ const DetailScreen = () => {
               marginTop: 15,
               marginLeft: 15,
               marginRight: 15,
-              borderBottomWidth: 2,
-              color: COLORS.GRAY,
+              fontFamily: FONTS.MEDIUM,
+              color: COLORS.LIGHT_GRAY,
             }}
           >
             1990
@@ -180,12 +179,12 @@ const DetailScreen = () => {
         <View>
           <Text
             style={{
-              color: "black",
-              fontFamily: FONTS.SEMI_BOLD,
               fontSize: 17,
               marginTop: 15,
               marginLeft: 15,
               marginRight: 15,
+              fontFamily: FONTS.SEMI_BOLD,
+              color: COLORS.DARK_GREY,
             }}
           >
             Description
@@ -199,7 +198,7 @@ const DetailScreen = () => {
                 marginLeft: 15,
                 marginRight: 15,
                 borderBottomWidth: 2,
-                borderColor: "#C0C0C0",
+                borderColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
             >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
@@ -375,7 +374,9 @@ const DetailScreen = () => {
               justifyContent: "center",
               marginTop: 4,
             }}
-            onPress={() => navigation.navigate("MyItem")}
+
+            onPress={() => navigation.push("MyItemBarter", {})}
+
           >
             <Text
               style={{
@@ -399,9 +400,11 @@ const DetailScreen = () => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.navigate("ChatRoom", {
+
+            onPress={() => navigation.push("MyChatRoom", , {
               userName: 'Josua', 
             })}
+
           >
             <Text
               style={{

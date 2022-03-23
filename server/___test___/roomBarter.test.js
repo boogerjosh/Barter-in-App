@@ -280,7 +280,7 @@ describe("POST RoomBarters", () => {
     });
   });
 
-  describe("POST /roomBarter - success test", () => {
+  describe("POST /roomBarter - failed test", () => {
     let payload = {
       user2: 2,
       item1: "",

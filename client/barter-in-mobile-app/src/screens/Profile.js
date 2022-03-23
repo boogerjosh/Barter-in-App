@@ -1,4 +1,6 @@
+
 import React, {useState, useEffect} from "react";
+
 import {
   StyleSheet,
   View,
@@ -6,6 +8,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+
 } from "react-native";
 import {
   Avatar,
@@ -13,19 +16,22 @@ import {
   Caption,
   Text,
   TouchableRipple,
-} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+} from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { AuthContext } from "../components/context";
 import { useFocusEffect } from '@react-navigation/native';
+
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const ProfileScreen = () => {
+
   const { signOut } = React.useContext(AuthContext);
 
   const [auth, setAuth] = useState(false);
@@ -51,8 +57,28 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const toLoginPage = () => {
-    navigation.navigate("Login")
+    navigation.navigate("Login");
+  };
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("access_token");
+    setAuth(false);
+    navigation.navigate("Profile");
+  };
+  async function getToken() {
+    try {
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, "<<<>>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        setAuth(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
 
   const logOut = async () => {
     await signOut()
@@ -79,9 +105,10 @@ const ProfileScreen = () => {
             size={80}
             /> :
             <Avatar.Image
-            source={require("../../assets/profileacc.png")}
-            size={80}
+              source={require("../../assets/profileacc.png")}
+              size={80}
             />
+
           }
          
             {auth ?
@@ -91,22 +118,34 @@ const ProfileScreen = () => {
               marginBottom: 5,
               }]}>Login</Title>
               <Caption style={styles.caption}>@username</Caption>
-               </View>
-            :
+            </View>
+          ) : (
             <View style={{ marginLeft: 20 }}>
-              <Title style={[styles.title, {
-              marginTop:11,
-              marginBottom: 5,
-              }]}>Login</Title>
+              <Title
+                style={[
+                  styles.title,
+                  {
+                    marginTop: 11,
+                    marginBottom: 5,
+                  },
+                ]}
+              >
+                Login
+              </Title>
               <TouchableOpacity onPress={toLoginPage}>
-                <Text style={{ color: '#777777', fontWeight: '600',
-                fontSize: 15, textDecorationLine: "underline",
-              }} >
-                Log in to your account
+                <Text
+                  style={{
+                    color: "#777777",
+                    fontWeight: "600",
+                    fontSize: 15,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  Log in to your account
                 </Text>
               </TouchableOpacity>
-               </View>
-            }
+            </View>
+          )}
         </View>
       </View>
 
@@ -133,22 +172,27 @@ const ProfileScreen = () => {
             <Title>12</Title>
             <Caption>Ads</Caption>
           </View>
-      </View> : false}
-    
+        </View>
+      ) : (
+        false
+      )}
 
       <View style={styles.menuWrapper}>
+
         { auth ?   <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="heart-outline" color="#FF6347" size={25}/>
             <Text style={styles.menuItemText}>Your Favorites</Text>
           </View>
         </TouchableRipple> : false}
+
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color="#FF6347" size={25}/>
+            <Icon name="account-check-outline" color="#FF6347" size={25} />
             <Text style={styles.menuItemText}>Help and Support</Text>
           </View>
         </TouchableRipple>
+
         { auth ?  <TouchableRipple onPress={logOut}>
           <View style={styles.menuItem}>
             <Icon name="logout" color="#FF6347" size={25}/>
@@ -240,42 +284,42 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   caption: {
     fontSize: 14,
     lineHeight: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 10,
   },
   infoBoxWrapper: {
-    borderBottomColor: '#dddddd',
+    borderBottomColor: "#dddddd",
     borderBottomWidth: 1,
-    borderTopColor: '#dddddd',
+    borderTopColor: "#dddddd",
     borderTopWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 100,
   },
   infoBox: {
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   menuWrapper: {
     marginTop: 8,
-    marginHorizontal: 25
+    marginHorizontal: 25,
   },
   menuItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 15,
   },
   menuItemText: {
-    color: '#777777',
+    color: "#777777",
     marginLeft: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
     lineHeight: 26,
   },

@@ -16,6 +16,8 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const BarterRoomScreen = () => {
   const navigation = useNavigation();
@@ -23,7 +25,7 @@ const BarterRoomScreen = () => {
   const getRoomBarters = async () => {
     try {
       const data = await axios.get(
-        "https://33f9-110-138-93-44.ngrok.io/myRoomBarters"
+        "https://af93-110-138-93-44.ngrok.io/myRoomBarters"
       );
       setRoomBarters(data.data);
     } catch (error) {
@@ -31,12 +33,30 @@ const BarterRoomScreen = () => {
     }
   };
 
-  useEffect(() => {
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      // await AsyncStorage.removeItem("access_token");
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, ">>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        navigation.navigate("MY ACCOUNT");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(() => {
+    getToken();
     getRoomBarters();
-  }, []);
+  });
+
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.header}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
@@ -44,7 +64,7 @@ const BarterRoomScreen = () => {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </View>
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
@@ -57,14 +77,15 @@ const BarterRoomScreen = () => {
           // numColumns={numColumns}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    paddingTop: StatusBar.currentHeight || 25,
+    marginBottom: setWidth(20),
   },
   listItem: {
     padding: 10,

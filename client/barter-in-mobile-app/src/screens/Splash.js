@@ -31,6 +31,12 @@ const Splash = ({ navigation }) => {
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
+
+            <View>
+              <Text style={styles.welcomeText}></Text>
+              <Text style={styles.toText}></Text>
+            </View>
+
           </View>
           <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Image
@@ -108,10 +114,12 @@ const styles = StyleSheet.create({
     paddingTop: 70,
     fontSize: 46,
     color: COLORS.EXTRA_LIGHT_GRAY,
+    fontFamily: FONTS.BOLD,
   },
   toText: {
     fontSize: 30,
     color: COLORS.EXTRA_LIGHT_GRAY,
+    fontFamily: FONTS.BOLD,
     textAlign: "center",
   },
   communityText: {
@@ -119,6 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 35,
     color: COLORS.EXTRA_LIGHT_GRAY,
+    fontFamily: FONTS.BOLD,
     textAlign: "center",
   },
   acceptText: {
@@ -138,6 +147,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     color: COLORS.DARK_GREY,
+    fontFamily: FONTS.BOLD,
     color: "white",
   },
 });

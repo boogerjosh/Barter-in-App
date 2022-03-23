@@ -11,10 +11,12 @@ import ProfileScreen from "../screens/Profile";
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
+
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Login from "../screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from '@react-navigation/native';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,11 +53,13 @@ const MainApp = () => {
     Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
   });
 
+
   const getTabBarStyle = (route) => {  
       const routeName = getFocusedRouteNameFromRoute(route);
       let display = (routeName === 'ChatRoom' || routeName === 'Login') ? 'none':'flex';
       return {display}
   }
+
 
   return fontsLoaded ? (
     <Tab.Navigator
@@ -86,6 +90,7 @@ const MainApp = () => {
       <Tab.Screen
         name="EXPLORE"
         component={HomeRouter}
+
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -93,10 +98,12 @@ const MainApp = () => {
           }
           )
         }
+
       />
       <Tab.Screen
         name="MY ADS"
         component={MyAddsRouter}
+
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -104,10 +111,12 @@ const MainApp = () => {
           }
           )
         }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
+
                navigation.navigate('Login');
             } else if (auth) {
               console.log(auth, 'my adds')
@@ -115,10 +124,12 @@ const MainApp = () => {
             }
         },
   })}
+
       />
       <Tab.Screen
         name="ADD ADS"
         component={PostItemRouter}
+
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -126,20 +137,24 @@ const MainApp = () => {
           }
           )
         }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
+
               navigation.navigate('Login');
             } else {
               navigation.navigate('ADD ADS');
             }
         },
   })}
+
       />
       <Tab.Screen
         name="BARTER"
         component={BarterRouter}
+
         options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -147,20 +162,24 @@ const MainApp = () => {
           }
           )
         }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
+
               navigation.navigate('Login');
             } else {
               navigation.navigate('BARTER');
             }
         },
   })}
+
       />
       <Tab.Screen
         name="MY ACCOUNT"
         component={ProfileScreen}
+
          options={
           ({ route }) => ({
             tabBarStyle: getTabBarStyle(route),
@@ -169,6 +188,7 @@ const MainApp = () => {
           )
         }
         
+
       />
     </Tab.Navigator>
   ) : (
@@ -202,6 +222,7 @@ const Router = () => {
         component={MyAddsRouter}
         options={{ headerShown: false }}
       />
+
   
       <Stack.Screen
       name="Login"

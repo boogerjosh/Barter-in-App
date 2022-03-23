@@ -6,10 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import COLORS from "../constants/Colors";
 import FONTS from "../constants/Fonts";
 import { useNavigation } from "@react-navigation/native";
+const { height, width } = Dimensions.get("screen");
+const setWidth = (w) => (width / 100) * w;
+const setHeight = (h) => (height / 200) * h;
 
 const Highlight = ({ item }) => {
   const navigation = useNavigation();
@@ -23,26 +27,27 @@ const Highlight = ({ item }) => {
           style={styles.highlight}
           imageStyle={{
             borderRadius: 12,
-            backgroundColor: item.backgroundColor,
+            // backgroundColor: item.backgroundColor,
             flexDirection: "row",
             alignItems: "flex-end",
           }}
-          source={item.image}
-        >
+          source={{ uri: item?.Images[0].imageUrl }}
+        ></ImageBackground>
+        <View>
+          <View style={styles.highlightItem}>
+            {/* <Image source={item.image} style={styles.highlightImage} /> */}
+          </View>
           <View>
-            <View style={styles.highlightItem}>
-              <View style={styles.chipsContainer}>
-                <Text style={styles.chips}>{item.chips}</Text>
-              </View>
-
-              {/* <Image source={item.image} style={styles.highlightImage} /> */}
-            </View>
-            <View>
-              <Text style={styles.highlightTitle}>{item.title}</Text>
-              <Text style={styles.highlightSubtitle}>{item.subtitle}</Text>
+            <Text style={styles.itemTitle} numberOfLines={3}>
+              {item.title}
+            </Text>
+            <View style={styles.itemSubtitleContainer}>
+              <Text style={styles.itemSubTitle}>
+                Purchased on {item.yearOfPurchase}
+              </Text>
             </View>
           </View>
-        </ImageBackground>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -50,12 +55,28 @@ const Highlight = ({ item }) => {
 
 const styles = StyleSheet.create({
   highlight: {
-    backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
     width: 230,
     height: 230,
     borderRadius: 12,
     elevation: 5,
     marginVertical: 2,
+    shadowColor: COLORS.GRAY,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
+  },
+  itemTitle: {
+    fontFamily: FONTS.BOLD,
+    fontSize: 18,
+    color: COLORS.DARK_GREY,
+  },
+  itemSubTitle: {
+    fontFamily: FONTS.SEMI_BOLD,
+    fontSize: 14,
+    color: COLORS.LIGHT_GRAY,
   },
   highlightItem: {
     flexDirection: "row",

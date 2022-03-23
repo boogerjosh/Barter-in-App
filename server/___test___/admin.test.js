@@ -12,12 +12,16 @@ jest.mock("cron");
 
 let access_token;
 const customerToken = signToken({
-  id: 2,
+  id: 1,
   email: "ustomer@customer.customer",
   role: "Customer",
 });
-
-beforeAll(() => {
+let adminToken = signToken({
+  id: 2,
+  email: "admin.test12@mail.com",
+  role: "Admin",
+});
+beforeAll((done) => {
   queryInterface
     .bulkDelete(
       "Users",
@@ -37,6 +41,16 @@ beforeAll(() => {
             email: "customer@customer.customer",
             password: hashPassword("customer@customer.customer"),
             role: "Customer",
+            address: "customer@customer.customer",
+            photoUrl: "customer@customer.customer",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            username: "admin123",
+            email: "admin.test12@mail.com",
+            password: hashPassword("customer@customer.customer"),
+            role: "Admin",
             address: "customer@customer.customer",
             photoUrl: "customer@customer.customer",
             createdAt: new Date(),
@@ -79,19 +93,32 @@ beforeAll(() => {
         ],
         {}
       );
+    })
+    .then(() => {
+      done();
+    })
+    .catch(() => {
+      done(err);
     });
 });
 
-afterAll(() => {
-  queryInterface.bulkDelete(
-    "Users",
-    {},
-    {
-      truncate: true,
-      restartIdentity: true,
-      cascade: true,
-    }
-  );
+afterAll((done) => {
+  queryInterface
+    .bulkDelete(
+      "Users",
+      {},
+      {
+        truncate: true,
+        restartIdentity: true,
+        cascade: true,
+      }
+    )
+    .then(() => {
+      done();
+    })
+    .catch(() => {
+      done(err);
+    });
 });
 
 describe("Admin Route Test", () => {
@@ -107,6 +134,7 @@ describe("Admin Route Test", () => {
           address: "admin@admin.admin",
           photoUrl: "admin@admin.admin",
         })
+        .set("access_token", adminToken)
         .then((response) => {
           expect(response.status).toBe(201);
           expect(response.body).toHaveProperty("id", expect.any(Number));
@@ -129,6 +157,7 @@ describe("Admin Route Test", () => {
           address: "admin@admin.admin",
           photoUrl: "admin@admin.admin",
         })
+        .set("access_token", adminToken)
         .then((response) => {
           expect(response.status).toBe(400);
           expect(response.body).toHaveProperty("message");
@@ -324,7 +353,7 @@ describe("Admin Route Test", () => {
 
     test("200 Success patch items - should return success message", (done) => {
       let payload = {
-        status: "Approve",
+        status: "Accepted",
       };
       request(app)
         .patch("/admins/items/1")

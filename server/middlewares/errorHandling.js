@@ -1,7 +1,7 @@
 const errorHandler = (err, req, res, next) => {
   let code = 500;
   let msg = "Internal server error";
-  console.log(err);
+  // console.log(err);
   if (
     err.name === "SequelizeValidationError" ||
     err.name === "SequelizeUniqueConstraintError"
@@ -25,7 +25,8 @@ const errorHandler = (err, req, res, next) => {
     msg = "Must input email";
   } else if (
     err.message === "INVALID_TOKEN" ||
-    err.message === "jwt malformed"
+    err.message === "jwt malformed" ||
+    err.name === "JsonWebTokenError"
   ) {
     code = 401;
     msg = "You are not authorized";

@@ -14,8 +14,8 @@ const BarterRouter = () => {
       <Stack.Screen
         name="BarterRoom"
         component={BarterRoomScreen}
-          options={{
-           headerShown: false,
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen name="Detail" component={DetailScreen} />

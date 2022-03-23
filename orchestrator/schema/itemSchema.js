@@ -1,12 +1,19 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 const Redis = require("ioredis");
-const url = "http://localhost:3000/users";
+const url = "http://localhost:3001/users";
 const redis = new Redis({
   port: 10199,
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
 });
+// const {
+//   GraphQLUpload,
+//   graphqlUploadExpress, // A Koa implementation is also exported.
+// } = require("graphql-upload");
+// const { finished } = require("stream/promises");
+const FormData = require("form-data");
+const formData = new FormData();
 
 const typeDefs = gql`
   type Item {
@@ -21,11 +28,29 @@ const typeDefs = gql`
     userId: ID
     createdAt: String
     updatedAt: String
+    Images: [Image]
+    User: UserType
   }
+
+  type Image {
+    id: ID
+    imageUrl: String
+    tag: String
+  }
+
+  type UserType {
+    id: ID
+    username: String
+    email: String
+    role: String
+    address: String
+    photoUrl: String
+  }
+
   type status {
-    status: String
     message: String
   }
+
   type RoomBarter {
     id: ID
     user1: ID
@@ -35,6 +60,36 @@ const typeDefs = gql`
     status1: Boolean
     status2: Boolean
   }
+
+  type tokenGoogle {
+    access_token: String
+    id: ID
+    username: String
+  }
+
+  input inputItem {
+    title: String
+    description: String
+    brand: String
+    yearOfPurchase: String
+    category: String
+    images: [image]
+  }
+
+  input inputUser {
+    email: String
+    id: ID
+    name: String
+    phoneUrl: String
+    givenName: String
+    familyName: String
+  }
+
+  input image {
+    imageUrl: String
+    tag: String
+  }
+
   type Query {
     getItems: [Item]
     getItemsHome: [Item]
@@ -43,6 +98,7 @@ const typeDefs = gql`
     getDataForBarter(access_token: String): [Item]
     getRoomBarter(access_token: String): [RoomBarter]
   }
+
   type Mutation {
     deleteItem(itemId: ID, access_token: String): status
     postRoomBarter(
@@ -52,6 +108,8 @@ const typeDefs = gql`
       item2: ID
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
+    postItem(newItem: inputItem, access_token: String): status
+    loginGoogle(newUser: inputUser): tokenGoogle
   }
 `;
 
@@ -60,7 +118,8 @@ const resolvers = {
     getItems: async () => {
       try {
         const cache = await redis.get("items");
-        if (cache) return JSON.parse(cache);
+        redis.del("items");
+        if (cache && cache.length > 0) return JSON.parse(cache);
         const { data } = await axios(`${url}/items`);
         await redis.set("items", JSON.stringify(data));
         return data;
@@ -71,6 +130,7 @@ const resolvers = {
     getItemsHome: async () => {
       try {
         const { data } = await axios(`${url}/items/homes`);
+        console.log(data, ">>>>>");
         return data;
       } catch (error) {
         console.log(error);
@@ -97,17 +157,17 @@ const resolvers = {
       }
     },
     getRoomBarter: async (_, args) => {
-        try {
-          const { data } = await axios(`${url}/roomBarter`, {
-            headers: {
-              access_token: args.access_token,
-            },
-          });
-          return data;
-        } catch (error) {
-          console.log(error);
-        }
-      },
+      try {
+        const { data } = await axios(`${url}/roomBarter`, {
+          headers: {
+            access_token: args.access_token,
+          },
+        });
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     getDataForBarter: async (_, args) => {
       try {
         const { data } = await axios(`${url}/items-barters`, {
@@ -122,6 +182,36 @@ const resolvers = {
     },
   },
   Mutation: {
+    postItem: async (_, args) => {
+      try {
+        const { access_token, newItem } = args;
+        const { title, description, category, yearOfPublish, brand, images } =
+          newItem;
+        let { data } = await axios.post(
+          `${url}/additem`,
+          { title, description, category, yearOfPublish, brand, images },
+          {
+            headers: {
+              access_token,
+            },
+          }
+        );
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    loginGoogle: async (_, args) => {
+      try {
+        const { newUser } = args;
+        const { data } = await axios.post(`${url}/googleLogin`, {
+          payload: newUser,
+        });
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     deleteItem: async (_, args) => {
       try {
         const { data } = await axios({

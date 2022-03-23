@@ -2,7 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ChooseCategoryScreen from "../screens/ChooseCategory";
 import InputItemScreen from "../screens/InputItem";
-import COLORS from '../constants/Colors'
+import COLORS from "../constants/Colors";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +17,7 @@ const PostItemRouter = () => {
         }}
       />
       <Stack.Screen
-        name="InputItem" 
+        name="InputItem"
         component={InputItemScreen}
         options={{
           headerBackTitleVisible: false,

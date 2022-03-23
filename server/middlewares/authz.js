@@ -16,4 +16,15 @@ const Authorization = async (req, res, next) => {
   }
 };
 
-module.exports = Authorization;
+const AuthorizationV1 = async (req, res, next) => {
+  try {
+    if (req.userLogin.role !== "Admin") {
+      throw new Error("FORBIDDEN");
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { Authorization, AuthorizationV1 };

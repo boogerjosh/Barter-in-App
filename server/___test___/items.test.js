@@ -206,6 +206,38 @@ describe("GET items", () => {
         });
     });
   });
+
+  describe("GET /users/items -  success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/items")
+        .query({ filterByTitle: "test" })
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /users/items -  success test", () => {
+    it("should return an object with status 200", (done) => {
+      request(app)
+        .get("/users/items")
+        .query({ filterByCategory: "Fashion" })
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
   //MyAds
   describe("GET /users/myads -  success test", () => {
     it("should return an object with status 200", (done) => {
@@ -354,14 +386,13 @@ describe("GET items/homes", () => {
 
 // //POST ITEMS
 describe("POST items", () => {
-  beforeAll(() => {
-    uploadFile.mockResolvedValue({
-      url: "fake-image.jpg",
-      AITags: ["fake-tag", "fake-tag", "fake-tag"],
-    });
-  });
-
   describe("POST /users/items -  success test", () => {
+    beforeEach(() => {
+      uploadFile.mockResolvedValue({
+        url: "fake-image.jpg",
+        AITags: ["fake-tag", "fake-tag", "fake-tag"],
+      });
+    });
     it("should return an object with status 201", (done) => {
       request(app)
         .post("/users/items")
@@ -383,6 +414,129 @@ describe("POST items", () => {
           expect(res.body).toHaveProperty("message", expect.any(String));
           expect(sendMailMock).toHaveBeenCalled();
           // expect(fileMock).toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("POST /users/items -  success test", () => {
+    beforeEach(() => {
+      uploadFile.mockResolvedValue({
+        url: "fake-image.jpg",
+        AITags: "",
+      });
+    });
+    it("should return an object with status 201", (done) => {
+      request(app)
+        .post("/users/items")
+        .set("access_token", access_token)
+        .field("title", "test input post")
+        .field("category", "pakaian")
+        .field(
+          "description",
+          "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga."
+        )
+        .field("brand", "Supreme")
+        .field("yearOfPurchase", "2021")
+        .field("userId", 1)
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          expect(sendMailMock).toHaveBeenCalled();
+          // expect(fileMock).toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+  //POST myImage
+  describe("POST /users/myImage -  success test", () => {
+    beforeEach(() => {
+      uploadFile.mockResolvedValue({
+        url: "fake-image.jpg",
+        AITags: ["fake-tag", "fake-tag", "fake-tag"],
+      });
+    });
+    it("should return an object with status 201", (done) => {
+      request(app)
+        .post("/users/myImage")
+        .set("access_token", access_token)
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("POST /users/myImage -  success test", () => {
+    beforeEach(() => {
+      uploadFile.mockResolvedValue({
+        url: "fake-image.jpg",
+        AITags: "",
+      });
+    });
+    it("should return an object with status 201", (done) => {
+      request(app)
+        .post("/users/myImage")
+        .set("access_token", access_token)
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        .attach("image", "assets/JK5OICOiE54.jpg")
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  //Post addItem
+  describe("POST /users/addItem -  success test", () => {
+    const newItem = {
+      title: "input test mid ",
+      category: "pakaian",
+      description:
+        "T-shirt pria yang cepat kering sehingga terasa halus dan fresh sepanjang hari. Sempurna untuk gaya kasual dan berolahraga.",
+      brand: "Supreme",
+      yearOfPurchase: "2021",
+      imageFields: [
+        {
+          imageUrl:
+            "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/442839/item/goods_00_442839.jpg?width=1600&impolicy=quality_75",
+          tag: "test",
+        },
+        {
+          imageUrl:
+            "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/442839/item/goods_00_442839.jpg?width=1600&impolicy=quality_75",
+          tag: "test",
+        },
+      ],
+    };
+    it("should return an object with status 201 - input without access_token as headers", (done) => {
+      request(app)
+        .post("/users/addItem")
+        .set("access_token", access_token)
+        .send(newItem)
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
           done();
         })
         .catch((err) => {

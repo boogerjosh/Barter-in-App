@@ -11,6 +11,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+// import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
@@ -19,13 +20,42 @@ import highlights from "../../data/banner";
 import categories from "../../data/categories";
 import Highlight from "../components/Highlight";
 import Categories from "../components/Categories";
+import categoryAdd from "../../data/categoryAdd";
 import ItemSpace from "../components/ItemSpace";
+import axios from "axios";
+
+import { useQuery } from "@apollo/client";
+import { GET_ITEMS_HOME } from "../../lib/apollo/queries/items";
+
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+
+const numColumns = 3;
+
+
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { loading, error, data } = useQuery(GET_ITEMS_HOME, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+  });
+  
+  let items;
+  if (data) {
+    items = data?.getItemsHome;
+  }
+  console.log(items);
+  // const getItems = async () => {
+  //   try {
+  //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+  //     setItems(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   return (
-    <ScrollView
+    <SafeAreaView
       contentContainerStyle={styles.container}
       options={{ headerShown: false }}
     >
@@ -34,7 +64,7 @@ const HomeScreen = () => {
         translucent={false}
         backgroundColor={COLORS.EXTRA_LIGHT_GRAY}
       />
-      <SafeAreaView style={styles.header}>
+      <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
@@ -51,10 +81,13 @@ const HomeScreen = () => {
             />
           </View>
         </View>
-      </SafeAreaView>
+
+      </View>
+      {/* Search Bar */}
+
       <View style={styles.highlightWrapper}>
         <FlatList
-          data={highlights}
+          data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Highlight item={item} />}
           horizontal
@@ -71,76 +104,31 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
-          {categories.map((chunk) => {
-            return (
-              <View
-                key={chunk.id}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignContent: 'stretch',
-                  marginTop: 10,
-                  marginBottom: 10,
-                }}
-              >
-                <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => navigation.push("ListItemHome")}
-                    >
-                      <View
-                        style={{
-                          width: width / 3 - 30,
-                          marginHorizontal: 12,
-                          justifyContent: "center",
-                          marginBottom: 20,
-                        }}
-                      >
-                        <View
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            backgroundColor: chunk.backgroundColor,
-                            borderRadius: 10,
-                            width: width / 3 - 30,
-                            height: width / 3 - 30,
-                          }}
-                        />
-                        <View>
-                          <Image
-                            source={chunk.image}
-                            style={{
-                              width: width / 5 - 30,
-                              height: width / 5 - 30,
-                            }}
-                          />
-                          <Text
-                            style={{
-                              textAlign: "center",
-                              fontFamily: FONTS.MEDIUM,
-                              marginTop: 10,
-                              fontSize: 17,
-                            }}
-                          >
-                            {chunk.title}
-                          </Text>
-                        </View>
-                      </View>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+
+          <FlatList
+            data={categoryAdd}
+            contentContainerStyle={styles.listCategory}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <Categories item={item} />}
+            numColumns={numColumns}
+          />
+
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: COLORS.WHITE,
     // alignItems: "center",
     // justifyContent: "center",
+  },
+  listCategory: {
+    justifyContent: "center",
+    paddingBottom: 20,
   },
   header: {
     backgroundColor: COLORS.BASIC_BACKGROUND,
@@ -169,11 +157,13 @@ const styles = StyleSheet.create({
   },
   highlightWrapper: {
     marginTop: 20,
+    // backgroundColor: COLORS.WHITE,
   },
   categoryWrapper: {
     paddingHorizontal: 20,
     marginTop: 20,
-    flex: 1,
+    // flex: 1,
+    // backgroundColor: COLORS.PRIMARY_LIGHT,
   },
   category: {
     flexDirection: "row",

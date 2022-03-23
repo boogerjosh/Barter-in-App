@@ -8,12 +8,13 @@ import DetailScreen from "../screens/Detail";
 import ListItemHomeScreen from "../screens/ListItemHome";
 import Login from "../screens/Login";
 import COLORS from "../constants/Colors";
+
 import MyItemScreen from '../screens/MyItem'
 import ChatRoomScreen from "../screens/ChatRoom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from '@react-navigation/native';
-
+import MyItemBarterScreen from "../screens/MyItemBarter";
 const Stack = createNativeStackNavigator();
 
 const HomeRouter = () => {
@@ -56,7 +57,7 @@ const HomeRouter = () => {
             headerShown: false,
           }}
       />
-      
+
       <Stack.Screen
           name="Detail"
           component={DetailScreen}
@@ -75,10 +76,23 @@ const HomeRouter = () => {
       
       
       <Stack.Screen
-        name="MyAdds"
-        component={MyAddsScreen}
+        name="Detail"
+        component={DetailScreen}
         options={{
-          headerShown: false,
+          headerBackTitleVisible: false,
+          title: "",
+          headerTintColor: COLORS.PRIMARY,
+        }}
+      />
+
+      <Stack.Screen name="MyChatRoom" component={ChatRoomScreen} />
+      <Stack.Screen
+        name="MyItemBarter"
+        component={MyItemBarterScreen}
+        options={{
+          headerBackTitleVisible: false,
+          title: "",
+          headerTintColor: COLORS.PRIMARY,
         }}
       />
 
