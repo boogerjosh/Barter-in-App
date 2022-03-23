@@ -19,14 +19,13 @@ import { useQuery } from "@apollo/client";
 import { GET_ITEM } from "../../lib/apollo/queries/items";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-import { useQuery } from "@apollo/client";
 
 const DetailScreen = ({ route }) => {
-  const { loading, error, data } = useQuery(GET_ITEM, {
-    variables: {
-      itemId: route.params.id
-    },
-  })
+  // const { loading, error, data } = useQuery(GET_ITEM, {
+  //   variables: {
+  //     itemId: route.params.id
+  //   },
+  // })
   console.log(loading, error, data)
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
