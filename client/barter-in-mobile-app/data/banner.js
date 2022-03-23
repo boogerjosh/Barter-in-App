@@ -1,6 +1,6 @@
 export default [
   {
-    id: "1",
+    id: 1,
     chips: "Good Condition",
     title: "Sepatu Converse",
     subtitle: "Sepatu dibeli pada tahun 2015",
@@ -8,7 +8,7 @@ export default [
     backgroundColor: "#edb96e",
   },
   {
-    id: "2",
+    id: 2,
     chips: "Middle Condition",
     title: "Baju Tidur",
     subtitle: "Safest germ product you can buy",

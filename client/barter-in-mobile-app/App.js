@@ -1,32 +1,51 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState, useContext } from "react";
+import { StyleSheet, ActivityIndicator, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 import Router from "./src/routes/index";
-import { useFonts } from "expo-font";
-import AppLoading from "expo-app-loading";
-import client from "./lib/apollo/connection";
-import { ApolloProvider } from "@apollo/client";
+import { AuthContext } from "./src/components/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const App = () => {
-  const [fontsLoaded] = useFonts({
-    Regular: require("./assets/fonts/Poppins-Regular.ttf"),
-    Bold: require("./assets/fonts/Poppins-Bold.ttf"),
-    Black: require("./assets/fonts/Poppins-Black.ttf"),
-    ExtraBold: require("./assets/fonts/Poppins-ExtraBold.ttf"),
-    ExtraLight: require("./assets/fonts/Poppins-ExtraLight.ttf"),
-    Light: require("./assets/fonts/Poppins-Light.ttf"),
-    SemiBold: require("./assets/fonts/Poppins-SemiBold.ttf"),
-    Medium: require("./assets/fonts/Poppins-Medium.ttf"),
-    Italic: require("./assets/fonts/Poppins-Italic.ttf"),
-  });
-  return fontsLoaded ? (
-    <ApolloProvider client={client}>
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [userToken, setUserToken] = React.useState(null);
+
+   const authContext = React.useMemo(() => ({
+    signOut: async() => {
+      try {
+        await AsyncStorage.removeItem('access_token');
+        setUserToken(null);
+        setIsLoading(false);
+      } catch(e) {
+        console.log(e);
+      }
+    },
+   }), []);
+  
+    useEffect(() => {
+      setTimeout(async() => {
+        setIsLoading(false);
+        try {
+          await AsyncStorage.getItem('access_token');
+        } catch(e) {
+          console.log(e);
+        }
+        // console.log('user token: ', userToken);
+      }, 1000);
+  }, [userToken]);
+  
+  if( isLoading ) {
+    return(
+      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <ActivityIndicator size="large"/>
+      </View>
+    );
+  }
+  return (
+    <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <Router />
       </NavigationContainer>
-    </ApolloProvider>
-  ) : (
-    <AppLoading />
+    </AuthContext.Provider>
   );
 };
 

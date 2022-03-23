@@ -31,10 +31,12 @@ const Splash = ({ navigation }) => {
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
+
             <View>
               <Text style={styles.welcomeText}></Text>
               <Text style={styles.toText}></Text>
             </View>
+
           </View>
           <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Image

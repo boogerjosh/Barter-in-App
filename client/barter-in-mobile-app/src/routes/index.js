@@ -11,15 +11,18 @@ import ProfileScreen from "../screens/Profile";
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Login from "../screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
+
   const [auth, setAuth] = useState(false);
   async function getToken() {
     try {
@@ -50,12 +53,13 @@ const MainApp = () => {
     Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
   });
 
-  const getTabBarStyle = (route) => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    let display =
-      routeName === "ChatRoom" || routeName === "Login" ? "none" : "flex";
-    return { display };
-  };
+
+  const getTabBarStyle = (route) => {  
+      const routeName = getFocusedRouteNameFromRoute(route);
+      let display = (routeName === 'ChatRoom' || routeName === 'Login') ? 'none':'flex';
+      return {display}
+  }
+
 
   return fontsLoaded ? (
     <Tab.Navigator
@@ -86,73 +90,105 @@ const MainApp = () => {
       <Tab.Screen
         name="EXPLORE"
         component={HomeRouter}
-        options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
-          headerShown: false,
-        })}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
       />
       <Tab.Screen
         name="MY ADS"
         component={MyAddsRouter}
-        options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
-          headerShown: false,
-        })}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-              navigation.navigate("Login");
+
+               navigation.navigate('Login');
             } else if (auth) {
-              console.log(auth, "my adds");
-              navigation.navigate("MY ADS");
+              console.log(auth, 'my adds')
+              navigation.navigate('MY ADS');
             }
-          },
-        })}
+        },
+  })}
+
       />
       <Tab.Screen
         name="ADD ADS"
         component={PostItemRouter}
-        options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
-          headerShown: false,
-        })}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-              navigation.navigate("Login");
+
+              navigation.navigate('Login');
             } else {
-              navigation.navigate("ADD ADS");
+              navigation.navigate('ADD ADS');
             }
-          },
-        })}
+        },
+  })}
+
       />
       <Tab.Screen
         name="BARTER"
         component={BarterRouter}
-        options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
-          headerShown: false,
-        })}
+
+        options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-              navigation.navigate("Login");
+
+              navigation.navigate('Login');
             } else {
-              navigation.navigate("BARTER");
+              navigation.navigate('BARTER');
             }
-          },
-        })}
+        },
+  })}
+
       />
       <Tab.Screen
         name="MY ACCOUNT"
         component={ProfileScreen}
-        options={({ route }) => ({
-          tabBarStyle: getTabBarStyle(route),
-          headerShown: false,
-        })}
+
+         options={
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false
+          }
+          )
+        }
+        
+
       />
     </Tab.Navigator>
   ) : (
@@ -187,28 +223,30 @@ const Router = () => {
         options={{ headerShown: false }}
       />
 
+  
       <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{
-          headerBackTitleVisible: false,
-          title: "",
-          headerTintColor: COLORS.PRIMARY,
-          headerShown: false,
-        }}
-      />
+      name="Login"
+      component={Login}
+      options={{
+        headerBackTitleVisible: false,
+        title: "",
+        headerTintColor: COLORS.PRIMARY,
+        headerShown: false,
+      }}
+    /> 
+    
+    <Stack.Screen
+      name="PostItemRouter"
+      component={PostItemRouter}
+      options={{ headerShown: false }}
+    />
 
-      <Stack.Screen
-        name="PostItemRouter"
-        component={PostItemRouter}
-        options={{ headerShown: false }}
-      />
+    <Stack.Screen
+      name="BarterRouter"
+      component={BarterRouter}
+      options={{ headerShown: false }}
+    />
 
-      <Stack.Screen
-        name="BarterRouter"
-        component={BarterRouter}
-        options={{ headerShown: false }}
-      />
     </Stack.Navigator>
   );
 };

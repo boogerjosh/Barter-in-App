@@ -18,10 +18,14 @@ const setWidth = (w) => (width / 100) * w;
 import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+
+import Item from '../../data/items';
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyAddsScreen = () => {
   const navigation = useNavigation();
+
   // console.log();
   const [items, setItems] = useState([]);
   const [auth, setAuth] = useState(false);
@@ -60,9 +64,13 @@ const MyAddsScreen = () => {
   //   getToken();
   // });
 
-  useEffect(() => {
-    getItems();
-  }, []);
+
+  // useEffect(() => {
+  //   getItems();
+  // }, []);
+
+  // const [auth, setAuth] = useState(false);
+  // const [access_token, setAccessToken] = useState('')
 
   return (
     <SafeAreaView>
@@ -76,7 +84,7 @@ const MyAddsScreen = () => {
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
-          data={items}
+          data={Item}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <MyAddsComp item={item} />}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
