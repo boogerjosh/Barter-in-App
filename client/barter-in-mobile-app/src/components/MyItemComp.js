@@ -13,6 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
+
+import { useQuery } from "@apollo/client";
+import { POST_ROOM_BARTER } from "../../lib/apollo/queries/items";
+
 const SPACING = 20;
 const ITEM_SIZE = 30;
 const { height, width } = Dimensions.get("screen");
@@ -22,6 +26,18 @@ const setHeight = (h) => (height / 200) * h;
 const MyItemComp = ({ item }) => {
   // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
   const navigation = useNavigation();
+  //graphql mutation
+  const { loading, error, data } = useQuery(POST_ROOM_BARTER, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      accessToken: null,
+      user2: null,
+      item1: null,
+      item2: null,
+    },
+  });
+
   // console.log(stylingStatus());
   return (
     <SafeAreaView style={styles.container}>

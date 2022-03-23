@@ -32,14 +32,14 @@ const setWidth = (w) => (width / 100) * w;
 
 const numColumns = 3;
 
-
 const HomeScreen = () => {
   const navigation = useNavigation();
+  //graphql
   const { loading, error, data } = useQuery(GET_ITEMS_HOME, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
   });
-  
+
   let items;
   if (data) {
     items = data?.getItemsHome;
@@ -81,7 +81,6 @@ const HomeScreen = () => {
             />
           </View>
         </View>
-
       </View>
       {/* Search Bar */}
 
@@ -104,7 +103,6 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
-
           <FlatList
             data={categoryAdd}
             contentContainerStyle={styles.listCategory}
@@ -112,7 +110,6 @@ const HomeScreen = () => {
             renderItem={({ item }) => <Categories item={item} />}
             numColumns={numColumns}
           />
-
         </View>
       </View>
     </SafeAreaView>
