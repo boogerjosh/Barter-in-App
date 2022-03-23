@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,15 +9,15 @@ import {
   Alert,
   Dimensions,
   TouchableOpacity,
-  Image
+  Image,
 } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Input from "../constants/Input";
-import TextInputDesc from '../constants/TextInputDesc';
-import TextInputTitle from '../constants/TextInputTitle';
+import TextInputDesc from "../constants/TextInputDesc";
+import TextInputTitle from "../constants/TextInputTitle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../constants/Button";
 import Loader from "../constants/Loader";
@@ -25,88 +25,86 @@ import Loader from "../constants/Loader";
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-
 const InputItem = ({ route }) => {
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
-    title: '',
-    description: '',
-    brand: '',
-    yearOfPurchase: '',
-    category: route.params.id
+    title: "",
+    description: "",
+    brand: "",
+    yearOfPurchase: "",
+    category: route.params.id,
   });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const [adsImage, setProfileImage] = useState({
-    image1: '',
-    image2: '',
-    image3: '',
+    image1: "",
+    image2: "",
+    image3: "",
   });
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
     }
-    if (status === 'granted') {
+    if (status === "granted") {
       const response = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
       if (!response.cancelled) {
-           setProfileImage(prevState => ({
-            ...prevState,
-            image1: response.uri
-         }));
+        setProfileImage((prevState) => ({
+          ...prevState,
+          image1: response.uri,
+        }));
       }
     }
   };
 
   const openImageLibrary2 = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
     }
-    if (status === 'granted') {
+    if (status === "granted") {
       const response = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
       if (!response.cancelled) {
-            setProfileImage(prevState => ({
-            ...prevState,
-            image2: response.uri
-         }));
+        setProfileImage((prevState) => ({
+          ...prevState,
+          image2: response.uri,
+        }));
       }
     }
   };
 
   const openImageLibrary3 = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
     }
-    if (status === 'granted') {
+    if (status === "granted") {
       const response = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
       if (!response.cancelled) {
-          setProfileImage(prevState => ({
-            ...prevState,
-            image3: response.uri
-          }));
+        setProfileImage((prevState) => ({
+          ...prevState,
+          image3: response.uri,
+        }));
       }
     }
   };
-
 
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
 
     if (!inputs.title) {
-      handleError('Title is required', 'title');
+      handleError("Title is required", "title");
       isValid = false;
     }
     // } else if (inputs.title.length < 15) {
@@ -118,7 +116,7 @@ const InputItem = ({ route }) => {
     // }
 
     if (!inputs.description) {
-      handleError('Description is required', 'description');
+      handleError("Description is required", "description");
       isValid = false;
     }
     // } else if (inputs.description.length < 20) {
@@ -130,26 +128,26 @@ const InputItem = ({ route }) => {
     // }
 
     if (!inputs.brand) {
-      handleError('Brand is required', 'brand');
+      handleError("Brand is required", "brand");
       isValid = false;
     }
 
     if (!inputs.yearOfPurchase) {
-      handleError('Year Purchase is required', 'yearOfPurchase');
+      handleError("Year Purchase is required", "yearOfPurchase");
       isValid = false;
     }
 
     if (!adsImage.image1) {
-      handleError('3 photos must be selected', 'imageUrl');
+      handleError("3 photos must be selected", "imageUrl");
       isValid = false;
     } else if (!adsImage.image2) {
-      handleError('3 photos must be selected', 'imageUrl');
+      handleError("3 photos must be selected", "imageUrl");
       isValid = false;
     } else if (!adsImage.image3) {
-      handleError('3 photos must be selected', 'imageUrl');
+      handleError("3 photos must be selected", "imageUrl");
       isValid = false;
     } else if (!adsImage.image1 && !adsImage.image2 && !adsImage.image3) {
-      handleError('3 photos must be selected', 'imageUrl');
+      handleError("3 photos must be selected", "imageUrl");
       isValid = false;
     }
 
@@ -161,7 +159,6 @@ const InputItem = ({ route }) => {
   const addAds = () => {
     setLoading(true);
     setTimeout(async () => {
-
       const formData = new FormData();
       let filename3 = adsImage.image3.split("/").pop();
       let match3 = /\.(\w+)$/.exec(filename3);
@@ -170,7 +167,7 @@ const InputItem = ({ route }) => {
       let filename2 = adsImage.image2.split("/").pop();
       let match2 = /\.(\w+)$/.exec(filename2);
       let type2 = match2 ? `image/${match2[1]}` : `image`;
-      
+
       let filename = adsImage.image1.split("/").pop();
       let match = /\.(\w+)$/.exec(filename);
       let type = match ? `image/${match[1]}` : `image`;
@@ -180,29 +177,29 @@ const InputItem = ({ route }) => {
         name: filename,
         type,
       });
-       formData.append("image", {
+      formData.append("image", {
         uri: adsImage.image2,
         name: filename2,
         type2,
-       });
-       formData.append("image", {
+      });
+      formData.append("image", {
         uri: adsImage.image3,
         name: filename3,
         type3,
-       });
-      
+      });
+
       formData.append("title", inputs.title);
       formData.append("description", inputs.description);
       formData.append("brand", inputs.brand);
       formData.append("yearOfPurchase", inputs.yearOfPurchase);
       formData.append("category", inputs.category);
 
-      console.log(formData)
+      console.log(formData);
 
       try {
         let token = await AsyncStorage.getItem("access_token");
         let response = await fetch(
-          `https://6085-2001-448a-1061-10b7-51be-a27c-aa8c-bde2.ngrok.io/users/items`,
+          `http://11ff-139-193-79-181.ngrok.io/users/items`,
           {
             method: "POST",
             headers: {
@@ -219,21 +216,21 @@ const InputItem = ({ route }) => {
         let item = response.json();
         console.log(item);
         setLoading(false);
-         setProfileImage(prevState => ({
-            ...prevState,
-           image1: '',
-           image2: '',
-           image3: ''
-         }));
-         setInputs(prevState => ({
-            ...prevState,
-           title: '',
-           description: '',
-           brand: '',
-           yearOfPurchase: '',
-           category: ''
-         }));
-        navigation.navigate('MyAdds');
+        setProfileImage((prevState) => ({
+          ...prevState,
+          image1: "",
+          image2: "",
+          image3: "",
+        }));
+        setInputs((prevState) => ({
+          ...prevState,
+          title: "",
+          description: "",
+          brand: "",
+          yearOfPurchase: "",
+          category: "",
+        }));
+        navigation.navigate("MyAdds");
       } catch (error) {
         Alert.alert("Error", "Something went wrong");
         setLoading(false);
@@ -242,50 +239,57 @@ const InputItem = ({ route }) => {
   };
 
   const handleOnchange = (text, input) => {
-    setInputs(prevState => ({ ...prevState, [input]: text }));
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
   const handleError = (error, input) => {
-    setErrors(prevState => ({ ...prevState, [input]: error }));
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.WHITE, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
       <Loader visible={loading} />
       <ScrollView
-        contentContainerStyle={{paddingTop: 25, paddingHorizontal: 20}}>
-        <Text style={{color: COLORS.BLACK, fontSize: 40, fontWeight: 'bold'}}>
+        contentContainerStyle={{ paddingTop: 25, paddingHorizontal: 20 }}
+      >
+        <Text style={{ color: COLORS.BLACK, fontSize: 40, fontWeight: "bold" }}>
           Include some details
         </Text>
-        <View style={{marginVertical: 20}}>
+        <View style={{ marginVertical: 20 }}>
           <TextInputTitle
-            onChangeText={text => handleOnchange(text, 'title')}
-            onFocus={() => handleError(null, 'title')}
+            onChangeText={(text) => handleOnchange(text, "title")}
+            onFocus={() => handleError(null, "title")}
             iconName="format-title"
             label="Ad title*"
             placeholder="Key features of your title"
             error={errors.title}
           />
-           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Text>{ inputs.title.length }/70</Text>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Text>{inputs.title.length}/70</Text>
           </View>
 
           <TextInputDesc
             multiline={true}
             numberOfLines={4}
-            onChangeText={text => handleOnchange(text, 'description')}
-            onFocus={() => handleError(null, 'description')}
+            onChangeText={(text) => handleOnchange(text, "description")}
+            onFocus={() => handleError(null, "description")}
             iconName="card-text-outline"
             label="Additional information*"
             placeholder="Include conditional, features and reasons for selling"
             error={errors.description}
           />
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 5}}>
-            <Text>{ inputs.description.length }/4096</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              marginBottom: 5,
+            }}
+          >
+            <Text>{inputs.description.length}/4096</Text>
           </View>
 
           <Input
-            onChangeText={text => handleOnchange(text, 'brand')}
-            onFocus={() => handleError(null, 'brand')}
+            onChangeText={(text) => handleOnchange(text, "brand")}
+            onFocus={() => handleError(null, "brand")}
             iconName="tshirt-v-outline"
             label="Brand*"
             placeholder="Brand"
@@ -293,75 +297,76 @@ const InputItem = ({ route }) => {
           />
 
           <Input
-            onChangeText={text => handleOnchange(text, 'yearOfPurchase')}
-            onFocus={() => handleError(null, 'yearOfPurchase')}
+            onChangeText={(text) => handleOnchange(text, "yearOfPurchase")}
+            onFocus={() => handleError(null, "yearOfPurchase")}
             iconName="update"
             label="Year Purchase*"
             placeholder="Year Purchase"
             error={errors.yearOfPurchase}
           />
 
-          <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            onFocus={() => handleError(null, 'imageUrl')}
-            onPress={openImageLibrary}
-            style={styles.uploadBtnContainer}
-            error={errors.image1}  
-          >
-            {adsImage.image1 ? (
-              <Image
-                source={{ uri: adsImage.image1 }}
-                style={{ width: '100%', height: '100%' }}
-              />
-            ) : (
-              <Text style={styles.uploadBtn}>Upload Ad Image</Text>
-            )}
-          </TouchableOpacity>
-          
+          <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
-            onFocus={() => handleError(null, 'imageUrl')}
-            onPress={openImageLibrary2}
-            error={errors.image2}
-            style={styles.uploadBtnContainer}
-          >
-            {adsImage.image2 ? (
-              <Image
-                source={{ uri: adsImage.image2 }}
-                style={{ width: '100%', height: '100%' }}
-              />
-            ) : (
-              <Text style={styles.uploadBtn}>Upload Ad Image</Text>
-            )}
+              onFocus={() => handleError(null, "imageUrl")}
+              onPress={openImageLibrary}
+              style={styles.uploadBtnContainer}
+              error={errors.image1}
+            >
+              {adsImage.image1 ? (
+                <Image
+                  source={{ uri: adsImage.image1 }}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              ) : (
+                <Text style={styles.uploadBtn}>Upload Ad Image</Text>
+              )}
             </TouchableOpacity>
-            
+
             <TouchableOpacity
-            onFocus={() => handleError(null, 'imageUrl')}  
-            onPress={openImageLibrary3}
-            error={errors.image3}
-            style={styles.uploadBtnContainer}
-          >
-            {adsImage.image3 ? (
-              <Image
-                source={{ uri: adsImage.image3 }}
-                style={{ width: '100%', height: '100%' }}
-              />
-            ) : (
-              <Text style={styles.uploadBtn}>Upload Ad Image</Text>
-            )}
-          </TouchableOpacity>
+              onFocus={() => handleError(null, "imageUrl")}
+              onPress={openImageLibrary2}
+              error={errors.image2}
+              style={styles.uploadBtnContainer}
+            >
+              {adsImage.image2 ? (
+                <Image
+                  source={{ uri: adsImage.image2 }}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              ) : (
+                <Text style={styles.uploadBtn}>Upload Ad Image</Text>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onFocus={() => handleError(null, "imageUrl")}
+              onPress={openImageLibrary3}
+              error={errors.image3}
+              style={styles.uploadBtnContainer}
+            >
+              {adsImage.image3 ? (
+                <Image
+                  source={{ uri: adsImage.image3 }}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              ) : (
+                <Text style={styles.uploadBtn}>Upload Ad Image</Text>
+              )}
+            </TouchableOpacity>
           </View>
-        {errors.imageUrl && (
-           <Text style={{marginTop: 7, color: COLORS.PERSIAN_RED, fontSize: 12}}>
-        {errors.imageUrl}
-        </Text>
-         )}
+          {errors.imageUrl && (
+            <Text
+              style={{ marginTop: 7, color: COLORS.PERSIAN_RED, fontSize: 12 }}
+            >
+              {errors.imageUrl}
+            </Text>
+          )}
           <Button title="Submit" onPress={validate} />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -389,18 +394,18 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 125 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderStyle: 'dashed',
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "dashed",
     borderWidth: 1,
-    overflow: 'hidden',
-    marginRight: 15
+    overflow: "hidden",
+    marginRight: 15,
   },
   uploadBtn: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
     opacity: 0.3,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

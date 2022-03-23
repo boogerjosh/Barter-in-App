@@ -16,6 +16,8 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const BarterRoomScreen = () => {
   const navigation = useNavigation();
@@ -23,7 +25,7 @@ const BarterRoomScreen = () => {
   const getRoomBarters = async () => {
     try {
       const data = await axios.get(
-        "https://8dea-110-138-93-44.ngrok.io/myRoomBarters"
+        "http://6cc5-139-193-79-181.ngrok.io/myRoomBarters"
       );
       setRoomBarters(data.data);
     } catch (error) {
@@ -31,9 +33,27 @@ const BarterRoomScreen = () => {
     }
   };
 
-  useEffect(() => {
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      // await AsyncStorage.removeItem("access_token");
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, ">>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        navigation.navigate("MY ACCOUNT");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(() => {
+    getToken();
     getRoomBarters();
-  }, []);
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

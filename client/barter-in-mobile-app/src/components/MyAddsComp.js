@@ -88,7 +88,7 @@ const MyAddsComp = ({ item }) => {
           <View style={styles.mainCardContent}>
             <View style={styles.leftContainer}>
               <Image
-                source={{ uri: item?.Images[0].imageUrl }}
+                source={{ uri: item?.Images[0]?.imageUrl }}
                 style={{
                   width: 70,
                   height: 70,

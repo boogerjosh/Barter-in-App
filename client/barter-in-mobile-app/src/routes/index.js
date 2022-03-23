@@ -16,6 +16,9 @@ import ProfileScreen from "../screens/Profile";
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
+import ProfileRouter from "./ProfileRouter";
+
+import Login from "../screens/Login";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -29,13 +32,19 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
-  const navigation = useNavigation()
 
+  const navigation = useNavigation()
   useEffect(()=> {
     Notifications.addNotificationResponseReceivedListener((response) => {
       navigation.push(response.notification.request.content.data.navigate)
     });
   },[])
+  const getTabBarStyle = (route) => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    let display =
+      routeName === "ChatRoom" || routeName === "Login" ? "none" : "flex";
+    return { display };
+  };
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -71,6 +80,15 @@ const MainApp = () => {
         name="MY ADS"
         component={MyAddsRouter}
         options={{ headerShown: false }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            // Prevent default action
+            e.preventDefault();
+            navigation.navigate("MY ADS");
+            // Do something with the `navigation` object
+            // navigation.navigate("MY ACCOUNT");
+          },
+        })}
       />
       <Tab.Screen
         name="ADD ADS"
@@ -84,8 +102,14 @@ const MainApp = () => {
       />
       <Tab.Screen
         name="MY ACCOUNT"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
+        component={ProfileRouter}
+        options={
+          // { headerShown: false }
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false,
+          })
+        }
       />
     </Tab.Navigator>
   );
@@ -97,7 +121,9 @@ const Router = () => {
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="MainApp"
@@ -123,6 +149,20 @@ const Router = () => {
         name="BarterRouter"
         component={BarterRouter}
         options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const AuthRouter = () => {
+  return (
+    <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

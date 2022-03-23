@@ -22,7 +22,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-socket = io("http://31f6-125-160-237-226.ngrok.io");
+socket = io("http://6cc5-139-193-79-181.ngrok.io");
 
 const ChatRoomScreen = () => {
   // COBA
@@ -42,8 +42,8 @@ const ChatRoomScreen = () => {
     });
     setUsername(await AsyncStorage.getItem("username"));
     setId(Number(await AsyncStorage.getItem("id")));
-    setPhotoUrl(await AsyncStorage.getItem("photoUrl"))
 
+    setPhotoUrl(await AsyncStorage.getItem("photoUrl"))
     if (Number(await AsyncStorage.getItem("id")) === 2) {
       setReceiverId(8);
     } else setReceiverId(2);
@@ -59,6 +59,7 @@ const ChatRoomScreen = () => {
         ) {
           tampung.push(e);
         }
+
       });
       return tampung;
     }

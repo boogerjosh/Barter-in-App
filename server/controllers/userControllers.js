@@ -159,12 +159,45 @@ class userControllers {
     }
   }
 
-  static async postItemClient() {
+  static async postImage(req, res, next) {
+    try {
+      const { files } = req;
+      const mappedArray = await Promise.all(
+        files.map((file) => {
+          return uploadFile(file).then((data) => {
+            let tags = [];
+            if (data.AITags) {
+              data.AITags.forEach((e) => {
+                tags.push(e.name);
+              });
+            }
+            let temp = {
+              imageUrl: data.url,
+              tag: tags.join(", "),
+            };
+            return temp;
+          });
+        })
+      );
+      res.status(201).json(mappedArray);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async addItem(req, res, next) {
     const t = await sequelize.transaction();
     try {
       const userId = req.userLogin.id;
-      const { title, category, description, brand, yearOfPurchase, imagesUrl } =
-        req.body;
+      const {
+        title,
+        category,
+        description,
+        brand,
+        yearOfPurchase,
+        imageFields,
+      } = req.body;
+      console.log(req.body);
       const createItem = await Item.create(
         {
           title,
@@ -172,22 +205,36 @@ class userControllers {
           description,
           brand,
           yearOfPurchase,
-          statusPost: "Pending",
+          statusPost: "Reviewed",
           statusBarter: "Not bartered yet",
           userId,
         },
-        { transaction: t }
+        {
+          returning: true,
+          transaction: t,
+        }
       );
 
-      await Image.bulkCreate(imagesUrl, {
+      let imagesData = imageFields.map((el) => {
+        let temp = {
+          imageUrl: el.imageUrl,
+          tag: el.tag,
+          itemId: createItem.id,
+        };
+        return temp;
+      });
+
+      console.log(imageFields);
+      await Image.bulkCreate(imagesData, {
         returning: true,
         transaction: t,
       });
+
       await sendEmail({ email: req.userLogin.email });
       await t.commit();
-
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
+      console.log(error);
       await t.rollback();
       next(error);
     }
@@ -289,6 +336,7 @@ class userControllers {
             },
           ],
         },
+        include: [Image],
       });
       res.status(200).json(items);
     } catch (error) {

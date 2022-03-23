@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import {
   StyleSheet,
   Text,
@@ -12,13 +12,35 @@ import COLORS from "../constants/Colors";
 import categoryAdd from "../../data/categoryAdd";
 import CategoryInputCard from "../components/CategoryInputCard";
 import ItemSpace from "../components/ItemSpace";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useState } from "react";
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const ChooseCategory = ({ navigation }) => {
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      // await AsyncStorage.removeItem("access_token");
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, ">>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        navigation.navigate("MY ACCOUNT");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(() => {
+    getToken();
+  });
   return (
-    <View style={{flex: 1}}>   
-     <SafeAreaView style={styles.header}>
+    <View style={{ flex: 1 }}>
+      <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
             <View>
@@ -34,7 +56,9 @@ const ChooseCategory = ({ navigation }) => {
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
-          renderItem={({ item }) => <CategoryInputCard item={item} navigation={navigation}/>}
+          renderItem={({ item }) => (
+            <CategoryInputCard item={item} navigation={navigation} />
+          )}
           numColumns={2}
         />
       </View>
@@ -65,7 +89,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.EXTRA_LIGHT_GRAY,
     fontFamily: FONTS.BOLD,
-  }
+  },
 });
 
 export default ChooseCategory;
