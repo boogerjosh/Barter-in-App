@@ -25,6 +25,7 @@ const numColumns = 2;
 const ListItemHomeScreen = () => {
   const navigation = useNavigation();
   //graphql
+
   const { loading, error, data } = useQuery(GET_ITEMS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
