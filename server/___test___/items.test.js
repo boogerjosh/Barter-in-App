@@ -9,6 +9,9 @@ const { queryInterface } = sequelize;
 const nodemailer = require("nodemailer");
 const sendMailMock = jest.fn();
 
+jest.mock("ioredis");
+const Redis = require("ioredis");
+
 jest.mock("../helpers/uploadFile");
 const uploadFile = require("../helpers/uploadFile");
 jest.setTimeout(2000);
@@ -606,6 +609,7 @@ describe("POST googleLogin", () => {
         email: "dummy.akun.1400@gmail.com",
         photoUrl: "-",
         givenName: "Dummy",
+        name: "Test",
       };
       request(app)
         .post("/users/googleLogin")
@@ -616,6 +620,7 @@ describe("POST googleLogin", () => {
           expect(res.body).toHaveProperty("access_token", expect.any(String));
           expect(res.body).toHaveProperty("id", expect.any(String));
           expect(res.body).toHaveProperty("username", expect.any(String));
+          expect(Redis).toBeCalledTimes(1);
           done();
         })
         .catch((err) => {

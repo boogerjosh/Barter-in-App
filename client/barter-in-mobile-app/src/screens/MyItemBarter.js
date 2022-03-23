@@ -20,23 +20,23 @@ import MyItemComp from "../components/MyItemComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
 
+import { useQuery } from "@apollo/client";
+import { GET_DATA_FOR_BARTER } from "../../lib/apollo/queries/items";
+
 const MyItemBarter = () => {
   const navigation = useNavigation();
-
-  const [items, setItems] = useState([]);
-
-  const getItems = async () => {
-    try {
-      const data = await axios.get("https://7cd3-110-138-93-44.ngrok.io/items");
-      setItems(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getItems();
-  }, []);
+  //graphql
+  const { loading, error, data } = useQuery(GET_DATA_FOR_BARTER, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      access_token: "",
+    },
+  });
+  let items;
+  if (data) {
+    items = data?.getDataForBarter;
+  }
 
   return (
     <View style={{ flex: 1 }}>

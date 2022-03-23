@@ -15,9 +15,29 @@
     "description":
       "Bahan baku kayu jati super (tpk) ",
     "category": "Decoration",
-    "brand": "-",
-    "yearOfPurchase": "2006",
-    "statusPost": "Pending",
+    "brand": "Ikea",
+    "yearOfPurchase": "2021",
+    "statusPost": "Accepted",
+    "statusBarter": "Not bartered yet",
+    "userId": 3
+  },
+  {
+    "title": "Lawson-style Sofa",
+    "description": "The reason for this design is to create a softer, more cushioned sofa with large cushions that aren’t taut within the frame of the sofa.",
+    "category": "Decoration",
+    "brand": "Ikea",
+    "yearOfPurchase": "2021",
+    "statusPost": "Accepted",
+    "statusBarter": "Not bartered yet",
+    "userId": 3
+  },
+  {
+    "title": "Harry Potter and Chamber of Secrets",
+    "description": "Harry Potter (Daniel Radcliffe) returns to Hogwarts School of Wizardry for his second year. After a confrontation with a house-elf named Dobby (Toby Jones), Harry escapes to the Weasley house with Ron Weasley (Rupert Grint) in a flying car. They are then late for the train and have to ride it to school.",
+    "category": "Book",
+    "brand": "Bloomsbury Publishing",
+    "yearOfPurchase": "2003",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
     "userId": 1
   },
@@ -39,7 +59,28 @@
     "category": "Decoration",
     "brand": "-",
     "yearOfPurchase": "2020",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
+    "statusBarter": "Not bartered yet",
+    "userId": 2
+  },
+  {
+    "title": "Nissan Versa Note",
+    "description": "Rear three quarter view of a 2014 Nissan Versa Note SV SL Hatchback2014 Nissan Versa Note SV SL Hatchback.",
+    "category": "Automotive",
+    "brand": "Nissan",
+    "yearOfPurchase": "2014",
+    "statusBarter": "Not bartered yet",
+    "statusPost": "Accepted",
+    "userId": 2
+  },
+  {
+    "title": "Nissan Versa Note",
+    "description": "Rear three quarter view of a 2014 Nissan Versa Note SV SL Hatchback2014 Nissan Versa Note SV SL Hatchback.",
+    "category": "Automotive",
+    "brand": "Nissan",
+    "yearOfPurchase": "2014",
+    "statusPost": "Accepted",
+
     "statusBarter": "Not bartered yet",
     "userId": 1
   },

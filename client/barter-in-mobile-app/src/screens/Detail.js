@@ -14,6 +14,9 @@ import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Carousel from "react-native-snap-carousel";
+
+import { useQuery } from "@apollo/client";
+import { GET_ITEM } from "../../lib/apollo/queries/items";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import { useQuery } from "@apollo/client";
@@ -30,6 +33,17 @@ const DetailScreen = ({ route }) => {
   const controllRead = (value) => {
     setReadMore(value);
   };
+  //graphql
+  const { loading, error, data } = useQuery(GET_ITEM, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+  });
+
+  let detailItem;
+  if (data) {
+    detailItem = data?.getItem;
+  }
+
   const renderItem2 = ({ item, index }) => {
     return (
       <View
@@ -405,7 +419,7 @@ const DetailScreen = ({ route }) => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.push("MyChatRoom", { userName: 'Josua' })}
+            onPress={() => navigation.push("MyChatRoom", { userName: "Josua" })}
           >
             <Text
               style={{

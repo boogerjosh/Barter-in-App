@@ -19,16 +19,28 @@ import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
 
-import Item from '../../data/items';
+import Item from "../../data/items";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQuery } from "@apollo/client";
+import { GET_MY_ADS } from "../../lib/apollo/queries/items";
 
 const MyAddsScreen = () => {
   const navigation = useNavigation();
-
-  // console.log();
-  const [items, setItems] = useState([]);
   const [auth, setAuth] = useState(false);
+  //graphql
+  const { loading, error, data } = useQuery(GET_MY_ADS, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      access_token: "",
+    },
+  });
+  let items;
+  if (data) {
+    items = data?.getMyAds;
+  }
+
   // async function getToken() {
   //   try {
   //     await AsyncStorage.removeItem("access_token");
@@ -44,33 +56,24 @@ const MyAddsScreen = () => {
   //   }
   // }
 
-  const getItems = async () => {
-    try {
-      const data = await axios.get(
-        "https://7cd3-110-138-93-44.ngrok.io/items",
-        {
-          headers: {
-            access_token: await AsyncStorage.getItem("access_token"),
-          },
-        }
-      );
-      setItems(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // console.log(items);
+  // const getItems = async () => {
+  //   try {
+  //     const data = await axios.get(
+  //       "https://7cd3-110-138-93-44.ngrok.io/items",
+  //       {
+  //         headers: {
+  //           access_token: await AsyncStorage.getItem("access_token"),
+  //         },
+  //       }
+  //     );
+  //     setItems(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   // useFocusEffect(() => {
   //   getToken();
   // });
-
-
-  // useEffect(() => {
-  //   getItems();
-  // }, []);
-
-  // const [auth, setAuth] = useState(false);
-  // const [access_token, setAccessToken] = useState('')
 
   return (
     <SafeAreaView>
