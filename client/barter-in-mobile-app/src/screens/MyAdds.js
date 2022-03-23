@@ -18,11 +18,28 @@ const setWidth = (w) => (width / 100) * w;
 import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const MyAddsScreen = () => {
   const navigation = useNavigation();
-
+  // console.log();
   const [items, setItems] = useState([]);
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, ">>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        navigation.navigate("MY ACCOUNT");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getItems = async () => {
     try {
@@ -33,9 +50,10 @@ const MyAddsScreen = () => {
     }
   };
 
-  useEffect(() => {
+  useFocusEffect(() => {
     getItems();
-  }, []);
+    getToken();
+  });
 
   return (
     <SafeAreaView>

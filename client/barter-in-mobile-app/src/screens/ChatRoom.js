@@ -24,16 +24,16 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // COBAAA
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
+// import * as Device from "expo-device";
+// import * as Notifications from "expo-notifications";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
 // COBA
 
 socket = io("http://31f6-125-160-237-226.ngrok.io");
@@ -111,14 +111,13 @@ const ChatRoomScreen = () => {
     };
   }, []);
 
-  useEffect( async() => {
+  useEffect(async () => {
     socket.emit("firstConnect");
     socket.on("getMessage", (message) => {
       setMessages(message);
     });
     setUsername(await AsyncStorage.getItem("username"));
     setId(Number(await AsyncStorage.getItem("id")));
-
   }, []);
 
   // UNTUK BUAT MESAGE PENAMPUNG!!!!!!
@@ -126,15 +125,15 @@ const ChatRoomScreen = () => {
     function forDisplayMessage() {
       let tampung = [];
       messages.forEach((e) => {
-        console.log(e.user)
+        console.log(e.user);
         // if(e.user) {
-          // if (
-          //   (e.user._id === id && e.user.receiverId === receiverId) ||
-          //   (e.user.receiverId === id && e.user._id === receiverId) ||
-          //   (e.user.receiverId === receiverId && e.user._id === _id)
-          // ) {
-            tampung.push(e);
-          // }
+        // if (
+        //   (e.user._id === id && e.user.receiverId === receiverId) ||
+        //   (e.user.receiverId === id && e.user._id === receiverId) ||
+        //   (e.user.receiverId === receiverId && e.user._id === _id)
+        // ) {
+        tampung.push(e);
+        // }
         // }
       });
       return tampung;
@@ -143,10 +142,10 @@ const ChatRoomScreen = () => {
   }, [messages]);
 
   useEffect(async () => {
-    setMount(mount + 1)
-    if(mount >= 2) {
-      console.log('masokkk')
-      setMount(1)
+    setMount(mount + 1);
+    if (mount >= 2) {
+      console.log("masokkk");
+      setMount(1);
       await sendPushNotification(expoPushToken);
     }
   }, [displayMessage]);

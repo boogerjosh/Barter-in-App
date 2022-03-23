@@ -9,11 +9,18 @@ import COLORS from "../constants/Colors";
 
 import HomeRouter from "./HomeRouter";
 import BarterRouter from "./BarterRouter";
-import ProfileScreen from "../screens/Profile";
+
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useEffect } from "react";
+
+import ProfileScreen from "../screens/Profile";
+
+import { useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +81,25 @@ const MainApp = () => {
 };
 
 const Router = () => {
+  const navigation = useNavigation();
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, ">>>>>");
+      if (token) {
+        setAuth(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(() => {
+    // getItems();
+    getToken();
+  });
   return (
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen
@@ -86,16 +112,30 @@ const Router = () => {
         component={MainApp}
         options={{ headerShown: false }}
       />
+      {/* before */}
       <Stack.Screen
         name="HomeRouter"
         component={HomeRouter}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="MyAddsRouter"
-        component={MyAddsRouter}
+        name="Profile"
+        component={ProfileScreen}
         options={{ headerShown: false }}
       />
+      {/* {auth ? (
+        <Stack.Screen
+          name="MyAddsRouter"
+          component={MyAddsRouter}
+          options={{ headerShown: false }}
+        />
+      ) : (
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+      )} */}
       <Stack.Screen
         name="PostItemRouter"
         component={PostItemRouter}
