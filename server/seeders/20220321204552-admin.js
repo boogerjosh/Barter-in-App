@@ -25,7 +25,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          username: "Joshua",
+          username: "Josua",
           email: "joshsudarso19@gmail.com",
           password: hashPassword("smio28934ng02m"),
           role: "Customer",
@@ -35,7 +35,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          username: "Arya",
+          username: "Josua",
           email: "aryawdy16@gmail.com",
           password: hashPassword("kdor02jmc9w39"),
           role: "Customer",
