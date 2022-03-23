@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 
-import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { POST_ROOM_BARTER } from "../../lib/apollo/queries/items";
 
 const SPACING = 20;
@@ -27,14 +27,14 @@ const MyItemComp = ({ item }) => {
   // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
   const navigation = useNavigation();
   //graphql mutation
-  const { loading, error, data } = useQuery(POST_ROOM_BARTER, {
+  const [postRoomBarter, { error, reset }] = useMutation(POST_ROOM_BARTER, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
-      accessToken: null,
-      user2: null,
-      item1: null,
-      item2: null,
+      // accessToken: null,
+      // user2: null,
+      // item1: null,
+      // item2: null,
     },
   });
 

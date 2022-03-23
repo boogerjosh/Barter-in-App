@@ -14,7 +14,7 @@ const setWidth = (w) => (width / 100) * w;
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 
-import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { PATCH_ROOM_BARTER } from "../../lib/apollo/queries/items";
 
 const SPACING = 20;
@@ -23,12 +23,12 @@ const ITEM_SIZE = 30;
 const MuBarterRoomComp = ({ item }) => {
   const navigation = useNavigation();
   //graphql mutation
-  const { loading, error, data } = useQuery(PATCH_ROOM_BARTER, {
+  const [patchRoomBarter, { error, reset }] = useMutation(PATCH_ROOM_BARTER, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
-      accessToken: null,
-      roomId: null,
+      // accessToken: null,
+      // roomId: null,
     },
   });
 

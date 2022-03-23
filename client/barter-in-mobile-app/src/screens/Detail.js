@@ -26,7 +26,7 @@ const DetailScreen = () => {
   const controllRead = (value) => {
     setReadMore(value);
   };
-
+  //graphql
   const { loading, error, data } = useQuery(GET_ITEM, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",

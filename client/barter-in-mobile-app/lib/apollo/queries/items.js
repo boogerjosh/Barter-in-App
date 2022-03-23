@@ -143,3 +143,13 @@ export const PATCH_ROOM_BARTER = gql`
     }
   }
 `;
+
+export const POST_GOOGLE_LOGIN = gql`
+  mutation LoginGoogle($newUser: inputUser) {
+    loginGoogle(newUser: $newUser) {
+      access_token
+      id
+      username
+    }
+  }
+`;
