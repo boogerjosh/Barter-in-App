@@ -72,7 +72,7 @@ const Login = () => {
           axios({
 
             method: 'post',
-            url: 'https://d8d7-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io/users/googleLogin',
+            url: 'http://8f18-125-160-237-226.ngrok.io/users/googleLogin',
             data: user
           })
             .then((data) => {
