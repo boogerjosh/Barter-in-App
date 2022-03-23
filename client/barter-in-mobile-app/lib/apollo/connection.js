@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
   //ganti ngrok
-  uri: "https://p3-challenge-2-orchestrator.herokuapp.com",
+  uri: "http://72b5-139-193-79-181.ngrok.io",
   cache: new InMemoryCache(),
 });
 

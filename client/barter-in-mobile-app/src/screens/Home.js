@@ -23,26 +23,38 @@ import Categories from "../components/Categories";
 import categoryAdd from "../../data/categoryAdd";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+
+import { useQuery } from "@apollo/client";
+import { GET_ITEMS_HOME } from "../../lib/apollo/queries/items";
+
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 3;
+
 const HomeScreen = () => {
   const navigation = useNavigation();
-
-  const [items, setItems] = useState([]);
-
-  const getItems = async () => {
-    try {
-      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
-      setItems(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getItems();
-  }, []);
+  const { loading, error, data } = useQuery(GET_ITEMS_HOME, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+  });
+  // const [items, setItems] = useState([]);
+  // if (data) {
+  //   console.log(data.getItemsHome);
+  //   setItems(data.getItemsHome);
+  // }
+  let items;
+  if (data) {
+    items = data?.getItemsHome;
+  }
+  console.log(items);
+  // const getItems = async () => {
+  //   try {
+  //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+  //     setItems(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <SafeAreaView

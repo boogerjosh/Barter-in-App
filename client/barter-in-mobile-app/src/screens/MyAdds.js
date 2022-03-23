@@ -19,7 +19,6 @@ import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
 
 const MyAddsScreen = () => {
   const navigation = useNavigation();

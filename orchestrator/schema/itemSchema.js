@@ -61,6 +61,12 @@ const typeDefs = gql`
     status2: Boolean
   }
 
+  type tokenGoogle {
+    access_token: String
+    id: ID
+    username: String
+  }
+
   input inputItem {
     title: String
     description: String
@@ -68,6 +74,15 @@ const typeDefs = gql`
     yearOfPurchase: String
     category: String
     images: [image]
+  }
+
+  input inputUser {
+    email: String
+    id: ID
+    name: String
+    phoneUrl: String
+    givenName: String
+    familyName: String
   }
 
   input image {
@@ -94,6 +109,7 @@ const typeDefs = gql`
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
     postItem(newItem: inputItem, access_token: String): status
+    loginGoogle(newUser: inputUser): tokenGoogle
   }
 `;
 
@@ -114,6 +130,7 @@ const resolvers = {
     getItemsHome: async () => {
       try {
         const { data } = await axios(`${url}/items/homes`);
+        console.log(data, ">>>>>");
         return data;
       } catch (error) {
         console.log(error);
@@ -179,6 +196,17 @@ const resolvers = {
             },
           }
         );
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    loginGoogle: async (_, args) => {
+      try {
+        const { newUser } = args;
+        const { data } = await axios.post(`${url}/googleLogin`, {
+          payload: newUser,
+        });
         return data;
       } catch (error) {
         console.log(error);

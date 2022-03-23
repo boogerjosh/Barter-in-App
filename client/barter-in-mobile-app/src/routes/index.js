@@ -14,8 +14,11 @@ import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
 import ProfileRouter from "./ProfileRouter";
-
+import { useState } from "react";
 import Login from "../screens/Login";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -27,6 +30,27 @@ const MainApp = () => {
       routeName === "ChatRoom" || routeName === "Login" ? "none" : "flex";
     return { display };
   };
+
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      // await AsyncStorage.removeItem("access_token");
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, "<<<>>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        setAuth(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(() => {
+    getToken();
+  });
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -66,7 +90,12 @@ const MainApp = () => {
           tabPress: (e) => {
             // Prevent default action
             e.preventDefault();
-            navigation.navigate("MY ADS");
+            console.log(auth);
+            if (auth) {
+              navigation.navigate("MY ADS");
+            } else {
+              navigation.navigate("Login");
+            }
             // Do something with the `navigation` object
             // navigation.navigate("MY ACCOUNT");
           },
@@ -84,7 +113,7 @@ const MainApp = () => {
       />
       <Tab.Screen
         name="MY ACCOUNT"
-        component={ProfileRouter}
+        component={ProfileScreen}
         options={
           // { headerShown: false }
           ({ route }) => ({
