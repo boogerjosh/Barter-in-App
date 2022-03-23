@@ -33,10 +33,11 @@ const BarterRoomScreen = () => {
     },
   });
 
-  let roomBarters;
+  let roomBarters = [];
   if (data) {
     roomBarters = data?.getRoomBarter;
   }
+  console.log(loading, "/..");
 
   // const [roomBarters, setRoomBarters] = useState([]);
   // const getRoomBarters = async () => {
@@ -68,7 +69,7 @@ const BarterRoomScreen = () => {
 
   useFocusEffect(() => {
     getToken();
-    getRoomBarters();
+    // getRoomBarters();
   });
 
   return (

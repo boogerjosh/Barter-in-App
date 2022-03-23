@@ -37,6 +37,10 @@ const DetailScreen = () => {
     detailItem = data?.getItem;
   }
 
+  // if(loading){
+  //   return (<></>)
+  // }
+
   const renderItem2 = ({ item, index }) => {
     return (
       <View

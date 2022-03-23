@@ -40,11 +40,16 @@ const HomeScreen = () => {
     nextFetchPolicy: "cache-first",
   });
 
-  let items;
+  let items = [];
   if (data) {
+    console.log(data.getItemsHome, ">>>>>");
     items = data?.getItemsHome;
   }
-  console.log(items);
+  if (loading) {
+    return <View></View>;
+  }
+  console.log(items, ">>>>>");
+  console.log(loading, ">>>>>");
   // const getItems = async () => {
   //   try {
   //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");

@@ -36,7 +36,7 @@ const MyAddsScreen = () => {
       access_token: "",
     },
   });
-  let items;
+  let items = [];
   if (data) {
     items = data?.getMyAds;
   }

@@ -31,7 +31,7 @@ const Highlight = ({ item }) => {
             flexDirection: "row",
             alignItems: "flex-end",
           }}
-          source={{ uri: item?.Images[0].imageUrl }}
+          source={{ uri: item?.Images[0]?.imageUrl }}
         ></ImageBackground>
         <View>
           <View style={styles.highlightItem}>
