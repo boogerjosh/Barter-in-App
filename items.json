@@ -88,7 +88,7 @@
     "yearOfPurchase": "2006",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
   },
   {
     "title": "Dead Edward",
@@ -302,12 +302,13 @@
   },
 
   {
-    "title": "Barbel 5kg",
-    "description": "Batang besi yang pada kedua ujungnya dibubuhi piringan besi dengan berat tertentu yang dapat dilepas, digunakan dalam olahraga angkat besi; halter",
-    "category": "Others",
-    "brand": "Hercules",
-    "yearOfPurchase": "2021",
-    "statusPost": "Accepted",
+    "title": "Karpet Hiasan Dinding",
+    "description":
+      "Kondisi masih seperti baru, bahan terbuat dari kain",
+    "category": "Decoration",
+    "brand": "-",
+    "yearOfPurchase": "2017",
+    "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
     "userId": 1
   },
@@ -359,6 +360,6 @@
     "yearOfPurchase": "2022",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
   }
 ]

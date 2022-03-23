@@ -1,12 +1,12 @@
 const axios = require('axios')
 
-async function sendPushNotification(expoPushToken, title, body, navigate) {
+async function sendPushNotification(expoPushToken, title, body, navigate, navigateData) {
     const message = {
       to: expoPushToken,
       sound: "default",
       title,
       body,
-      data: { navigate },
+      data: { navigate, navigateData },
     };
   
     await axios("https://exp.host/--/api/v2/push/send", {

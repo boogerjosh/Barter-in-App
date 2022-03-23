@@ -27,9 +27,9 @@ Notifications.setNotificationHandler({
 
 });
 
-socket = io("https://d8d7-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io");
+socket = io("http://8f18-125-160-237-226.ngrok.io");
 
-const ChatRoomScreen = () => {
+const ChatRoomScreen = (routes) => {
 
   // COBA
   const notificationListener = useRef();
@@ -42,13 +42,14 @@ const ChatRoomScreen = () => {
   const [displayMessage, setDisplayMessage] = useState([]);
 
   useEffect(async () => {
+    console.log(routes.route.params.itemUserId, '<<<<<<<<<<<<<<<<<<<<<')
     socket.emit("firstConnect");
     socket.on("getMessage", (message) => {
       setMessages(message);
     });
     setUsername(await AsyncStorage.getItem("username"));
     setId(Number(await AsyncStorage.getItem("id")));
-
+    setReceiverId(Number(routes.route.params.itemUserId));
     setPhotoUrl(await AsyncStorage.getItem("photoUrl"));
     if (Number(await AsyncStorage.getItem("id")) === 2) {
       setReceiverId(8);

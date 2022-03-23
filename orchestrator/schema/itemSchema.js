@@ -1,12 +1,12 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
+const Redis = require("ioredis");
 const url = "http://localhost:3001/users";
-// const Redis = require("ioredis");
-// const redis = new Redis({
-//   port: 10199,
-//   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
-//   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
-// });
+const redis = new Redis({
+  port: 10199,
+  host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
+  password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
+});
 // const {
 //   GraphQLUpload,
 //   graphqlUploadExpress, // A Koa implementation is also exported.
@@ -65,6 +65,8 @@ const typeDefs = gql`
     access_token: String
     id: ID
     username: String
+    email: String
+    photoUrl: String
   }
 
   input inputItem {
@@ -80,7 +82,7 @@ const typeDefs = gql`
     email: String
     id: ID
     name: String
-    phoneUrl: String
+    photoUrl: String
     givenName: String
     familyName: String
   }
@@ -94,6 +96,8 @@ const typeDefs = gql`
     filterByTitle: String
     filterByCategory: String
   }
+
+
 
   type Query {
     getItems(search: inputSearch): [Item]
@@ -194,7 +198,7 @@ const resolvers = {
           newItem;
         let { data } = await axios.post(
           `${url}/additem`,
-          { title, description, category, yearOfPublish, brand, images },
+          { title, description, category, yearOfPurchase, brand, imageFields },
           {
             headers: {
               access_token,
@@ -209,9 +213,8 @@ const resolvers = {
     loginGoogle: async (_, args) => {
       try {
         const { newUser } = args;
-        const { data } = await axios.post(`${url}/googleLogin`, {
-          payload: newUser,
-        });
+        const { data } = await axios.post(`${url}/googleLogin`, newUser);
+        console.log(data)
         return data;
       } catch (error) {
         console.log(error);

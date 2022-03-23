@@ -32,8 +32,8 @@ export const GET_ITEMS_HOME = gql`
 `;
 
 export const GET_ITEM = gql`
-  query GetItem {
-    getItem {
+  query GetItem($itemId: ID) {
+    getItem(itemId: $itemId) {
       id
       title
       category
@@ -147,9 +147,11 @@ export const PATCH_ROOM_BARTER = gql`
 export const POST_GOOGLE_LOGIN = gql`
   mutation LoginGoogle($newUser: inputUser) {
     loginGoogle(newUser: $newUser) {
-      access_token
       id
+      access_token
       username
+      email
+      photoUrl
     }
   }
 `;

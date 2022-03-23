@@ -20,7 +20,13 @@ import { GET_ITEM } from "../../lib/apollo/queries/items";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-const DetailScreen = () => {
+const DetailScreen = ({ route }) => {
+  // const { loading, error, data } = useQuery(GET_ITEM, {
+  //   variables: {
+  //     itemId: route.params.id
+  //   },
+  // })
+  console.log(loading, error, data)
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
@@ -416,7 +422,7 @@ const DetailScreen = () => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.push("MyChatRoom", { userName: "Josua" })}
+            onPress={() => navigation.push("MyChatRoom", { userName: 'Josua', itemUserId: 8 })}
           >
             <Text
               style={{
