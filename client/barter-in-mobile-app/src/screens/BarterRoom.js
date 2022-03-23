@@ -25,7 +25,7 @@ const BarterRoomScreen = () => {
   const getRoomBarters = async () => {
     try {
       const data = await axios.get(
-        "https://8dea-110-138-93-44.ngrok.io/myRoomBarters"
+        "http://6cc5-139-193-79-181.ngrok.io/myRoomBarters"
       );
       setRoomBarters(data.data);
     } catch (error) {
@@ -36,7 +36,7 @@ const BarterRoomScreen = () => {
   const [auth, setAuth] = useState(false);
   async function getToken() {
     try {
-      await AsyncStorage.removeItem("access_token");
+      // await AsyncStorage.removeItem("access_token");
       let token = await AsyncStorage.getItem("access_token");
       console.log(token, ">>>>>");
       if (token) {

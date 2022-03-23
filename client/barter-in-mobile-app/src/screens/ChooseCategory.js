@@ -22,7 +22,7 @@ const ChooseCategory = ({ navigation }) => {
   const [auth, setAuth] = useState(false);
   async function getToken() {
     try {
-      await AsyncStorage.removeItem("access_token");
+      // await AsyncStorage.removeItem("access_token");
       let token = await AsyncStorage.getItem("access_token");
       console.log(token, ">>>>>");
       if (token) {

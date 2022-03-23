@@ -36,7 +36,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // });
 // COBA
 
-socket = io("http://31f6-125-160-237-226.ngrok.io");
+socket = io("http://6cc5-139-193-79-181.ngrok.io");
 
 const ChatRoomScreen = () => {
   // COBA

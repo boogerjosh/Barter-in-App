@@ -26,34 +26,44 @@ const MyAddsScreen = () => {
   // console.log();
   const [items, setItems] = useState([]);
   const [auth, setAuth] = useState(false);
-  async function getToken() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      let token = await AsyncStorage.getItem("access_token");
-      console.log(token, ">>>>>");
-      if (token) {
-        setAuth(true);
-      } else {
-        navigation.navigate("MY ACCOUNT");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // async function getToken() {
+  //   try {
+  //     await AsyncStorage.removeItem("access_token");
+  //     let token = await AsyncStorage.getItem("access_token");
+  //     console.log(token, ">>>>>");
+  //     if (token) {
+  //       setAuth(true);
+  //     } else {
+  //       navigation.navigate("Login");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   const getItems = async () => {
     try {
-      const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+      const data = await axios.get(
+        "http://6cc5-139-193-79-181.ngrok.io/users/myads",
+        {
+          headers: {
+            access_token: await AsyncStorage.getItem("access_token"),
+          },
+        }
+      );
       setItems(data.data);
     } catch (error) {
       console.log(error);
     }
   };
+  // console.log(items);
+  // useFocusEffect(() => {
+  //   getToken();
+  // });
 
-  useFocusEffect(() => {
+  useEffect(() => {
     getItems();
-    getToken();
-  });
+  }, []);
 
   return (
     <SafeAreaView>

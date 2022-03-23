@@ -9,22 +9,24 @@ import COLORS from "../constants/Colors";
 
 import HomeRouter from "./HomeRouter";
 import BarterRouter from "./BarterRouter";
-
+import ProfileScreen from "../screens/Profile";
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
+import ProfileRouter from "./ProfileRouter";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect } from "react";
+import Login from "../screens/Login";
 
-import ProfileScreen from "../screens/Profile";
-
-import { useFocusEffect } from "@react-navigation/native";
-import { useNavigation } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
+  const getTabBarStyle = (route) => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    let display =
+      routeName === "ChatRoom" || routeName === "Login" ? "none" : "flex";
+    return { display };
+  };
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -60,6 +62,15 @@ const MainApp = () => {
         name="MY ADS"
         component={MyAddsRouter}
         options={{ headerShown: false }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            // Prevent default action
+            e.preventDefault();
+            navigation.navigate("MY ADS");
+            // Do something with the `navigation` object
+            // navigation.navigate("MY ACCOUNT");
+          },
+        })}
       />
       <Tab.Screen
         name="ADD ADS"
@@ -73,69 +84,44 @@ const MainApp = () => {
       />
       <Tab.Screen
         name="MY ACCOUNT"
-        component={ProfileScreen}
-        options={{ headerShown: false }}
+        component={ProfileRouter}
+        options={
+          // { headerShown: false }
+          ({ route }) => ({
+            tabBarStyle: getTabBarStyle(route),
+            headerShown: false,
+          })
+        }
       />
     </Tab.Navigator>
   );
 };
 
 const Router = () => {
-  const navigation = useNavigation();
-  const [auth, setAuth] = useState(false);
-  async function getToken() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      let token = await AsyncStorage.getItem("access_token");
-      console.log(token, ">>>>>");
-      if (token) {
-        setAuth(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useFocusEffect(() => {
-    // getItems();
-    getToken();
-  });
   return (
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="MainApp"
         component={MainApp}
         options={{ headerShown: false }}
       />
-      {/* before */}
       <Stack.Screen
         name="HomeRouter"
         component={HomeRouter}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="MyAddsRouter"
+        component={MyAddsRouter}
         options={{ headerShown: false }}
       />
-      {/* {auth ? (
-        <Stack.Screen
-          name="MyAddsRouter"
-          component={MyAddsRouter}
-          options={{ headerShown: false }}
-        />
-      ) : (
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ headerShown: false }}
-        />
-      )} */}
       <Stack.Screen
         name="PostItemRouter"
         component={PostItemRouter}
@@ -145,6 +131,20 @@ const Router = () => {
         name="BarterRouter"
         component={BarterRouter}
         options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const AuthRouter = () => {
+  return (
+    <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );
