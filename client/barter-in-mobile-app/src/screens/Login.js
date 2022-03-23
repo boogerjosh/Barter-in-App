@@ -8,6 +8,7 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
+import { TouchableRipple } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +17,8 @@ import COLORS from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-google-app-auth";
 import axios from "axios";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 const windowHeight = Dimensions.get("window").height;
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
@@ -67,12 +70,11 @@ const Login = () => {
               AsyncStorage.setItem("access_token", data.data.access_token);
               AsyncStorage.setItem("id", data.data.id);
               AsyncStorage.setItem("username", data.data.username);
+              console.log("Google signin successfull", "SUCCESS");             
               AsyncStorage.setItem("photoUrl", data.data.photoUrl);
+              setTimeout(() => navigation.navigate("HomeRouter"), 1000);
             })
             .catch((err) => console.log("GAGAL MASUK SERVER"));
-
-          console.log("Google signin successfull", "SUCCESS");
-          setTimeout(() => navigation.navigate("HomeRouter"), 1000);
         } else {
           console.log("Google signin was canceled");
         }
@@ -93,9 +95,17 @@ const Login = () => {
       />
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
+          <TouchableRipple
+            style={{ alignSelf: "flex-start" }}
+            onPress={(props) => {
+              navigation.navigate("Profile");
+            }}
+          >
+            <Icon name="close" color="#fff" size={30} />
+          </TouchableRipple>
           <View style={styles.headerDetails}>
             <View>
-              <Text style={styles.welcomeText}>LOGIN</Text>
+              <Text style={styles.welcomeText}>WELCOME</Text>
               <Text style={styles.toText}>to</Text>
             </View>
           </View>

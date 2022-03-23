@@ -20,15 +20,41 @@ import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const ProfileScreen = () => {
-  const [isLogging, setLogging] = useState(true);
   const navigation = useNavigation();
+  const [auth, setAuth] = useState(false);
   const toLoginPage = () => {
     navigation.navigate("Login");
   };
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("access_token");
+    setAuth(false);
+    navigation.navigate("Profile");
+  };
+  async function getToken() {
+    try {
+      let token = await AsyncStorage.getItem("access_token");
+      console.log(token, "<<<>>>>>");
+      if (token) {
+        setAuth(true);
+      } else {
+        setAuth(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(() => {
+    getToken();
+  });
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.header}>
@@ -40,7 +66,7 @@ const ProfileScreen = () => {
 
       <View style={styles.userInfoSection}>
         <View style={{ flexDirection: "row", marginTop: 15 }}>
-          {isLogging ? (
+          {auth ? (
             <Avatar.Image
               source={require("../../assets/person.jpg")}
               size={80}
@@ -52,7 +78,7 @@ const ProfileScreen = () => {
             />
           )}
 
-          {isLogging ? (
+          {auth ? (
             <View style={{ marginLeft: 20 }}>
               <Title
                 style={[
@@ -97,7 +123,7 @@ const ProfileScreen = () => {
         </View>
       </View>
 
-      {isLogging ? (
+      {auth ? (
         <View style={styles.userInfoSection}>
           <View style={styles.row}>
             <Icon name="phone" color="#777777" size={20} />
@@ -116,7 +142,7 @@ const ProfileScreen = () => {
         false
       )}
 
-      {isLogging ? (
+      {auth ? (
         <View style={styles.infoBoxWrapper}>
           <View
             style={[
@@ -140,7 +166,7 @@ const ProfileScreen = () => {
       )}
 
       <View style={styles.menuWrapper}>
-        {isLogging ? (
+        {auth ? (
           <TouchableRipple onPress={() => {}}>
             <View style={styles.menuItem}>
               <Icon name="heart-outline" color="#FF6347" size={25} />
@@ -156,8 +182,8 @@ const ProfileScreen = () => {
             <Text style={styles.menuItemText}>Help and Support</Text>
           </View>
         </TouchableRipple>
-        {isLogging ? (
-          <TouchableRipple onPress={() => {}}>
+        {auth ? (
+          <TouchableRipple onPress={logout}>
             <View style={styles.menuItem}>
               <Icon name="logout" color="#FF6347" size={25} />
               <Text style={styles.menuItemText}>Logout</Text>

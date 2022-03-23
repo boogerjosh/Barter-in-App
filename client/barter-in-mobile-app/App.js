@@ -4,6 +4,8 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import Router from "./src/routes/index";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
+import client from "./lib/apollo/connection";
+import { ApolloProvider } from "@apollo/client";
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -18,9 +20,11 @@ const App = () => {
     Italic: require("./assets/fonts/Poppins-Italic.ttf"),
   });
   return fontsLoaded ? (
-    <NavigationContainer>
-      <Router />
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Router />
+      </NavigationContainer>
+    </ApolloProvider>
   ) : (
     <AppLoading />
   );
