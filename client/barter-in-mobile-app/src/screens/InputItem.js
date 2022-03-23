@@ -22,7 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../constants/Button";
 import Loader from "../constants/Loader";
 
-import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { POST_ITEM } from "../../lib/apollo/queries/items";
 
 const { width } = Dimensions.get("screen");
@@ -30,24 +30,24 @@ const setWidth = (w) => (width / 100) * w;
 
 const InputItem = ({ route }) => {
   //graphql
-  const { error, data } = useQuery(POST_ITEM, {
+  const [postItem, { error, data }] = useMutation(POST_ITEM, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
-      newItem: {
-        title: null,
-        description: null,
-        brand: null,
-        yearOfPurchase: null,
-        category: null,
-        images: [
-          {
-            imageUrl: null,
-            tag: null,
-          },
-        ],
-      },
-      access_token: "",
+      // newItem: {
+      //   title: null,
+      //   description: null,
+      //   brand: null,
+      //   yearOfPurchase: null,
+      //   category: null,
+      //   images: [
+      //     {
+      //       imageUrl: null,
+      //       tag: null,
+      //     },
+      //   ],
+      // },
+      // access_token: "",
     },
   });
 

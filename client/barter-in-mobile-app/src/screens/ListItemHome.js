@@ -16,7 +16,7 @@ import COLORS from "../constants/Colors";
 import Items from "../components/Items";
 // import items from "../../data/items";
 
-import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { GET_ITEMS } from "../../lib/apollo/queries/items";
 
 const { width } = Dimensions.get("screen");
@@ -24,8 +24,8 @@ const setWidth = (w) => (width / 100) * w;
 const numColumns = 2;
 const ListItemHomeScreen = () => {
   const navigation = useNavigation();
-
-  const { loading, error, data } = useQuery(GET_ITEMS, {
+  //graphql
+  const { loading, error, data } = useMutation(GET_ITEMS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
