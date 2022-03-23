@@ -4,6 +4,7 @@ import HomeScreen from "../screens/Home";
 import BarterRoomScreen from "../screens/BarterRoom";
 import ChatRoomScreen from "../screens/ChatRoom";
 import DetailScreen from "../screens/Detail";
+import COLORS from "../constants/Colors";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +19,13 @@ const BarterRouter = () => {
         }}
       />
       <Stack.Screen name="Detail" component={DetailScreen} />
-      <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+      <Stack.Screen name="ChatRoom" component={ChatRoomScreen}
+          options={{
+            headerBackTitleVisible: false,
+            title: "",
+            headerTintColor: COLORS.PRIMARY,
+          }}
+      />
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );

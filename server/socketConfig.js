@@ -9,14 +9,16 @@ const io = require("socket.io")();
 //     io.emit("typing-start", data);
 //   });
 // });
+
 const messageArray = [];
 io.on("connection", (socket) => {
-  console.log(socket.id);
   socket.on("chatMessage", (message) => {
     messageArray.push(message);
     console.log(messageArray);
     io.emit("chatMessage", messageArray);
   });
 });
+
+
 
 module.exports = io;

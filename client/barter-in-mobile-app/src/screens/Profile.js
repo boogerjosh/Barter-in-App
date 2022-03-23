@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +6,6 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  Linking
 } from "react-native";
 import {
   Avatar,
@@ -20,29 +19,63 @@ import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../components/context";
+import { useFocusEffect } from '@react-navigation/native';
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const ProfileScreen = () => {
-  const [isLogging, setLogging] = useState(false)
+  const { signOut } = React.useContext(AuthContext);
+
+  const [auth, setAuth] = useState(false);
+  async function getToken() {
+    try {
+      let token = await AsyncStorage.getItem("access_token");
+      if (token) {
+        setAuth(true);
+      } else {
+        setAuth(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken()
+    }, [])
+  );
+
   const navigation = useNavigation();
+
   const toLoginPage = () => {
     navigation.navigate("Login")
   }
+
+  const logOut = async () => {
+    await signOut()
+    setAuth(false)
+    navigation.navigate("Profile");
+  }
+  
   return (
-      <View style={styles.container}>
-        <SafeAreaView style={styles.header}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
           <View style={styles.headerWrapper}>
              <Text style={styles.nameText}>My Account</Text>
           </View>
-        </SafeAreaView>
+        </View>
       <StatusBar style="auto" />
-
+      <ScrollView>
       <View style={styles.userInfoSection}>
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
-          {isLogging ?
+          {auth ?
             <Avatar.Image
-            source={require("../../assets/person.jpg")}
+                source={{
+              uri: `https://miro.medium.com/max/1400/1*dk2mi2QGlsv3_oy4b7CjpA.png`
+            }}
             size={80}
             /> :
             <Avatar.Image
@@ -51,7 +84,7 @@ const ProfileScreen = () => {
             />
           }
          
-            {isLogging ?
+            {auth ?
              <View style={{ marginLeft: 20 }}>
               <Title style={[styles.title, {
               marginTop:15,
@@ -77,7 +110,7 @@ const ProfileScreen = () => {
         </View>
       </View>
 
-      { isLogging ?  <View style={styles.userInfoSection}>
+      { auth ?  <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="phone" color="#777777" size={20}/>
           <Text style={{color:"#777777", marginLeft: 20}}>+628-XXX-XXX</Text>
@@ -88,7 +121,7 @@ const ProfileScreen = () => {
         </View>
       </View> : false}
       
-      { isLogging ?   <View style={styles.infoBoxWrapper}>
+      { auth ?   <View style={styles.infoBoxWrapper}>
           <View style={[styles.infoBox, {
             borderRightColor: '#dddddd',
             borderRightWidth: 1
@@ -104,7 +137,7 @@ const ProfileScreen = () => {
     
 
       <View style={styles.menuWrapper}>
-        { isLogging ?   <TouchableRipple onPress={() => {}}>
+        { auth ?   <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="heart-outline" color="#FF6347" size={25}/>
             <Text style={styles.menuItemText}>Your Favorites</Text>
@@ -116,38 +149,42 @@ const ProfileScreen = () => {
             <Text style={styles.menuItemText}>Help and Support</Text>
           </View>
         </TouchableRipple>
-        { isLogging ?  <TouchableRipple onPress={() => {}}>
+        { auth ?  <TouchableRipple onPress={logOut}>
           <View style={styles.menuItem}>
             <Icon name="logout" color="#FF6347" size={25}/>
             <Text style={styles.menuItemText}>Logout</Text>
           </View>
-        </TouchableRipple> : false}
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.PRIMARY,
-              width: 323,
-              paddingVertical: 8,
-              borderRadius: 10,
-              justifyContent: "center",
-              marginTop: 4,
-            }}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text
+          </TouchableRipple> : false}
+          {auth ? true :    
+            <TouchableOpacity
               style={{
-                fontSize: 15,
-                fontWeight: "bold",
-                color: "white",
-                textAlign: "center",
-                marginVertical: 5,
+                backgroundColor: COLORS.PRIMARY,
+                width: 323,
+                paddingVertical: 8,
+                borderRadius: 10,
+                justifyContent: "center",
+                marginTop: 4,
               }}
+              onPress={toLoginPage}
             >
-              Login or Register
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "center",
+                  marginVertical: 5,
+                }}
+              >
+                Login or Register
+              </Text>
+            </TouchableOpacity>
+          }
       </View>
+        
+      </ScrollView>
 
-      </View>
+      </SafeAreaView>
   );
 };
 

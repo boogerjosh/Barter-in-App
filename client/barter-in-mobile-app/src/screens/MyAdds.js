@@ -18,24 +18,29 @@ const setWidth = (w) => (width / 100) * w;
 import MyAddsComp from "../components/MyAddsComp";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+import Item from '../../data/items';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyAddsScreen = () => {
   const navigation = useNavigation();
 
-  const [items, setItems] = useState([]);
+  // const [items, setItems] = useState([]);
 
-  const getItems = async () => {
-    try {
-      const data = await axios.get("https://33f9-110-138-93-44.ngrok.io/items");
-      setItems(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getItems = async () => {
+  //   try {
+  //     const data = await axios.get("https://4faa-2001-448a-1061-10b7-855e-111e-1bdf-867d.ngrok.io /items");
+  //     setItems(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getItems();
-  }, []);
+  // useEffect(() => {
+  //   getItems();
+  // }, []);
+
+  // const [auth, setAuth] = useState(false);
+  // const [access_token, setAccessToken] = useState('')
 
   return (
     <View style={{flex: 1}}>
@@ -49,7 +54,7 @@ const MyAddsScreen = () => {
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
-          data={items}
+          data={Item}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <MyAddsComp item={item} />}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}

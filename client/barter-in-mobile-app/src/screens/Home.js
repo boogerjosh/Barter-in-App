@@ -9,7 +9,6 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -23,7 +22,6 @@ import Categories from "../components/Categories";
 import ItemSpace from "../components/ItemSpace";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-const numColumns = 3;
 const HomeScreen = () => {
   const navigation = useNavigation();
   return (
@@ -54,7 +52,6 @@ const HomeScreen = () => {
           </View>
         </View>
       </SafeAreaView>
-      {/* Search Bar */}
       <View style={styles.highlightWrapper}>
         <FlatList
           data={highlights}
@@ -74,25 +71,23 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
-          {categories.map((chunk, index) => {
+          {categories.map((chunk) => {
             return (
               <View
-                key={index}
+                key={chunk.id}
                 style={{
                   flexDirection: "row",
                   justifyContent: "center",
+                  alignContent: 'stretch',
                   marginTop: 10,
                   marginBottom: 10,
                 }}
               >
-                {chunk.map((category) => {
-                  return (
-                    <TouchableOpacity
+                <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => navigation.push("ListItemHome")}
                     >
                       <View
-                        key={category.id}
                         style={{
                           width: width / 3 - 30,
                           marginHorizontal: 12,
@@ -104,7 +99,7 @@ const HomeScreen = () => {
                           style={{
                             position: "absolute",
                             top: 0,
-                            backgroundColor: category.backgroundColor,
+                            backgroundColor: chunk.backgroundColor,
                             borderRadius: 10,
                             width: width / 3 - 30,
                             height: width / 3 - 30,
@@ -112,7 +107,7 @@ const HomeScreen = () => {
                         />
                         <View>
                           <Image
-                            source={category.image}
+                            source={chunk.image}
                             style={{
                               width: width / 5 - 30,
                               height: width / 5 - 30,
@@ -126,13 +121,11 @@ const HomeScreen = () => {
                               fontSize: 17,
                             }}
                           >
-                            {category.title}
+                            {chunk.title}
                           </Text>
                         </View>
                       </View>
-                    </TouchableOpacity>
-                  );
-                })}
+                </TouchableOpacity>
               </View>
             );
           })}

@@ -375,7 +375,7 @@ const DetailScreen = () => {
               justifyContent: "center",
               marginTop: 4,
             }}
-            onPress={() => navigation.navigate("Detail", { id: data.id })}
+            onPress={() => navigation.navigate("MyItem")}
           >
             <Text
               style={{
@@ -399,7 +399,9 @@ const DetailScreen = () => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.navigate("ChatRoom")}
+            onPress={() => navigation.navigate("ChatRoom", {
+              userName: 'Josua', 
+            })}
           >
             <Text
               style={{

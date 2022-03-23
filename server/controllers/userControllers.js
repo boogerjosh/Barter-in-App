@@ -32,11 +32,13 @@ class userControllers {
         id: user[0].dataValues.id,
         email: user[0].dataValues.email,
       });
-
+      console.log(tokenServer)
       res.status(200).json({
         access_token: tokenServer,
         id: String(user[0].dataValues.id),
         username: user[0].dataValues.username,
+        email: user[0].dataValues.email,
+        photoUrl: user[0].dataValues.photoUrl,
       });
     } catch (err) {
       next(err);
@@ -49,6 +51,7 @@ class userControllers {
       const userId = req.userLogin.id;
       console.log(userId)
       const { files } = req;
+      console.log(files)
       const { title, category, description, brand, yearOfPurchase } = req.body;
 
       const createItem = await Item.create(
@@ -84,64 +87,6 @@ class userControllers {
         })
       );
 
-      // const mappedArray = await Promise.all(
-      //   files.map((file) => {
-      //     let data = uploadFile(file);
-      //     console.log(data, "<<<<<<");
-      //     let tags = [];
-      //     if (data.AITags) {
-      //       data.AITags.forEach((e) => {
-      //         tags.push(e.name);
-      //       });
-      //     }
-      //     let temp = {
-      //       imageUrl: data.url,
-      //       itemId: createItems.id,
-      //       tag: tags.join(", "),
-      //     };
-      //     return temp;
-      //   })
-      // );
-
-      // const mappedArray = Promise.all(
-      //   files.map((file) => {
-      //     return uploadFile(file).then((data) => {
-      //       let tags = [];
-      //       if (data.AITags) {
-      //         data.AITags.forEach((e) => {
-      //           tags.push(e.name);
-      //         });
-      //       }
-      //       let temp = {
-      //         imageUrl: data.url,
-      //         itemId: createItems.id,
-      //         tag: tags.join(", "),
-      //       };
-      //       return temp;
-      //     });
-      //   })
-      // )
-
-      // let mappedArray = [];
-      // for (const file of files) {
-      //   let data = await uploadFile(file);
-      //   let tags = [];
-      //   if (data.AITags) {
-      //     data.AITags.forEach((e) => {
-      //       tags.push(e.name);
-      //     });
-      //   }
-      //   let temp = {
-      //     imageUrl: data.url,
-      //     itemId: createItem.id,
-      //     tag: tags.join(", "),
-      //   };
-      //   console.log(data, ">>>>>");
-      //   mappedArray.push(temp);
-      // }
-      // console.log(mappedArray);
-
-
       await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
@@ -156,10 +101,85 @@ class userControllers {
     }
   }
 
+  static async postImage(req, res, next) {
+    try {
+      const { files } = req;
+      console.log(req.files, '=====')
+      const mappedArray = await Promise.all(
+        files.map((file) => {
+          return uploadFile(file).then((data) => {
+            let tags = [];
+            if (data.AITags) {
+              data.AITags.forEach((e) => {
+                tags.push(e.name);
+              });
+            }
+            let temp = {
+              imageUrl: data.url,
+              tag: tags.join(", "),
+            };
+            return temp;
+          });
+        })
+      );
+      console.log(mappedArray)
+      res.status(200).json(mappedArray);
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  }
+
+  static async addItem(req, res, next) {
+     const t = await sequelize.transaction();
+    try {
+      const userId = req.userLogin.id;
+      const { title, category, description, brand, yearOfPurchase, imageFields } = req.body;
+      console.log(req.body)
+      const createItem = await Item.create(
+        {
+          title,
+          category,
+          description,
+          brand,
+          yearOfPurchase,
+          statusPost: "Reviewed",
+          statusBarter: "Not bartered yet",
+          userId,
+        },
+        {
+          returning: true, 
+          transaction: t
+        }
+      );
+
+      let imagesData = imageFields.map((el) => {
+        let temp = {
+          imageUrl: el.imageUrl,
+          tag: el.tag,
+          itemId: createItem.id
+        }
+        return temp
+      })
+
+      await Image.bulkCreate(imagesData, {
+        returning: true,
+        transaction: t,
+      });
+
+      await sendEmail({ email: req.userLogin.email });
+      await t.commit();
+      res.status(201).send({ message: "Item has been created" });
+
+    } catch (error) {
+      console.log(error);
+      await t.rollback();
+      next(error);
+    }
+  }
+
   static async getItems(req, res, next) {
     try {
-
-
       const cache = await redis.get('items')
       if (cache) res.status(200).json(JSON.parse(cache));
       let { filterByTitle, filterByCategory } = req.query;

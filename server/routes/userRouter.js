@@ -14,6 +14,18 @@ userRouter.get("/myads", userControllers.getMyAds);
 userRouter.get("/items-barters", userControllers.dataForBarter);
 
 userRouter.post(
+  "/addItem",
+  multerImage().array("image"),
+  userControllers.addItem
+  );
+  
+userRouter.post(
+  '/myImage',
+  multerImage().array("image"),
+  userControllers.postImage
+);
+    
+userRouter.post(
   "/items",
   multerImage().array("image"),
   userControllers.postItems
