@@ -31,7 +31,6 @@ import { AuthContext } from "../components/context";
 import { useMutation } from "@apollo/client";
 import { POST_GOOGLE_LOGIN } from "../../lib/apollo/queries/items";
 
-// COBAAAAAAAAA
 import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
@@ -50,74 +49,44 @@ async function registerForPushNotificationsAsync() {
 
 const Login = () => {
   const [token, setToken] = useState("");
-
-  //graphql mutation
-  const [loginGoogle, { error, reset }] = useMutation(POST_GOOGLE_LOGIN, {
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-    variables: {
-      // newUser: {
-      //   email: null,
-      //   id: null,
-      //   name: null,
-      //   givenName: null,
-      //   familyName: null,
-      //   phoneUrl: null,
-      // },
-    },
-  });
+  const [LoginGoogle, { data, loading, error }] = useMutation(POST_GOOGLE_LOGIN);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((data) => setToken(data));
   }, []);
 
-  const [googleSubmitting, setGoogleSubmitting] = useState(false);
-
   const navigation = useNavigation();
   const handleGoogleSignIn = () => {
-    setGoogleSubmitting(true);
     const config = {
       iosClientId: `844458367499-o26lt12vj3hmr4l995o11q3dosv0meav.apps.googleusercontent.com`,
       androidClientId: `844458367499-c1pqe2nh4on96u7go5oc5r0bum5c05dv.apps.googleusercontent.com`,
       scopes: ["profile", "email"],
     };
+    let user = {};
     Google.logInAsync(config)
       .then((result) => {
-        const { type, user } = result;
-        if (type === "success") {
-          const { email, name, photoUrl } = user;
-
-          axios({
-            method: "post",
-            url: "https://d8d7-2001-448a-1061-10b7-f545-7b5f-5a0-a525.ngrok.io/users/googleLogin",
-            data: user,
-          })
-            .then((data) => {
-              return AsyncStorage.setItem(
-                "access_token",
-                data.data.access_token
-              );
-              // AsyncStorage.setItem("id", data.data.id);
-              // AsyncStorage.setItem("username", data.data.username);
-              // signIn(data.data.access_token)
-            })
-            .then((result) => {
-              navigation.navigate("Profile", {
-                dataUser: user,
-              });
-            })
-            .catch((err) => console.log("GAGAL MASUK SERVER"));
-
-          console.log("Google signin successfull", "SUCCESS");
-        } else {
-          console.log("Google signin was canceled");
-        }
-        setGoogleSubmitting(false);
+        user = result.user
+        console.log(user, '====')
+          return LoginGoogle({ variables: { newUser: user } });
+      })
+       .then((data) => {
+        AsyncStorage.setItem("id", data.data.loginGoogle.id);
+        AsyncStorage.setItem("username", data.data.loginGoogle.username);
+        AsyncStorage.setItem("email", data.data.loginGoogle.email);
+        AsyncStorage.setItem("photoUrl", data.data.loginGoogle.photoUrl);
+        return AsyncStorage.setItem(
+          "access_token",
+          data.data.loginGoogle.access_token
+        );
+       })
+      .then((result) => {
+        navigation.navigate("Profile", {
+          dataUser: user,
+        });
       })
       .catch((err) => {
         console.log(err);
         console.log("An error occurred. Check your network and try again");
-        setGoogleSubmitting(false);
       });
   };
 

@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 const Redis = require("ioredis");
-const url = "http://localhost:3000/users";
+const url = "http://localhost:3001/users";
 const redis = new Redis({
   port: 10199,
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
@@ -65,6 +65,8 @@ const typeDefs = gql`
     access_token: String
     id: ID
     username: String
+    email: String
+    photoUrl: String
   }
 
   input inputItem {
@@ -78,9 +80,9 @@ const typeDefs = gql`
 
   input inputUser {
     email: String
-    id: ID
+    id: String
     name: String
-    phoneUrl: String
+    photoUrl: String
     givenName: String
     familyName: String
   }
@@ -124,10 +126,14 @@ const resolvers = {
       try {
         const { search } = args;
         const { filterByTitle, filterByCategory } = search;
+
         const { data } = await axios.get(
-          `${url}/items?filterByTitle=${filterByTitle}&filterByCategory=${filterByCategory}`
+          `${url}/items?filterByCategory=${filterByCategory}&filterByTitle=${filterByTitle}`
         );
+        
+        console.log(data)
         return data;
+   
       } catch (error) {
         console.log(error);
       }
@@ -209,9 +215,8 @@ const resolvers = {
     loginGoogle: async (_, args) => {
       try {
         const { newUser } = args;
-        const { data } = await axios.post(`${url}/googleLogin`, {
-          payload: newUser,
-        });
+        const { data } = await axios.post(`${url}/googleLogin`, newUser);
+        console.log(data)
         return data;
       } catch (error) {
         console.log(error);

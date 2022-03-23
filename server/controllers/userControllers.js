@@ -243,10 +243,11 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
-      const cache = await redis.get("items");
-      if (cache) res.status(200).json(JSON.parse(cache));
+      // await redis.del("items");
+      // if (cache) res.status(200).json(JSON.parse(cache));
 
       let { filterByTitle, filterByCategory } = req.query;
+      console.log(filterByCategory, 'hiii')
       if (!filterByTitle) filterByTitle = "";
       if (!filterByCategory) filterByCategory = "";
 
@@ -277,7 +278,7 @@ class userControllers {
         include: [
           {
             model: User,
-            attributes: ["id", "email"],
+            attributes: ["id", "email", "username", "photoUrl"],
           },
           Image,
         ],
@@ -309,7 +310,6 @@ class userControllers {
   static async dataForHome(req, res, next) {
     try {
       let items = await Item.findAll({
-        order: [["updatedAt", "DESC"]],
         where: {
           [Op.and]: [
             {
@@ -321,6 +321,7 @@ class userControllers {
           ],
         },
         limit: 10,
+        order: [['updatedAt', 'DESC']],
         include: [Image],
       });
       res.status(200).json(items);

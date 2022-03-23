@@ -61,8 +61,9 @@ const HomeRouter = () => {
       <Stack.Screen
           name="Detail"
           component={DetailScreen}
-          options={{
-            headerBackTitleVisible: false,
+        options={{
+            headerBackTitleVisible: true,
+            headerTransparent: true,
             title: "",
             headerTintColor: COLORS.PRIMARY,
           }}
