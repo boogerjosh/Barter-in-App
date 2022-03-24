@@ -38,12 +38,10 @@ const MuBarterRoomComp = ({ item }) => {
       "GetRoomBarter", // Query name
     ],
   });
-  console.log(item.id, token, "KOJD");
   const updateRoomBarter = () => {
     patchRoomBarter({ variables: { accessToken: token, roomId: item.id } });
     // navigation.navigate("HomeRouter");
   };
-  // console.log(token);
   async function getToken() {
     try {
       let newToken = await AsyncStorage.getItem("access_token");

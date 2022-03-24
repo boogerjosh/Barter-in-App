@@ -127,8 +127,6 @@ const resolvers = {
     getItems: async (_, args) => {
       try {
         const { search, id } = args;
-        console.log(args, ">>>>>>.");
-        console.log(id, ">>>>>>");
         const { filterByTitle, filterByCategory } = search;
 
         const { data } = await axios.get(
@@ -159,8 +157,6 @@ const resolvers = {
     },
     getMyAds: async (_, args) => {
       try {
-        console.log(args.access_token);
-        // const { access_token } = args;
         const { data } = await axios(`${url}/myads`, {
           headers: {
             access_token: args.access_token,
@@ -200,9 +196,14 @@ const resolvers = {
     postItem: async (_, args) => {
       try {
         const { access_token, newItem } = args;
-        console.log(args, 'heiheihhie')
-        const { title, description, category, yearOfPurchase, brand, imageFields } =
-          newItem;
+        const {
+          title,
+          description,
+          category,
+          yearOfPurchase,
+          brand,
+          imageFields,
+        } = newItem;
         let { data } = await axios.post(
           `${url}/additem`,
           { title, description, category, yearOfPurchase, brand, imageFields },
@@ -212,7 +213,6 @@ const resolvers = {
             },
           }
         );
-        console.log(data, '====')
         return data;
       } catch (error) {
         console.log(error);
@@ -221,16 +221,16 @@ const resolvers = {
     loginGoogle: async (_, args) => {
       try {
         const { newUser, newToken } = args;
-        console.log(args, 'hi dari client')
+
         let input = {
           email: newUser.email,
           givenName: newUser.givenName,
           photoUrl: newUser.photoUrl,
-          token: newToken
-        }
-        console.log(input, 'hi input')
+          token: newToken,
+        };
+
         const { data } = await axios.post(`${url}/googleLogin`, input);
-        console.log(data);
+
         return data;
       } catch (error) {
         console.log(error);
@@ -265,7 +265,6 @@ const resolvers = {
           },
           data: { user2: args.user2, item1: args.item1, item2: args.item2 },
         });
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error.response.data);
@@ -277,7 +276,6 @@ const resolvers = {
     },
     patchRoomBarter: async (_, args) => {
       try {
-        console.log(args.access_token, args.roomId, ">?>?>?>>");
         const { data } = await axios({
           url: `${url}/roomBarter/${args.roomId}`,
           method: "patch",
@@ -285,7 +283,6 @@ const resolvers = {
             access_token: args.access_token,
           },
         });
-        console.log(data);
         return { status: "success" };
       } catch (error) {
         console.log(error.response.data);

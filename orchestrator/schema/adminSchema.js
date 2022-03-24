@@ -111,7 +111,6 @@ const resolvers = {
       try {
         const { email, password } = args;
         const { data } = await axios.post(`${url}/login`, { email, password });
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);

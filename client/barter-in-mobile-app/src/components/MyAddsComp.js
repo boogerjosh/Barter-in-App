@@ -26,18 +26,11 @@ const setWidth = (w) => (width / 100) * w;
 const setHeight = (h) => (height / 200) * h;
 
 const MyAddsComp = ({ item }) => {
-  // const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
-  //graphql mutation
   const [deleteItem, { error, reset }] = useMutation(DELETE_ITEM, {
-    refetchQueries: [
-      GET_MY_ADS, // DocumentNode object parsed with gql
-      "GetMyAds", // Query name
-    ],
+    refetchQueries: [GET_MY_ADS, "GetMyAds"],
   });
-  // console.log(item.id);
   const deleteMyAds = () => {
-    console.log(item.id, ">>>>>>");
     deleteItem({
       fetchPolicy: "network-only",
       nextFetchPolicy: "cache-first",
@@ -52,7 +45,6 @@ const MyAddsComp = ({ item }) => {
       let newId = await AsyncStorage.getItem("id");
       if (newToken) {
         setToken(newToken);
-        // setAuth(true);
       }
     } catch (error) {
       console.log(error);
@@ -106,20 +98,11 @@ const MyAddsComp = ({ item }) => {
           }}
           onPress={deleteMyAds}
         >
-          {/* <Text
-            style={{
-              color: COLORS.EXTRA_LIGHT_GRAY,
-              fontFamily: FONTS.MEDIUM,
-            }}
-          >
-            Delete
-          </Text> */}
           <Ionicons name="md-trash-outline" size={24} color="white" />
         </TouchableOpacity>
       );
     }
   };
-  // console.log(stylingStatus());
   return (
     <TouchableOpacity
       activeOpacity={0.8}

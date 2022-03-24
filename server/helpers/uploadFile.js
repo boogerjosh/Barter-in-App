@@ -1,11 +1,7 @@
 const imagekit = require("./imagekit");
 
 function uploadFile(file) {
-
-  // console.log(file, ">>>>");
-  // console.log(imagekit.upload(), ">>>>>");
   return new Promise((resolve, reject) => {
-
     imagekit
       .upload({
         file: file.buffer,
@@ -21,10 +17,10 @@ function uploadFile(file) {
       .then((data) => {
         resolve(data);
       })
-      .catch(err => {
-        reject(err)
-        console.log(err)
-      }) 
+      .catch((err) => {
+        reject(err);
+        console.log(err);
+      });
   });
 }
 

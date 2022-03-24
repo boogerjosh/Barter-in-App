@@ -29,10 +29,8 @@ const MyItemBarter = ({ route }) => {
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
-  //graphql
   let itemId = route.params.detailItem.id;
   let userId = route.params.detailItem.User.id;
-  // console.log(route.params.detailItem.id, "Detail in myitembarter");
   const { loading, error, data } = useQuery(GET_DATA_FOR_BARTER, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
@@ -57,8 +55,6 @@ const MyItemBarter = ({ route }) => {
   if (data) {
     items = data?.getDataForBarter;
   }
-  // console.log(token, "token<<<");
-  // console.log(items, "ITEM BARTER");
   useFocusEffect(
     React.useCallback(() => {
       getToken();
