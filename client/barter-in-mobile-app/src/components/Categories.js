@@ -24,6 +24,7 @@ const Categories = ({ item }) => {
         style={{
           width: width / 3 - 30,
           marginHorizontal: 10,
+          marginRight: 4,
           justifyContent: "center",
           marginBottom: 20,
           marginTop: 10,

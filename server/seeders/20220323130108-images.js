@@ -1,5 +1,6 @@
 "use strict";
 
+const data = require('../image.json')
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -11,12 +12,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    let images = require("../../image.json");
-    images.forEach((el) => {
+    data.forEach((el) => {
       el.updatedAt = new Date();
       el.createdAt = new Date();
     });
-    await queryInterface.bulkInsert("Images", images, {});
+    await queryInterface.bulkInsert("Images", data, {});
   },
 
   async down(queryInterface, Sequelize) {

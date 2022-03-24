@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   Image,
+  SafeAreaView,
   FlatList,
   TouchableOpacity,
   Dimensions,
@@ -14,11 +15,10 @@ import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Carousel from "react-native-snap-carousel";
-
-import { useQuery } from "@apollo/client";
 import { GET_ITEM } from "../../lib/apollo/queries/items";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+import { useQuery } from "@apollo/client";
 
 const DetailScreen = ({ route }) => {
   // const { loading, error, data } = useQuery(GET_ITEM, {
@@ -27,6 +27,7 @@ const DetailScreen = ({ route }) => {
   //   },
   // })
   console.log(route);
+
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
@@ -41,6 +42,7 @@ const DetailScreen = ({ route }) => {
     },
   });
 
+
   let detailItem;
   let images = [];
   if (data) {
@@ -50,10 +52,6 @@ const DetailScreen = ({ route }) => {
     });
   }
 
-  console.log(images, "detailItem");
-  // if(loading){
-  //   return (<></>)
-  // }
 
   const renderItem2 = ({ item, index }) => {
     return (
@@ -64,9 +62,7 @@ const DetailScreen = ({ route }) => {
         }}
       >
         <Image
-          source={{
-            uri: `${item?.imageUrl}`,
-          }}
+          source={item?.imageUrl ? {uri: item?.imageUrl } : null}
           style={{
             height: 250,
             width: width * 0.8,
@@ -78,6 +74,7 @@ const DetailScreen = ({ route }) => {
 
   let _carousel;
   return (
+  <SafeAreaView style={styles.container}>    
     <View style={styles.container}>
       <ScrollView style={{ width: Dimensions.get("window").width }}>
         <Carousel
@@ -323,7 +320,9 @@ const DetailScreen = ({ route }) => {
             style={{ flexDirection: "row", marginLeft: 15, marginBottom: 15 }}
           >
             <Image
-              source={require("../../assets/person.jpg")}
+               source={{
+            uri: `${detailItem?.User.photoUrl}`,
+            }}
               style={styles.headerImage}
             />
             <View style={{ flexDirection: "column", justifyContent: "center" }}>
@@ -431,6 +430,7 @@ const DetailScreen = ({ route }) => {
         </View>
       </ScrollView>
     </View>
+    </SafeAreaView>
   );
 };
 

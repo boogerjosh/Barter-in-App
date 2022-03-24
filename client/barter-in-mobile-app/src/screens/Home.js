@@ -51,7 +51,6 @@ const HomeScreen = () => {
 
   let items = [];
   if (data) {
-    console.log(data.getItemsHome, ">>>>>");
     items = data?.getItemsHome;
   }
   // console.log(items, ">?>?>?");

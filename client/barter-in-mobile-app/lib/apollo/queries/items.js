@@ -63,6 +63,7 @@ export const GET_ITEM = gql`
         id
         username
         email
+        photoUrl
       }
     }
   }
@@ -203,5 +204,4 @@ export const POST_GOOGLE_LOGIN = gql`
       email
       photoUrl
     }
-  }
-`;
+  }`

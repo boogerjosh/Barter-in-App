@@ -17,6 +17,7 @@ const setHeight = (h) => (height / 200) * h;
 
 const Highlight = ({ item }) => {
   const navigation = useNavigation();
+  let numberOfLines = 0
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -38,8 +39,11 @@ const Highlight = ({ item }) => {
             {/* <Image source={item.image} style={styles.highlightImage} /> */}
           </View>
           <View>
-            <Text style={styles.itemTitle} numberOfLines={3}>
-              {item.title}
+            <Text style={styles.itemTitle} numberOfLines={1} onTextLayout={(event) => {
+              const { lines } = event.nativeEvent
+              lines.length > numberOfLines
+            }}>
+              {item?.title.length >= 20 ? item?.title.slice(0, 19) + "..." : item?.title}
             </Text>
             <View style={styles.itemSubtitleContainer}>
               <Text style={styles.itemSubTitle}>
@@ -69,6 +73,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   itemTitle: {
+    flexWrap: 'wrap',
     fontFamily: FONTS.BOLD,
     fontSize: 18,
     color: COLORS.DARK_GREY,

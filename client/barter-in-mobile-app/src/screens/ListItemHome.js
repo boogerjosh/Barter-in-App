@@ -32,6 +32,7 @@ const ListItemHomeScreen = ({ route }) => {
   const [id, setId] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   //graphql
+
   const { loading, error, data } = useQuery(GET_ITEMS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
@@ -88,6 +89,7 @@ const ListItemHomeScreen = ({ route }) => {
             color="black"
             style={styles.searchicon}
           />
+
           <TextInput
             placeholder="Search Item"
             style={styles.searchInput}

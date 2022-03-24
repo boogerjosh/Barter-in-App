@@ -82,7 +82,7 @@ const typeDefs = gql`
 
   input inputUser {
     email: String
-    id: ID
+    id: String
     name: String
     photoUrl: String
     givenName: String
@@ -128,11 +128,14 @@ const resolvers = {
       try {
         const { search, id } = args;
         const { filterByTitle, filterByCategory } = search;
-        console.log(id);
+
         const { data } = await axios.get(
           `${url}/items?filterByTitle=${filterByTitle}&filterByCategory=${filterByCategory}&id=${id}`
         );
+        
+        console.log(data)
         return data;
+   
       } catch (error) {
         console.log(error);
       }

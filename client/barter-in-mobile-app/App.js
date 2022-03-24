@@ -39,11 +39,13 @@ const App = () => {
       setTimeout(async() => {
         setIsLoading(false);
         try {
+          await AsyncStorage.getItem("username");
+          await AsyncStorage.getItem("email");
+          await AsyncStorage.getItem("photoUrl");
           await AsyncStorage.getItem('access_token');
         } catch(e) {
           console.log(e);
         }
-        // console.log('user token: ', userToken);
       }, 1000);
   }, [userToken]);
   
