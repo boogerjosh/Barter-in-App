@@ -107,7 +107,6 @@ class userControllers {
   static async postImage(req, res, next) {
     try {
       const { files } = req;
-      console.log(files, 'huhuhuhuh')
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -127,7 +126,6 @@ class userControllers {
       );
       res.status(201).json(mappedArray);
     } catch (error) {
-      console.log(error)
       next(error);
     }
   }
@@ -144,7 +142,6 @@ class userControllers {
         yearOfPurchase,
         imageFields,
       } = req.body;
-      console.log(req.body)
 
       const createItem = await Item.create(
         {
@@ -183,7 +180,6 @@ class userControllers {
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
       await t.rollback();
-      console.log(error)
       next(error);
     }
   }
@@ -212,7 +208,6 @@ class userControllers {
 
       res.status(200).json(items);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -256,7 +251,6 @@ class userControllers {
     try {
       let { id } = req.query;
       if (!id) id = 0;
-      console.log(id);
       let items = await Item.findAll({
         where: {
           [Op.and]: [
@@ -319,7 +313,6 @@ class userControllers {
       // });
       res.status(200).json(items);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
