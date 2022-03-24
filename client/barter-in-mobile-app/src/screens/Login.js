@@ -47,11 +47,13 @@ async function registerForPushNotificationsAsync() {
 
 const Login = () => {
   const [token, setToken] = useState("");
-
   const [LoginGoogle, { data, loading, error }] = useMutation(POST_GOOGLE_LOGIN);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((data) => setToken(data));
+    registerForPushNotificationsAsync().then((data) => {
+      setToken(data)
+      console.log(data, 'data')
+    });
   }, []);
 
   const navigation = useNavigation();
@@ -61,11 +63,14 @@ const Login = () => {
       androidClientId: `844458367499-c1pqe2nh4on96u7go5oc5r0bum5c05dv.apps.googleusercontent.com`,
       scopes: ["profile", "email"],
     };
-    let user = {};
+    let user = {}
     Google.logInAsync(config)
       .then((result) => {
         user = result.user;
-        return LoginGoogle({ variables: { newUser: user } });
+        console.log(token, '----')
+        let token1 = token
+        return LoginGoogle({ variables: { newUser: user, newToken: token1 } });
+        
       })
       .then((data) => {
         AsyncStorage.setItem("id", data.data.loginGoogle.id);
@@ -90,11 +95,6 @@ const Login = () => {
 
   return (
     <View>
-      <StatusBar
-        style="auto"
-        translucent={false}
-        backgroundColor={COLORS.EXTRA_LIGHT_GRAY}
-      />
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <TouchableRipple

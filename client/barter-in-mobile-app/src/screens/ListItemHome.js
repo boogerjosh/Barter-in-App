@@ -31,7 +31,6 @@ const ListItemHomeScreen = ({ route }) => {
   const [token, setToken] = useState("");
   const [id, setId] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
-  //graphql
 
   const { loading, error, data } = useQuery(GET_ITEMS, {
     fetchPolicy: "network-only",
@@ -49,17 +48,17 @@ const ListItemHomeScreen = ({ route }) => {
   if (data) {
     items = data?.getItems;
   }
-  // console.log(data);
-  // console.log(items, "<><><><><");
 
   async function getToken() {
     try {
       let newToken = await AsyncStorage.getItem("access_token");
+      let id = await AsyncStorage.getItem("id");
       if (newToken) {
+        setId(id)
         setToken(newToken);
         setAuth(true);
       } else {
-        navigation.navigate("Login");
+        setAuth(false);
       }
     } catch (error) {
       console.log(error);

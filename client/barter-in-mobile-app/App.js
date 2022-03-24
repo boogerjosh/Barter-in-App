@@ -27,6 +27,9 @@ const App = () => {
     signOut: async() => {
       try {
         await AsyncStorage.removeItem('access_token');
+        await AsyncStorage.removeItem("username");
+        await AsyncStorage.removeItem("email");
+        await AsyncStorage.removeItem("photoUrl");
         setUserToken(null);
         setIsLoading(false);
       } catch(e) {

@@ -48,7 +48,6 @@ const ProfileScreen = ({ route }) => {
       let username = await AsyncStorage.getItem("username");
       let email = await AsyncStorage.getItem("email");
       let photo = await AsyncStorage.getItem("photoUrl");
-      console.log(photo, '====')
       if (token) {
         setAuth(true);
         setUsername(username);

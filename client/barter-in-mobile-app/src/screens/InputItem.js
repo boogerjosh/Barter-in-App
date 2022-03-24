@@ -31,8 +31,6 @@ const setWidth = (w) => (width / 100) * w;
 
 const InputItem = ({ route }) => {
 
-  const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM)
-
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     title: "",
@@ -113,23 +111,18 @@ const InputItem = ({ route }) => {
     if (!inputs.title) {
       handleError("Title is required", "title");
       isValid = false;
+    } else if (inputs.title.length < 15) {
+      handleError('Min title length of 15', 'title');
+      isValid = false;
     }
-    // } else if (inputs.title.length < 15) {
-    //   handleError('Min title length of 15', 'title');
-    //   isValid = false;
-    // }
 
     if (!inputs.description) {
       handleError("Description is required", "description");
       isValid = false;
-    }
-    // } else if (inputs.description.length < 20) {
-    //   handleError('Min description length of 20', 'description');
-    //   isValid = false;
-    // } else if (inputs.description.length > 4096) {
-    //   handleError('Length maximum is 4096 characters', 'description');
-    //   isValid = false;
-    // }
+    } else if (inputs.description.length < 20) {
+      handleError('Min description length of 20', 'description');
+      isValid = false;
+    } 
 
     if (!inputs.brand) {
       handleError("Brand is required", "brand");
@@ -162,8 +155,8 @@ const InputItem = ({ route }) => {
 
   const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM, {
     refetchQueries: [
-      GET_MY_ADS, // DocumentNode object parsed with gql
-      "getMyAds", // Query name
+      GET_MY_ADS,
+      "GetMyAds"
     ],
   })
 
@@ -276,6 +269,7 @@ const InputItem = ({ route }) => {
             label="Ad title*"
             placeholder="Key features of your title"
             error={errors.title}
+            maxLength={70}
           />
           <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
             <Text>{inputs.title.length}/70</Text>
@@ -290,6 +284,7 @@ const InputItem = ({ route }) => {
             label="Additional information*"
             placeholder="Include conditional, features and reasons for selling"
             error={errors.description}
+            maxLength={4096}
           />
           <View
             style={{

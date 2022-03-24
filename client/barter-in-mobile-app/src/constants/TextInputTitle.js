@@ -68,10 +68,11 @@ const style = StyleSheet.create({
   },
   inputContainer: {
     height: 55,
-    backgroundColor: COLORS.LIGHT_GRAY,
     flexDirection: 'row',
     paddingHorizontal: 15,
     borderWidth: 0.5,
+    backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+    borderRadius: 8
   },
 });
 

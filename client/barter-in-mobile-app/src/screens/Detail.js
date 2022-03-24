@@ -21,19 +21,13 @@ const setWidth = (w) => (width / 100) * w;
 import { useQuery } from "@apollo/client";
 
 const DetailScreen = ({ route }) => {
-  // const { loading, error, data } = useQuery(GET_ITEM, {
-  //   variables: {
-  //     itemId: route.params.id
-  //   },
-  // })
-  console.log(route);
 
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
     setReadMore(value);
   };
-  //graphql
+
   const { loading, error, data } = useQuery(GET_ITEM, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
@@ -81,7 +75,7 @@ const DetailScreen = ({ route }) => {
           ref={(c) => {
             _carousel = c;
           }}
-          data={detailItem?.Images}
+          data={detailItem?.Images ? detailItem?.Images : null}
           renderItem={renderItem2}
           sliderWidth={width * 1}
           itemWidth={width * 0.8}

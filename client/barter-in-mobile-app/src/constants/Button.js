@@ -14,6 +14,7 @@ const Button = ({title, onPress = () => {}}) => {
         marginVertical: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 8
       }}>
       <Text style={{color: COLORS.WHITE, fontWeight: 'bold', fontSize: 18}}>
         {title}

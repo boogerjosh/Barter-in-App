@@ -118,7 +118,7 @@ const typeDefs = gql`
     ): RoomBarter
     patchRoomBarter(access_token: String, roomId: ID): status
     postItem(newItem: inputItem, access_token: String): status
-    loginGoogle(newUser: inputUser): tokenGoogle
+    loginGoogle(newUser: inputUser, newToken: String): tokenGoogle
   }
 `;
 
@@ -220,8 +220,16 @@ const resolvers = {
     },
     loginGoogle: async (_, args) => {
       try {
-        const { newUser } = args;
-        const { data } = await axios.post(`${url}/googleLogin`, newUser);
+        const { newUser, newToken } = args;
+        console.log(args, 'hi dari client')
+        let input = {
+          email: newUser.email,
+          givenName: newUser.givenName,
+          photoUrl: newUser.photoUrl,
+          token: newToken
+        }
+        console.log(input, 'hi input')
+        const { data } = await axios.post(`${url}/googleLogin`, input);
         console.log(data);
         return data;
       } catch (error) {

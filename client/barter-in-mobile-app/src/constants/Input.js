@@ -72,6 +72,8 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 15,
     borderWidth: 0.5,
+    backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+    borderRadius: 8
   },
 });
 
