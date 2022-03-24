@@ -23,12 +23,13 @@ import Button from "../constants/Button";
 import Loader from "../constants/Loader";
 
 import { useMutation } from "@apollo/client";
-import { POST_ITEM } from "../../lib/apollo/queries/items";
+import { POST_ITEM, GET_MY_ADS } from "../../lib/apollo/queries/items";
 
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const InputItem = ({ route }) => {
+
   const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM)
 
   const navigation = useNavigation();

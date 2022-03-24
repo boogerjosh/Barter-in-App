@@ -21,6 +21,7 @@ import axios from "axios";
 
 import Item from "../../data/items";
 
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@apollo/client";
 import { GET_MY_ADS } from "../../lib/apollo/queries/items";
@@ -28,33 +29,39 @@ import { GET_MY_ADS } from "../../lib/apollo/queries/items";
 const MyAddsScreen = () => {
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState("");
   //graphql
+  let items = [];
+
+  async function getToken() {
+    try {
+      let newToken = await AsyncStorage.getItem("access_token");
+      if (newToken) {
+        setToken(newToken);
+        setAuth(true);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const { loading, error, data } = useQuery(GET_MY_ADS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
-      access_token: "",
+      accessToken: token,
     },
   });
-  let items = [];
+
   if (data) {
     items = data?.getMyAds;
   }
-
-  // async function getToken() {
-  //   try {
-  //     await AsyncStorage.removeItem("access_token");
-  //     let token = await AsyncStorage.getItem("access_token");
-  //     console.log(token, ">>>>>");
-  //     if (token) {
-  //       setAuth(true);
-  //     } else {
-  //       navigation.navigate("Login");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  // console.log(data);
+  // console.log(data.getMyAds, " .>>>>");
+  // console.log(error, "dskoad");
+  // console.log(items, "ji<F>EO");
 
   // const getItems = async () => {
   //   try {
@@ -71,9 +78,11 @@ const MyAddsScreen = () => {
   //     console.log(error);
   //   }
   // };
-  // useFocusEffect(() => {
-  //   getToken();
-  // });
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
 
   return (
     <SafeAreaView>
@@ -87,7 +96,7 @@ const MyAddsScreen = () => {
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
-          data={Item}
+          data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <MyAddsComp item={item} />}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}

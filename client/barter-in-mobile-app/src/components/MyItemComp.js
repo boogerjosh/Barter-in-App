@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,13 @@ import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 
 import { useMutation } from "@apollo/client";
-import { POST_ROOM_BARTER } from "../../lib/apollo/queries/items";
+import {
+  POST_ROOM_BARTER,
+  GET_ROOM_BARTER,
+} from "../../lib/apollo/queries/items";
+
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SPACING = 20;
 const ITEM_SIZE = 30;
@@ -23,29 +29,61 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const setHeight = (h) => (height / 200) * h;
 
-const MyItemComp = ({ item }) => {
+const MyItemComp = ({ item, itemId, userId }) => {
   // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
   const navigation = useNavigation();
+  const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState("");
+
   //graphql mutation
   const [postRoomBarter, { error, reset }] = useMutation(POST_ROOM_BARTER, {
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-    variables: {
-      // accessToken: null,
-      // user2: null,
-      // item1: null,
-      // item2: null,
-    },
+    refetchQueries: [
+      GET_ROOM_BARTER, // DocumentNode object parsed with gql
+      "getRoomBarter", // Query name
+    ],
   });
 
-  // console.log(stylingStatus());
+  const addRoomBarter = () => {
+    postRoomBarter({
+      variables: {
+        accessToken: token,
+        user2: userId,
+        item1: item.id,
+        item2: itemId,
+      },
+    });
+    navigation.navigate("HomeRouter");
+    navigation.navigate("BARTER");
+  };
+  // console.log(token, ">>>>");
+  async function getToken() {
+    try {
+      let newToken = await AsyncStorage.getItem("access_token");
+      let newId = await AsyncStorage.getItem("id");
+      if (newToken) {
+        setToken(newToken);
+        setAuth(true);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.itemWrapper}>
         <View style={styles.mainCardContent}>
           <View style={styles.leftContainer}>
             <Image
-              source={{ uri: item?.Images[0].imageUrl }}
+              source={{ uri: item?.Images[0]?.imageUrl }}
               style={{
                 width: setWidth(20),
                 height: setHeight(20),
@@ -59,7 +97,9 @@ const MyItemComp = ({ item }) => {
           </View>
           <View style={styles.rightContainer}>
             <Text style={styles.itemTitle} numberOfLines={3}>
-              {item?.title}
+              {item?.title.length >= 14
+                ? item?.title.slice(0, 13) + "..."
+                : item?.title}
             </Text>
             <Text style={styles.itemSubTitle}>{item?.brand}</Text>
             <Text style={styles.itemSubTitle}>
@@ -70,13 +110,13 @@ const MyItemComp = ({ item }) => {
             style={{
               backgroundColor: COLORS.ACTIVE,
               width: setWidth(10),
-              marginLeft: 50,
+              marginLeft: 40,
               paddingVertical: setWidth(2),
               borderRadius: 8,
               justifyContent: "center",
               alignItems: "center",
             }}
-            onPress={() => navigation.push("MyChatRoom")}
+            onPress={addRoomBarter}
           >
             <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
@@ -161,7 +201,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     color: COLORS.DARK_GREY,
     fontFamily: FONTS.BOLD,
-    fontSize: 22,
+    fontSize: 18,
     // paddingVertical: setHeight(2),
     // width: 140,
   },

@@ -11,8 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       RoomBarter.belongsTo(models.User, { foreignKey: "user1" });
       RoomBarter.belongsTo(models.User, { foreignKey: "user2" });
-      RoomBarter.belongsTo(models.Item, { foreignKey: "item1" });
-      RoomBarter.belongsTo(models.Item, { foreignKey: "item2" });
+      // RoomBarter.belongsTo(models.Item, { foreignKey: "item1", as: "Item1" });
+      RoomBarter.belongsTo(models.Item, { foreignKey: "item1", as: "Item1" });
+      RoomBarter.belongsTo(models.Item, { foreignKey: "item2", as: "Item2" });
     }
   }
   RoomBarter.init(

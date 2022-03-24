@@ -56,7 +56,9 @@ const typeDefs = gql`
     user1: ID
     user2: ID
     item1: ID
+    Item1: Item
     item2: ID
+    Item2: Item
     status1: Boolean
     status2: Boolean
   }
@@ -97,11 +99,9 @@ const typeDefs = gql`
     filterByCategory: String
   }
 
-
-
   type Query {
-    getItems(search: inputSearch): [Item]
-    getItemsHome: [Item]
+    getItems(search: inputSearch, id: ID): [Item]
+    getItemsHome(id: ID): [Item]
     getItem(itemId: ID): Item
     getMyAds(access_token: String): [Item]
     getDataForBarter(access_token: String): [Item]
@@ -126,11 +126,11 @@ const resolvers = {
   Query: {
     getItems: async (_, args) => {
       try {
-        const { search } = args;
+        const { search, id } = args;
         const { filterByTitle, filterByCategory } = search;
 
         const { data } = await axios.get(
-          `${url}/items?filterByCategory=${filterByCategory}&filterByTitle=${filterByTitle}`
+          `${url}/items?filterByTitle=${filterByTitle}&filterByCategory=${filterByCategory}&id=${id}`
         );
         
         console.log(data)
@@ -140,10 +140,10 @@ const resolvers = {
         console.log(error);
       }
     },
-    getItemsHome: async () => {
+    getItemsHome: async (_, args) => {
       try {
-        const { data } = await axios(`${url}/items/homes`);
-        console.log(data, ">>>>>");
+        const { id } = args;
+        const { data } = await axios(`${url}/items/homes?id=${id}`);
         return data;
       } catch (error) {
         console.log(error);
@@ -159,6 +159,8 @@ const resolvers = {
     },
     getMyAds: async (_, args) => {
       try {
+        console.log(args.access_token);
+        // const { access_token } = args;
         const { data } = await axios(`${url}/myads`, {
           headers: {
             access_token: args.access_token,
@@ -218,7 +220,7 @@ const resolvers = {
       try {
         const { newUser } = args;
         const { data } = await axios.post(`${url}/googleLogin`, newUser);
-        console.log(data)
+        console.log(data);
         return data;
       } catch (error) {
         console.log(error);
@@ -265,6 +267,7 @@ const resolvers = {
     },
     patchRoomBarter: async (_, args) => {
       try {
+        console.log(args.access_token, args.roomId, ">?>?>?>>");
         const { data } = await axios({
           url: `${url}/roomBarter/${args.roomId}`,
           method: "patch",

@@ -21,23 +21,37 @@ const setWidth = (w) => (width / 100) * w;
 import { useQuery } from "@apollo/client";
 
 const DetailScreen = ({ route }) => {
+  // const { loading, error, data } = useQuery(GET_ITEM, {
+  //   variables: {
+  //     itemId: route.params.id
+  //   },
+  // })
+  console.log(route);
 
-  console.log(route.params.id)
-  const { loading, error, data } = useQuery(GET_ITEM, {
-    variables: {
-      itemId: route.params.id
-    },
-  })
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
     setReadMore(value);
   };
+  //graphql
+  const { loading, error, data } = useQuery(GET_ITEM, {
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "cache-first",
+    variables: {
+      itemId: route.params.id,
+    },
+  });
+
 
   let detailItem;
+  let images = [];
   if (data) {
     detailItem = data?.getItem;
+    detailItem?.Images.forEach((el) => {
+      images.push(el.imageUrl);
+    });
   }
+
 
   const renderItem2 = ({ item, index }) => {
     return (
@@ -57,6 +71,7 @@ const DetailScreen = ({ route }) => {
       </View>
     );
   };
+
   let _carousel;
   return (
   <SafeAreaView style={styles.container}>    
@@ -212,7 +227,7 @@ const DetailScreen = ({ route }) => {
                 borderColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
             >
-                {detailItem?.description}
+              {detailItem?.description}
             </Text>
           ) : (
             <Text
@@ -320,7 +335,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                {detailItem?.User.username}
+                {detailItem?.User?.username}
               </Text>
               <Text
                 style={{
@@ -331,7 +346,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                 {detailItem?.User.email}
+                {detailItem?.User?.email}
               </Text>
             </View>
           </View>
@@ -369,7 +384,7 @@ const DetailScreen = ({ route }) => {
               justifyContent: "center",
               marginTop: 4,
             }}
-            onPress={() => navigation.push("MyItemBarter", {})}
+            onPress={() => navigation.push("MyItemBarter", { detailItem })}
           >
             <Text
               style={{
@@ -393,7 +408,12 @@ const DetailScreen = ({ route }) => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.push("MyChatRoom", { userName: detailItem?.User.username, id: detailItem?.User.id })}
+            onPress={() =>
+              navigation.push("MyChatRoom", {
+                userName: detailItem?.User?.username,
+                itemUserId: detailItem?.User?.id,
+              })
+            }
           >
             <Text
               style={{

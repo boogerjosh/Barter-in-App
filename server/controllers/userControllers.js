@@ -15,7 +15,6 @@ class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
-      console.log(payload)
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -47,7 +46,6 @@ class userControllers {
         photoUrl: user[0].dataValues.photoUrl,
       });
     } catch (err) {
-      console.log(err)
       next(err);
     }
   }
@@ -188,14 +186,10 @@ class userControllers {
 
   static async getItems(req, res, next) {
     try {
-      // await redis.del("items");
-      // if (cache) res.status(200).json(JSON.parse(cache));
-
-      let { filterByTitle, filterByCategory } = req.query;
-      console.log(filterByCategory, 'hiii')
+      let { filterByTitle, filterByCategory, id } = req.query;
       if (!filterByTitle) filterByTitle = "";
       if (!filterByCategory) filterByCategory = "";
-
+      if (!id) id = 0;
       let items = await Item.findAll({
         include: [Image],
         where: {
@@ -206,12 +200,15 @@ class userControllers {
           category: {
             [Op.iLike]: `%${filterByCategory}%`,
           },
+          userId: {
+            [Op.ne]: id,
+          },
         },
       });
-      // await redis.set("items", JSON.stringify(items));
 
       res.status(200).json(items);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -245,7 +242,6 @@ class userControllers {
         throw new Error("NOT_FOUND");
       }
       await Item.destroy({ where: { id } });
-      // await redis.del("items");
       res.status(200).json({ message: "Item has been deleted" });
     } catch (error) {
       next(error);
@@ -254,6 +250,9 @@ class userControllers {
 
   static async dataForHome(req, res, next) {
     try {
+      let { id } = req.query;
+      if (!id) id = 0;
+      console.log(id);
       let items = await Item.findAll({
         where: {
           [Op.and]: [
@@ -262,6 +261,11 @@ class userControllers {
             },
             {
               statusBarter: "Not bartered yet",
+            },
+            {
+              userId: {
+                [Op.ne]: id,
+              },
             },
           ],
         },
@@ -277,14 +281,9 @@ class userControllers {
 
   static async getMyAds(req, res, next) {
     try {
-      console.log(req.userLogin.id, '=====')
       let items = await Item.findAll({
         where: {
-          [Op.and]: [
-            {
-              userId: req.userLogin.id,
-            },
-          ],
+          userId: req.userLogin.id,
         },
         include: [Image],
       });
@@ -297,19 +296,26 @@ class userControllers {
   static async dataForBarter(req, res, next) {
     try {
       let items = await Item.findAll({
-        Where: {
+        where: {
           [Op.and]: [
             {
-              status: {
+              statusPost: {
                 [Op.eq]: "Accepted",
               },
               userId: req.userLogin.id,
             },
           ],
         },
+        include: [Image],
       });
+      // let filterItemBarter = items.filter((el) => {
+      //   if (el.userId === req.userLogin.id && el.statusPost === "Accepted") {
+      //     return el;
+      //   }
+      // });
       res.status(200).json(items);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -336,12 +342,9 @@ class userControllers {
   static async patchRoomBarter(req, res, next) {
     try {
       let { id } = req.params;
-      // let { status } = req.body;
       let userId = req.userLogin.id;
 
-      let roomBarter = await RoomBarter.findByPk(+id, {
-        include: [Item],
-      });
+      let roomBarter = await RoomBarter.findByPk(+id);
       if (!roomBarter) {
         throw new Error("ROOM_NOT_FOUND");
       }
@@ -352,10 +355,7 @@ class userControllers {
         await RoomBarter.update({ status2: true }, { where: { id } });
       }
 
-      let newRoomBarter = await RoomBarter.findByPk(+id, {
-        include: [Item],
-      });
-
+      let newRoomBarter = await RoomBarter.findByPk(+id);
       if (newRoomBarter.status1 && newRoomBarter.status2) {
         await Item.update(
           { statusBarter: "Barter" },
@@ -382,6 +382,18 @@ class userControllers {
         where: {
           [Op.or]: [{ user1: UserId }, { user2: UserId }],
         },
+        include: [
+          {
+            model: Item,
+            as: "Item1",
+            include: [Image],
+          },
+          {
+            model: Item,
+            as: "Item2",
+            include: [Image],
+          },
+        ],
       });
       res.status(200).json(response1);
     } catch (error) {

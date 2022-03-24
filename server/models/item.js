@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Item.hasMany(models.Image, { foreignKey: "itemId" });
-      Item.hasMany(models.RoomBarter, { foreignKey: "item1" });
-      Item.hasMany(models.RoomBarter, { foreignKey: "item2" });
+      Item.hasOne(models.RoomBarter, { foreignKey: "item1", as: "Item1" });
+      Item.hasOne(models.RoomBarter, { foreignKey: "item2", as: "Item2" });
       Item.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Title is required",
           },
-           len: {
+          len: {
             args: [15],
-            msg: "Length minimum must be 15 characters"
-          }
+            msg: "Length minimum must be 15 characters",
+          },
         },
       },
       category: {

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,8 @@ import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Items from "../components/Items";
 // import items from "../../data/items";
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useQuery } from "@apollo/client";
 import { GET_ITEMS } from "../../lib/apollo/queries/items";
@@ -22,18 +24,24 @@ import { GET_ITEMS } from "../../lib/apollo/queries/items";
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 2;
-const ListItemHomeScreen = ({route}) => {
+
+const ListItemHomeScreen = ({ route }) => {
   const navigation = useNavigation();
-  const [searchTitle, setSearch] = useState('')
+  const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState("");
+  const [id, setId] = useState("");
+  const [searchTitle, setSearchTitle] = useState("");
+  //graphql
 
   const { loading, error, data } = useQuery(GET_ITEMS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
       search: {
-        filterByCategory: route.params.category,
+        filterByCategory: route.params.item.title,
         filterByTitle: searchTitle,
       },
+      getItemsId: id,
     },
   });
 
@@ -41,6 +49,28 @@ const ListItemHomeScreen = ({route}) => {
   if (data) {
     items = data?.getItems;
   }
+  // console.log(data);
+  // console.log(items, "<><><><><");
+
+  async function getToken() {
+    try {
+      let newToken = await AsyncStorage.getItem("access_token");
+      if (newToken) {
+        setToken(newToken);
+        setAuth(true);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -59,7 +89,13 @@ const ListItemHomeScreen = ({route}) => {
             color="black"
             style={styles.searchicon}
           />
-          <TextInput placeholder="Search Item" style={styles.searchInput} onChangeText={setSearch} value={searchTitle} />
+
+          <TextInput
+            placeholder="Search Item"
+            style={styles.searchInput}
+            onChangeText={setSearchTitle}
+            value={searchTitle}
+          />
         </View>
       </View>
       <FlatList

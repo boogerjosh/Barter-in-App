@@ -24,6 +24,9 @@ import categoryAdd from "../../data/categoryAdd";
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
 
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { useQuery } from "@apollo/client";
 import { GET_ITEMS_HOME } from "../../lib/apollo/queries/items";
 
@@ -34,21 +37,57 @@ const numColumns = 3;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState("");
+  const [id, setId] = useState("");
   //graphql
   const { loading, error, data } = useQuery(GET_ITEMS_HOME, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
+    variables: {
+      getItemsHomeId: id,
+    },
   });
 
   let items = [];
-
   if (data) {
     items = data?.getItemsHome;
   }
-  
-  if (loading) {
-    return <View></View>;
+  // console.log(items, ">?>?>?");
+  async function getToken() {
+    try {
+      let newToken = await AsyncStorage.getItem("access_token");
+      let newId = await AsyncStorage.getItem("id");
+      if (newToken) {
+        setId(newId);
+        setToken(newToken);
+        setAuth(true);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  // if (loading) {
+  //   return <View></View>;
+  // }
+  // console.log(items, ">>>>>");
+  // console.log(loading, ">>>>>");
+  // const getItems = async () => {
+  //   try {
+  //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
+  //     setItems(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
 
   return (
     <SafeAreaView
