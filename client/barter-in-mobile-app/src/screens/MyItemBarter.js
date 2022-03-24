@@ -47,8 +47,6 @@ const MyItemBarter = ({ route }) => {
       if (newToken) {
         setToken(newToken);
         setAuth(true);
-      } else {
-        navigation.navigate("Login");
       }
     } catch (error) {
       console.log(error);

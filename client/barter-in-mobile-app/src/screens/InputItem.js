@@ -30,9 +30,6 @@ const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const InputItem = ({ route }) => {
-
-  const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM)
-
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     title: "",
@@ -160,16 +157,16 @@ const InputItem = ({ route }) => {
     }
   };
 
-  const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM, {
+  const [fieldsInput, { data, loading, error }] = useMutation(POST_ITEM, {
     refetchQueries: [
       GET_MY_ADS, // DocumentNode object parsed with gql
       "getMyAds", // Query name
     ],
-  })
+  });
 
   const addAds = () => {
     setLoading(true);
-    setTimeout(async () => {      
+    setTimeout(async () => {
       const formData = new FormData();
       let filename3 = adsImage.image3.split("/").pop();
       let match3 = /\.(\w+)$/.exec(filename3);
@@ -220,15 +217,17 @@ const InputItem = ({ route }) => {
           let itemImage = await responseImage.json();
           console.log(itemImage, "====");
           let fieldsInputs = {
-             title: inputs.title,
-             category: inputs.category,
-             description: inputs.description,
-             brand: inputs.brand,
-             yearOfPurchase: inputs.yearOfPurchase,
-             imageFields: itemImage,
-          }
-          console.log(fieldsInputs, 'hihihihi====')
-          fieldsInput({ variables: { newItem: fieldsInputs, accessToken: token } });
+            title: inputs.title,
+            category: inputs.category,
+            description: inputs.description,
+            brand: inputs.brand,
+            yearOfPurchase: inputs.yearOfPurchase,
+            imageFields: itemImage,
+          };
+          console.log(fieldsInputs, "hihihihi====");
+          fieldsInput({
+            variables: { newItem: fieldsInputs, accessToken: token },
+          });
           setLoading(false);
           setProfileImage({
             image1: "",
@@ -261,7 +260,7 @@ const InputItem = ({ route }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
-      <Loader visible={loaded} style={{ marginBottom: 50}}/>
+      <Loader visible={loaded} style={{ marginBottom: 50 }} />
       <ScrollView
         contentContainerStyle={{ paddingTop: 25, paddingHorizontal: 20 }}
       >

@@ -26,7 +26,6 @@ const DetailScreen = ({ route }) => {
   //     itemId: route.params.id
   //   },
   // })
-  console.log(route);
 
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
@@ -42,7 +41,6 @@ const DetailScreen = ({ route }) => {
     },
   });
 
-
   let detailItem;
   let images = [];
   if (data) {
@@ -51,7 +49,6 @@ const DetailScreen = ({ route }) => {
       images.push(el.imageUrl);
     });
   }
-
 
   const renderItem2 = ({ item, index }) => {
     return (
@@ -62,7 +59,7 @@ const DetailScreen = ({ route }) => {
         }}
       >
         <Image
-          source={item?.imageUrl ? {uri: item?.imageUrl } : null}
+          source={item?.imageUrl ? { uri: item?.imageUrl } : null}
           style={{
             height: 250,
             width: width * 0.8,
@@ -74,46 +71,50 @@ const DetailScreen = ({ route }) => {
 
   let _carousel;
   return (
-  <SafeAreaView style={styles.container}>    
-    <View style={styles.container}>
-      <ScrollView style={{ width: Dimensions.get("window").width }}>
-        <Carousel
-          ref={(c) => {
-            _carousel = c;
-          }}
-          data={detailItem?.Images}
-          renderItem={renderItem2}
-          sliderWidth={width * 1}
-          itemWidth={width * 0.8}
-          layout={"default"}
-        />
-        <View>
-          <Text
-            style={{
-              fontFamily: FONTS.BOLD,
-              fontSize: 18,
-              marginTop: 15,
-              marginLeft: 15,
-              marginRight: 15,
-              // borderBottomWidth: 2,
-              borderColor: "#C0C0C0",
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <ScrollView style={{ width: Dimensions.get("window").width }}>
+          <Carousel
+            ref={(c) => {
+              _carousel = c;
             }}
-          >
-            {detailItem?.title}
-          </Text>
-        </View>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
-        >
+            data={detailItem?.Images}
+            renderItem={renderItem2}
+            sliderWidth={width * 1}
+            itemWidth={width * 0.8}
+            layout={"default"}
+          />
+          <View>
+            <Text
+              style={{
+                fontFamily: FONTS.BOLD,
+                fontSize: 18,
+                marginTop: 15,
+                marginLeft: 15,
+                marginRight: 15,
+                // borderBottomWidth: 2,
+                borderColor: "#C0C0C0",
+              }}
+            >
+              {detailItem?.title}
+            </Text>
+          </View>
           <View
             style={{
-              flex: 1,
-              height: 6,
-              backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 10,
             }}
-          />
-        </View>
-        {/* <View>
+          >
+            <View
+              style={{
+                flex: 1,
+                height: 6,
+                backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+              }}
+            />
+          </View>
+          {/* <View>
           <Text
             style={{
               fontFamily: FONTS.BOLD,
@@ -128,308 +129,318 @@ const DetailScreen = ({ route }) => {
             Details
           </Text>
         </View> */}
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text
-            style={{
-              fontSize: 17,
-              color: COLORS.DARK_GREY,
-              fontFamily: FONTS.SEMI_BOLD,
-              marginTop: 15,
-              marginLeft: 15,
-            }}
-          >
-            Brand
-          </Text>
-          <Text
-            style={{
-              fontSize: 17,
-              marginTop: 15,
-              marginLeft: 15,
-              marginRight: 15,
-              fontFamily: FONTS.MEDIUM,
-              color: COLORS.LIGHT_GRAY,
-            }}
-          >
-            {detailItem?.brand}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 15,
-            marginTop: 10,
-          }}
-        >
           <View
-            style={{ flex: 1, height: 1, backgroundColor: COLORS.DARK_GREY }}
-          />
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text
-            style={{
-              fontSize: 17,
-              marginTop: 15,
-              marginLeft: 15,
-              fontFamily: FONTS.SEMI_BOLD,
-              color: COLORS.DARK_GREY,
-            }}
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            Year
-          </Text>
-          <Text
-            style={{
-              fontSize: 17,
-              marginTop: 15,
-              marginLeft: 15,
-              marginRight: 15,
-              fontFamily: FONTS.MEDIUM,
-              color: COLORS.LIGHT_GRAY,
-            }}
-          >
-            {detailItem?.yearOfPurchase}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 15,
-            marginTop: 10,
-          }}
-        >
-          <View
-            style={{ flex: 1, height: 1, backgroundColor: COLORS.DARK_GREY }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              fontSize: 17,
-              marginTop: 15,
-              marginLeft: 15,
-              marginRight: 15,
-              fontFamily: FONTS.SEMI_BOLD,
-              color: COLORS.DARK_GREY,
-            }}
-          >
-            Description
-          </Text>
-          {readMore ? (
             <Text
               style={{
-                marginTop: 10,
                 fontSize: 17,
-                marginBottom: 15,
+                color: COLORS.DARK_GREY,
+                fontFamily: FONTS.SEMI_BOLD,
+                marginTop: 15,
                 marginLeft: 15,
-                marginRight: 15,
-                borderBottomWidth: 2,
-                borderColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
             >
-              {detailItem?.description}
+              Brand
             </Text>
-          ) : (
             <Text
               style={{
-                marginTop: 10,
                 fontSize: 17,
-                marginBottom: 10,
+                marginTop: 15,
                 marginLeft: 15,
                 marginRight: 15,
-                borderBottomWidth: 2,
-                borderColor: "#C0C0C0",
+                fontFamily: FONTS.MEDIUM,
+                color: COLORS.LIGHT_GRAY,
               }}
-              numberOfLines={3}
             >
-              {detailItem?.description}
+              {detailItem?.brand}
             </Text>
-          )}
-          {readMore ? (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                marginLeft: 15,
-                marginRight: 15,
-              }}
-            >
-              <TouchableOpacity onPress={() => controllRead(false)}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: FONTS.SEMI_BOLD,
-                    color: "black",
-                    textAlign: "center",
-                  }}
-                >
-                  READ LESS
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                marginLeft: 15,
-                marginRight: 15,
-              }}
-            >
-              <TouchableOpacity onPress={() => controllRead(true)}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: FONTS.SEMI_BOLD,
-                    color: "black",
-                    textAlign: "center",
-                  }}
-                >
-                  READ MORE
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
-        >
+          </View>
           <View
             style={{
-              flex: 1,
-              height: 4,
-              backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
-            }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              color: "black",
-              fontFamily: FONTS.SEMI_BOLD,
-              fontSize: 17,
-              marginTop: 12,
-              marginLeft: 15,
-              marginRight: 15,
-              marginBottom: 7,
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 15,
+              marginTop: 10,
             }}
           >
-            Barter Profile
-          </Text>
-          <View
-            style={{ flexDirection: "row", marginLeft: 15, marginBottom: 15 }}
-          >
-            <Image
-               source={{
-            uri: `${detailItem?.User.photoUrl}`,
-            }}
-              style={styles.headerImage}
+            <View
+              style={{ flex: 1, height: 1, backgroundColor: COLORS.DARK_GREY }}
             />
-            <View style={{ flexDirection: "column", justifyContent: "center" }}>
+          </View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text
+              style={{
+                fontSize: 17,
+                marginTop: 15,
+                marginLeft: 15,
+                fontFamily: FONTS.SEMI_BOLD,
+                color: COLORS.DARK_GREY,
+              }}
+            >
+              Year
+            </Text>
+            <Text
+              style={{
+                fontSize: 17,
+                marginTop: 15,
+                marginLeft: 15,
+                marginRight: 15,
+                fontFamily: FONTS.MEDIUM,
+                color: COLORS.LIGHT_GRAY,
+              }}
+            >
+              {detailItem?.yearOfPurchase}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 15,
+              marginTop: 10,
+            }}
+          >
+            <View
+              style={{ flex: 1, height: 1, backgroundColor: COLORS.DARK_GREY }}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                fontSize: 17,
+                marginTop: 15,
+                marginLeft: 15,
+                marginRight: 15,
+                fontFamily: FONTS.SEMI_BOLD,
+                color: COLORS.DARK_GREY,
+              }}
+            >
+              Description
+            </Text>
+            {readMore ? (
               <Text
                 style={{
-                  color: "black",
-                  fontFamily: FONTS.SEMI_BOLD,
-                  fontSize: 13,
-                  marginLeft: 9,
+                  marginTop: 10,
+                  fontSize: 17,
+                  marginBottom: 15,
+                  marginLeft: 15,
+                  marginRight: 15,
+                  borderBottomWidth: 2,
+                  borderColor: COLORS.EXTRA_LIGHT_GRAY,
+                }}
+              >
+                {detailItem?.description}
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  marginTop: 10,
+                  fontSize: 17,
+                  marginBottom: 10,
+                  marginLeft: 15,
+                  marginRight: 15,
+                  borderBottomWidth: 2,
+                  borderColor: "#C0C0C0",
+                }}
+                numberOfLines={3}
+              >
+                {detailItem?.description}
+              </Text>
+            )}
+            {readMore ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  marginLeft: 15,
                   marginRight: 15,
                 }}
               >
-                {detailItem?.User?.username}
-              </Text>
-              <Text
+                <TouchableOpacity onPress={() => controllRead(false)}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: FONTS.SEMI_BOLD,
+                      color: "black",
+                      textAlign: "center",
+                    }}
+                  >
+                    READ LESS
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
                 style={{
-                  color: "black",
-                  fontFamily: FONTS.SEMI_BOLD,
-                  fontSize: 13,
-                  marginLeft: 9,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  marginLeft: 15,
                   marginRight: 15,
                 }}
               >
-                {detailItem?.User?.email}
-              </Text>
+                <TouchableOpacity onPress={() => controllRead(true)}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: FONTS.SEMI_BOLD,
+                      color: "black",
+                      textAlign: "center",
+                    }}
+                  >
+                    READ MORE
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 10,
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                height: 4,
+                backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+              }}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                color: "black",
+                fontFamily: FONTS.SEMI_BOLD,
+                fontSize: 17,
+                marginTop: 12,
+                marginLeft: 15,
+                marginRight: 15,
+                marginBottom: 7,
+              }}
+            >
+              Barter Profile
+            </Text>
+            <View
+              style={{ flexDirection: "row", marginLeft: 15, marginBottom: 15 }}
+            >
+              <Image
+                source={{
+                  uri: `${detailItem?.User.photoUrl}`,
+                }}
+                style={styles.headerImage}
+              />
+              <View
+                style={{ flexDirection: "column", justifyContent: "center" }}
+              >
+                <Text
+                  style={{
+                    color: "black",
+                    fontFamily: FONTS.SEMI_BOLD,
+                    fontSize: 13,
+                    marginLeft: 9,
+                    marginRight: 15,
+                  }}
+                >
+                  {detailItem?.User?.username}
+                </Text>
+                <Text
+                  style={{
+                    color: "black",
+                    fontFamily: FONTS.SEMI_BOLD,
+                    fontSize: 13,
+                    marginLeft: 9,
+                    marginRight: 15,
+                  }}
+                >
+                  {detailItem?.User?.email}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 0,
-            marginBottom: 15,
-          }}
-        >
           <View
             style={{
-              flex: 1,
-              height: 4,
-              backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 0,
+              marginBottom: 15,
             }}
-          />
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.PRIMARY,
-              width: 350,
-              paddingVertical: 8,
-              borderRadius: 10,
-              justifyContent: "center",
-              marginTop: 4,
-            }}
-            onPress={() => navigation.push("MyItemBarter", { detailItem })}
           >
-            <Text
+            <View
               style={{
-                fontSize: 12,
-                fontWeight: "bold",
-                color: "white",
-                textAlign: "center",
-                marginVertical: 5,
+                flex: 1,
+                height: 4,
+                backgroundColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
-            >
-              Ajukan Barter
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+            />
+          </View>
+          <View
             style={{
-              backgroundColor: "#2E2EFF",
-              width: 350,
-              paddingVertical: 8,
-              borderRadius: 10,
+              display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
-              marginTop: 20,
-              marginBottom: 25,
+              alignItems: "center",
             }}
-            onPress={() =>
-              navigation.push("MyChatRoom", {
-                userName: detailItem?.User?.username,
-                itemUserId: detailItem?.User?.id,
-              })
-            }
           >
-            <Text
+            <TouchableOpacity
               style={{
-                fontSize: 12,
-                fontWeight: "bold",
-                color: "white",
-                textAlign: "center",
-                marginVertical: 5,
+                backgroundColor: COLORS.PRIMARY,
+                width: 350,
+                paddingVertical: 8,
+                borderRadius: 10,
+                justifyContent: "center",
+                marginTop: 4,
               }}
+              onPress={() => navigation.push("MyItemBarter", { detailItem })}
             >
-              Chat
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "center",
+                  marginVertical: 5,
+                }}
+              >
+                Ajukan Barter
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#2E2EFF",
+                width: 350,
+                paddingVertical: 8,
+                borderRadius: 10,
+                justifyContent: "center",
+                marginTop: 20,
+                marginBottom: 25,
+              }}
+              onPress={() =>
+                navigation.push("MyChatRoom", {
+                  userName: detailItem?.User?.username,
+                  itemUserId: detailItem?.User?.id,
+                })
+              }
+            >
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "center",
+                  marginVertical: 5,
+                }}
+              >
+                Chat
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

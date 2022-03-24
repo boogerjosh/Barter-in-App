@@ -10,6 +10,8 @@ jest.mock("ioredis");
 const Redis = require("ioredis");
 jest.setTimeout(2000);
 let access_token;
+jest.mock("../helpers/uploadFile");
+const uploadFile = require("../helpers/uploadFile");
 
 beforeAll((done) => {
   queryInterface
@@ -238,6 +240,29 @@ describe("GET Error", () => {
       jest.spyOn(Item, "update").mockRejectedValue("Error");
       request(app)
         .patch("/admins/items/1")
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(500);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+describe("POST Error", () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe("PATCH /admins/items/:id -  failed test", () => {
+    it("should return an object with status 500", (done) => {
+      request(app)
+        .post("/users/myImage")
         .set("access_token", access_token)
         .then((res) => {
           expect(res.status).toBe(500);
