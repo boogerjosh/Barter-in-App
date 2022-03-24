@@ -3,7 +3,7 @@ const sendEmail = async (obj) => {
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "dummy.akun.1400@gmail.com", // generated ethereal user
+      user: "barter.in.hacktiv@gmail.com", // generated ethereal user
       pass: "123abc987", // generated ethereal password
     },
     tls: {
@@ -12,7 +12,7 @@ const sendEmail = async (obj) => {
   });
   let mailOptions = {
     from: obj.email,
-    to: "dummy.akun.1400@gmail.com",
+    to: "barter.in.hacktiv@gmail.com",
     subject: "Asking for approvement",
     text: `user with ${obj.email} asking for approval`,
   };

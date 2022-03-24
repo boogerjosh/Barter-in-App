@@ -3,7 +3,7 @@ const { Item } = require("../models");
 
 function deleteItem(id) {
   let d = new Date();
-  d.setMilliseconds(d.getMilliseconds() + 1000 * 60);
+  d.setMilliseconds(d.getMilliseconds() + 1000 * 3600);
 
   // console.log("Before job instantiation");
   const job = new CronJob(

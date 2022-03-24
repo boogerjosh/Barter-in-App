@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit --runInBand --coverage",
-    "start": "nodemon server.js"
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "16.13.2",
+    "npm": "8.1.2"
   },
   "keywords": [],
   "author": "",

@@ -5,9 +5,9 @@
     "category": "Fashion",
     "brand": "Out Cast ",
     "yearOfPurchase": "2021",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 2
+    "userId": 1
   },
   {
     "title": "Jeans Nyc",
@@ -15,9 +15,9 @@
     "category": "Fashion",
     "brand": "Jeans",
     "yearOfPurchase": "2021",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 2
   },
   {
     "title": "Black Suit for Man",
@@ -25,9 +25,9 @@
     "category": "Fashion",
     "brand": "H&M",
     "yearOfPurchase": "2020",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 1
   },
   {
     "title": "Blank Nyc Jacket",
@@ -55,9 +55,9 @@
     "category": "Fashion",
     "brand": "Light Weight Jacket",
     "yearOfPurchase": "2022",
-    "statusPost": "Pending",
+    "statusPost": "Rejected",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 1
   },
 
   {
@@ -78,7 +78,7 @@
     "yearOfPurchase": "2003",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
   },
   {
     "title": "Stay Gold",
@@ -88,7 +88,7 @@
     "yearOfPurchase": "2006",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 2
   },
   {
     "title": "Dead Edward",
@@ -96,9 +96,9 @@
     "category": "Book",
     "brand": "Ann Napolitano",
     "yearOfPurchase": "2020",
-    "statusPost": "Accepted",
+    "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
-    "userId": 2
+    "userId": 3
   },
   {
     "title": "The Grace Year",
@@ -106,9 +106,9 @@
     "category": "Book",
     "brand": "Kim Liggett",
     "yearOfPurchase": "2019",
-    "statusPost": "Accepted",
+    "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
   },
   {
     "title": "Leonardo Da Vinci",
@@ -116,9 +116,9 @@
     "category": "Book",
     "brand": "Walter Isaacson",
     "yearOfPurchase": "2017",
-    "statusPost": "Accepted",
+    "statusPost": "Rejected",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 2
   },
   {
     "title": "Sofa Kursi Meja",
@@ -126,9 +126,9 @@
     "category": "Decoration",
     "brand": "-",
     "yearOfPurchase": "2004",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 2
+    "userId": 1
   },
   {
     "title": "Meja Tv Koin Kayu Jati",
@@ -136,9 +136,9 @@
     "category": "Decoration",
     "brand": "-",
     "yearOfPurchase": "2006",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 2
   },
   {
     "title": "Patung Babi Abstrak",
@@ -146,9 +146,9 @@
     "category": "Decoration",
     "brand": "-",
     "yearOfPurchase": "2020",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 3
   },
   {
     "title": "Patung Dewa Fu Lu Shou",
@@ -158,7 +158,7 @@
     "yearOfPurchase": "2020",
     "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
-    "userId": 2
+    "userId": 1
   },
   {
     "title": "Karpet Hiasan Dinding",
@@ -168,7 +168,7 @@
     "yearOfPurchase": "2017",
     "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 2
   },
   {
     "title": "Lukisan Le Maeyeur",
@@ -176,9 +176,9 @@
     "category": "Decoration",
     "brand": "-",
     "yearOfPurchase": "2001",
-    "statusPost": "Pending",
+    "statusPost": "Rejected",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 1
   },
   {
     "title": "Iphone 12 PRO",
@@ -186,7 +186,7 @@
     "category": "Electronic",
     "brand": "Iphone",
     "yearOfPurchase": "2018",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
     "userId": 2
   },
@@ -196,7 +196,7 @@
     "category": "Electronic",
     "brand": "Iphone",
     "yearOfPurchase": "2017",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
     "userId": 3
   },
@@ -206,9 +206,9 @@
     "category": "Electronic",
     "brand": "Sharp",
     "yearOfPurchase": "2018",
-    "statusPost": "Pending",
+    "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 1
   },
   {
     "title": "Fitbit 5",
@@ -228,7 +228,7 @@
     "yearOfPurchase": "2021",
     "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
   },
   {
     "title": "Lenovo Thinkpad X1",
@@ -236,9 +236,9 @@
     "category": "Electronic",
     "brand": "Lenovo",
     "yearOfPurchase": "2016",
-    "statusPost": "Pending",
+    "statusPost": "Rejected",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 2
   },
   {
     "title": "Nissan Skyline R30",
@@ -248,7 +248,7 @@
     "yearOfPurchase": "1989",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 2
+    "userId": 3
   },
   {
     "title": "Honda Beat Modifico",
@@ -258,7 +258,7 @@
     "yearOfPurchase": "2019",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 1
   },
   {
     "title": "Nissan Versa Note",
@@ -268,7 +268,7 @@
     "yearOfPurchase": "2014",
     "statusBarter": "Not bartered yet",
     "statusPost": "Accepted",
-    "userId": 4
+    "userId": 2
   },
   {
     "title": "Kawasaki Ninja 250R",
@@ -277,8 +277,8 @@
     "brand": "Kawasaki",
     "yearOfPurchase": "2014",
     "statusBarter": "Not bartered yet",
-    "statusPost": "Accepted",
-    "userId": 2
+    "statusPost": "Pending",
+    "userId": 1
   },
   {
     "title": "Yamaha Mio Black",
@@ -287,8 +287,8 @@
     "brand": "Yamaha",
     "yearOfPurchase": "2015",
     "statusBarter": "Not bartered yet",
-    "statusPost": "Accepted",
-    "userId": 3
+    "statusPost": "Pending",
+    "userId": 2
   },
   {
     "title": "1996 Honda C100",
@@ -297,8 +297,8 @@
     "brand": "Honda",
     "yearOfPurchase": "1966",
     "statusBarter": "Not bartered yet",
-    "statusPost": "Accepted",
-    "userId": 4
+    "statusPost": "Rejected",
+    "userId": 3
   },
 
   {
@@ -309,7 +309,7 @@
     "yearOfPurchase": "2021",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 2
+    "userId": 1
   },
   {
     "title": "Alat Gym mini set",
@@ -319,7 +319,7 @@
     "yearOfPurchase": "2022",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 3
+    "userId": 2
   },
   {
     "title": "Lego set Toys",
@@ -329,7 +329,7 @@
     "yearOfPurchase": "2022",
     "statusPost": "Accepted",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 1
   },
   {
     "title": "Diecast toy",
@@ -337,7 +337,7 @@
     "category": "Others",
     "brand": "Diecast",
     "yearOfPurchase": "2022",
-    "statusPost": "Accepted",
+    "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
     "userId": 2
   },
@@ -347,7 +347,7 @@
     "category": "Others",
     "brand": "Nerf",
     "yearOfPurchase": "2022",
-    "statusPost": "Accepted",
+    "statusPost": "Pending",
     "statusBarter": "Not bartered yet",
     "userId": 3
   },
@@ -357,8 +357,8 @@
     "category": "Others",
     "brand": "Nerf",
     "yearOfPurchase": "2022",
-    "statusPost": "Accepted",
+    "statusPost": "Rejected",
     "statusBarter": "Not bartered yet",
-    "userId": 4
+    "userId": 1
   }
 ]

@@ -17,14 +17,14 @@ userRouter.post(
   "/addItem",
   multerImage().array("image"),
   userControllers.addItem
-  );
-  
+);
+
 userRouter.post(
-  '/myImage',
+  "/myImage",
   multerImage().array("image"),
   userControllers.postImage
 );
-    
+
 userRouter.post(
   "/items",
   multerImage().array("image"),
@@ -38,6 +38,5 @@ userRouter.get("/roomBarter", userControllers.getRoomBarter);
 userRouter.delete("/items/:id", userControllers.deleteItem);
 
 userRouter.patch("/roomBarter/:id", userControllers.patchRoomBarter);
-// userRouter.patch("/:id", userControllers.patchItem);
-// userRouter.post("/send-emails", userControllers.sendEmail);
+
 module.exports = userRouter;
