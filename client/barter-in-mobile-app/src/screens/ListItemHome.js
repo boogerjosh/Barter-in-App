@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   StyleSheet,
   Text,
@@ -22,17 +22,17 @@ import { GET_ITEMS } from "../../lib/apollo/queries/items";
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 const numColumns = 2;
-const ListItemHomeScreen = () => {
+const ListItemHomeScreen = ({route}) => {
   const navigation = useNavigation();
-  //graphql
+  const [searchTitle, setSearch] = useState('')
 
   const { loading, error, data } = useQuery(GET_ITEMS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
       search: {
-        filterByCategory: "",
-        filterByTitle: "",
+        filterByCategory: route.params.category,
+        filterByTitle: searchTitle,
       },
     },
   });
@@ -59,7 +59,7 @@ const ListItemHomeScreen = () => {
             color="black"
             style={styles.searchicon}
           />
-          <TextInput placeholder="Search Item" style={styles.searchInput} />
+          <TextInput placeholder="Search Item" style={styles.searchInput} onChangeText={setSearch} value={searchTitle} />
         </View>
       </View>
       <FlatList

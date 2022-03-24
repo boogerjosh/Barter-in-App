@@ -18,7 +18,14 @@ const BarterRouter = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="Detail" component={DetailScreen} />
+      <Stack.Screen name="Detail" component={DetailScreen}
+         options={{
+            headerBackTitleVisible: true,
+            headerTransparent: true,
+            title: "",
+            headerTintColor: COLORS.PRIMARY,
+          }}
+      />
       <Stack.Screen name="ChatRoom" component={ChatRoomScreen}
           options={{
             headerBackTitleVisible: false,

@@ -1,5 +1,6 @@
 "use strict";
 
+const data = require('../items.json');
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -11,12 +12,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    let items = require("../../items.json");
-    items.forEach((el) => {
+    data.forEach((el) => {
       el.updatedAt = new Date();
       el.createdAt = new Date();
     });
-    await queryInterface.bulkInsert("Items", items, {});
+    await queryInterface.bulkInsert("Items", data, {});
   },
 
   async down(queryInterface, Sequelize) {

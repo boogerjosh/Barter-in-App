@@ -25,8 +25,11 @@ import { useFocusEffect } from "@react-navigation/native";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
-const ProfileScreen = () => {
-  const [isLogging, setLogging] = useState(false);
+const ProfileScreen = ({ route }) => {
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [photo, setPhoto] = useState('');
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const toLoginPage = () => {
@@ -38,12 +41,19 @@ const ProfileScreen = () => {
     setAuth(false);
     navigation.navigate("Profile");
   };
+
   async function getToken() {
     try {
       let token = await AsyncStorage.getItem("access_token");
-      console.log(token, "<<<>>>>>");
+      let username = await AsyncStorage.getItem("username");
+      let email = await AsyncStorage.getItem("email");
+      let photo = await AsyncStorage.getItem("photoUrl");
+      console.log(photo, '====')
       if (token) {
         setAuth(true);
+        setUsername(username);
+        setEmail(email);
+        setPhoto(photo);
       } else {
         setAuth(false);
       }
@@ -52,9 +62,11 @@ const ProfileScreen = () => {
     }
   }
 
-  useFocusEffect(() => {
-    getToken();
-  });
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken()
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -69,7 +81,7 @@ const ProfileScreen = () => {
         <View style={{ flexDirection: "row", marginTop: 15 }}>
           {auth ? (
             <Avatar.Image
-              source={require("../../assets/person.jpg")}
+               source={photo ? {uri: photo } : null}
               size={80}
             />
           ) : (
@@ -90,9 +102,9 @@ const ProfileScreen = () => {
                   },
                 ]}
               >
-                Login
+                {username}
               </Title>
-              <Caption style={styles.caption}>@username</Caption>
+              <Caption style={styles.caption}>@{username.toLowerCase()}</Caption>
             </View>
           ) : (
             <View style={{ marginLeft: 20 }}>
@@ -135,7 +147,7 @@ const ProfileScreen = () => {
           <View style={styles.row}>
             <Icon name="email" color="#777777" size={20} />
             <Text style={{ color: "#777777", marginLeft: 20 }}>
-              john_doe@email.com
+              {email}
             </Text>
           </View>
         </View>

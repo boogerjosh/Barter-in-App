@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,18 +20,15 @@ import COLORS from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Google from "expo-google-app-auth";
-import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const windowHeight = Dimensions.get("window").height;
-const { height, width } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-import { AuthContext } from "../components/context";
 
 import { useMutation } from "@apollo/client";
 import { POST_GOOGLE_LOGIN } from "../../lib/apollo/queries/items";
 
-// COBAAAAAAAAA
 import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
@@ -51,23 +48,7 @@ async function registerForPushNotificationsAsync() {
 const Login = () => {
   const [token, setToken] = useState("");
 
-  //graphql mutation
-  // const [loginGoogle, { error, reset }] = useMutation(POST_GOOGLE_LOGIN('hai','hao','hehe'), {
-  //   fetchPolicy: "network-only",
-  //   nextFetchPolicy: "cache-first",
-  //   variables: {
-  //     // newUser: {
-  //     //   email: null,
-  //     //   id: null,
-  //     //   name: null,
-  //     //   givenName: null,
-  //     //   familyName: null,
-  //     //   phoneUrl: null,
-  //     // },
-  //   },
-  // });
-  const [LoginGoogle, { data, loading, error }] =
-    useMutation(POST_GOOGLE_LOGIN);
+  const [LoginGoogle, { data, loading, error }] = useMutation(POST_GOOGLE_LOGIN);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((data) => setToken(data));
@@ -95,7 +76,7 @@ const Login = () => {
           "access_token",
           data.data.loginGoogle.access_token
         );
-      })
+       })
       .then((result) => {
         navigation.navigate("Profile", {
           dataUser: user,

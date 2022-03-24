@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   Image,
+  SafeAreaView,
   FlatList,
   TouchableOpacity,
   Dimensions,
@@ -14,38 +15,29 @@ import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Carousel from "react-native-snap-carousel";
-
-import { useQuery } from "@apollo/client";
 import { GET_ITEM } from "../../lib/apollo/queries/items";
 const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
+import { useQuery } from "@apollo/client";
 
 const DetailScreen = ({ route }) => {
-  // const { loading, error, data } = useQuery(GET_ITEM, {
-  //   variables: {
-  //     itemId: route.params.id
-  //   },
-  // })
-  console.log(loading, error, data)
+
+  console.log(route.params.id)
+  const { loading, error, data } = useQuery(GET_ITEM, {
+    variables: {
+      itemId: route.params.id
+    },
+  })
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
     setReadMore(value);
   };
-  //graphql
-  const { loading, error, data } = useQuery(GET_ITEM, {
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-  });
 
   let detailItem;
   if (data) {
     detailItem = data?.getItem;
   }
-
-  // if(loading){
-  //   return (<></>)
-  // }
 
   const renderItem2 = ({ item, index }) => {
     return (
@@ -56,9 +48,7 @@ const DetailScreen = ({ route }) => {
         }}
       >
         <Image
-          source={{
-            uri: `${item}`,
-          }}
+          source={item?.imageUrl ? {uri: item?.imageUrl } : null}
           style={{
             height: 250,
             width: width * 0.8,
@@ -67,19 +57,16 @@ const DetailScreen = ({ route }) => {
       </View>
     );
   };
-
+  let _carousel;
   return (
+  <SafeAreaView style={styles.container}>    
     <View style={styles.container}>
       <ScrollView style={{ width: Dimensions.get("window").width }}>
         <Carousel
           ref={(c) => {
             _carousel = c;
           }}
-          data={[
-            "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
-            "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
-            "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
-          ]}
+          data={detailItem?.Images}
           renderItem={renderItem2}
           sliderWidth={width * 1}
           itemWidth={width * 0.8}
@@ -97,7 +84,7 @@ const DetailScreen = ({ route }) => {
               borderColor: "#C0C0C0",
             }}
           >
-            Examplenya ini baju gueu deh
+            {detailItem?.title}
           </Text>
         </View>
         <View
@@ -148,7 +135,7 @@ const DetailScreen = ({ route }) => {
               color: COLORS.LIGHT_GRAY,
             }}
           >
-            Calvin Klein
+            {detailItem?.brand}
           </Text>
         </View>
         <View
@@ -185,7 +172,7 @@ const DetailScreen = ({ route }) => {
               color: COLORS.LIGHT_GRAY,
             }}
           >
-            1990
+            {detailItem?.yearOfPurchase}
           </Text>
         </View>
         <View
@@ -225,16 +212,7 @@ const DetailScreen = ({ route }) => {
                 borderColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              auctor, neque a fringilla semper, neque massa commodo neque, sed
-              varius nulla urna at neque. Vivamus ullamcorper mauris ex, eget
-              consectetur elit ultrices at. Etiam massa massa, pellentesque et
-              risus quis, suscipit scelerisque tortor. Morbi ac tincidunt
-              ligula, non ullamcorper orci. Morbi laoreet turpis sed nisi
-              aliquet, vel efficitur sem faucibus. Cras vestibulum iaculis
-              libero sed blandit. Nulla quis ex maximus, dapibus nunc eu,
-              pulvinar lacus. Phasellus aliquet mattis turpis, vitae faucibus
-              purus sollicitudin ut.
+                {detailItem?.description}
             </Text>
           ) : (
             <Text
@@ -249,16 +227,7 @@ const DetailScreen = ({ route }) => {
               }}
               numberOfLines={3}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              auctor, neque a fringilla semper, neque massa commodo neque, sed
-              varius nulla urna at neque. Vivamus ullamcorper mauris ex, eget
-              consectetur elit ultrices at. Etiam massa massa, pellentesque et
-              risus quis, suscipit scelerisque tortor. Morbi ac tincidunt
-              ligula, non ullamcorper orci. Morbi laoreet turpis sed nisi
-              aliquet, vel efficitur sem faucibus. Cras vestibulum iaculis
-              libero sed blandit. Nulla quis ex maximus, dapibus nunc eu,
-              pulvinar lacus. Phasellus aliquet mattis turpis, vitae faucibus
-              purus sollicitudin ut.
+              {detailItem?.description}
             </Text>
           )}
           {readMore ? (
@@ -336,7 +305,9 @@ const DetailScreen = ({ route }) => {
             style={{ flexDirection: "row", marginLeft: 15, marginBottom: 15 }}
           >
             <Image
-              source={require("../../assets/person.jpg")}
+               source={{
+            uri: `${detailItem?.User.photoUrl}`,
+            }}
               style={styles.headerImage}
             />
             <View style={{ flexDirection: "column", justifyContent: "center" }}>
@@ -349,7 +320,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                Josua
+                {detailItem?.User.username}
               </Text>
               <Text
                 style={{
@@ -360,7 +331,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                test@gmail.com
+                 {detailItem?.User.email}
               </Text>
             </View>
           </View>
@@ -422,7 +393,7 @@ const DetailScreen = ({ route }) => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.push("MyChatRoom", { userName: 'Josua', itemUserId: 8 })}
+            onPress={() => navigation.push("MyChatRoom", { userName: detailItem?.User.username, id: detailItem?.User.id })}
           >
             <Text
               style={{
@@ -439,6 +410,7 @@ const DetailScreen = ({ route }) => {
         </View>
       </ScrollView>
     </View>
+    </SafeAreaView>
   );
 };
 
