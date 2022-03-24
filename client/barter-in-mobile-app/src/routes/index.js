@@ -55,7 +55,7 @@ const MainApp = () => {
 
 
   const getTabBarStyle = (route) => {  
-      const routeName = getFocusedRouteNameFromRoute(route);
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'BARTER';
       let display = (routeName === 'MyChatRoom' || routeName === 'Login') ? 'none':'flex';
       return {display}
   }

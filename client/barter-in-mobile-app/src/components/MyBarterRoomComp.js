@@ -91,7 +91,9 @@ const MuBarterRoomComp = ({ item }) => {
             />
             <View>
               <Text style={styles.itemTitle} numberOfLines={3}>
-                {item?.Item1?.title}
+                 {item?.Item1?.title.length >= 18
+                  ? item?.Item1?.title.slice(0, 17) + "..."
+                  : item?.Item1?.title}
               </Text>
               <Text style={styles.itemSubTitle}>{item?.Item1?.brand}</Text>
               <Text style={styles.itemSubTitle}>
@@ -115,7 +117,9 @@ const MuBarterRoomComp = ({ item }) => {
             />
             <View>
               <Text style={styles.itemTitle} numberOfLines={3}>
-                {item?.Item2?.title}
+                 {item?.Item2?.title.length >= 18
+                  ? item?.Item2?.title.slice(0, 17) + "..."
+                  : item?.Item2?.title}
               </Text>
               <Text style={styles.itemSubTitle}>{item?.Item2?.brand}</Text>
               <Text style={styles.itemSubTitle}>

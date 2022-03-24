@@ -18,7 +18,6 @@ const setWidth = (w) => (width / 100) * w;
 import MyAddsComp from "../components/MyAddsComp";
 import MyItemComp from "../components/MyItemComp";
 import ItemSpace from "../components/ItemSpace";
-import axios from "axios";
 
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,13 +25,11 @@ import { useQuery } from "@apollo/client";
 import { GET_DATA_FOR_BARTER } from "../../lib/apollo/queries/items";
 
 const MyItemBarter = ({ route }) => {
+  console.log(route, '----')
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
   //graphql
-  let itemId = route.params.detailItem.id;
-  let userId = route.params.detailItem.User.id;
-  // console.log(route.params.detailItem.id, "Detail in myitembarter");
   const { loading, error, data } = useQuery(GET_DATA_FOR_BARTER, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
@@ -53,12 +50,6 @@ const MyItemBarter = ({ route }) => {
     }
   }
 
-  let items = [];
-  if (data) {
-    items = data?.getDataForBarter;
-  }
-  // console.log(token, "token<<<");
-  // console.log(items, "ITEM BARTER");
   useFocusEffect(
     React.useCallback(() => {
       getToken();
@@ -77,10 +68,10 @@ const MyItemBarter = ({ route }) => {
       <View>
         <FlatList
           contentContainerStyle={styles.listItem}
-          data={items}
+          data={data?.getDataForBarter}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <MyItemComp item={item} itemId={itemId} userId={userId} />
+            <MyItemComp item={item} itemId={route?.params.detailItem.id} userId={route?.params.detailItem.User.id} />
           )}
           ItemSeparatorComponent={() => <ItemSpace width={10} />}
           ListHeaderComponent={() => <ItemSpace width={10} />}

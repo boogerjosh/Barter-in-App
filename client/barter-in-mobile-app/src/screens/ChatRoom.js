@@ -28,7 +28,7 @@ Notifications.setNotificationHandler({
 });
 
 
-socket = io("https://51a8-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io");
+socket = io("https://server-barter-in.herokuapp.com");
 const ChatRoomScreen = (routes) => {
   // COBA
   const notificationListener = useRef();
