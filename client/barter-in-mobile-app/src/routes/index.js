@@ -71,12 +71,11 @@ const MainApp = () => {
     Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
   });
 
-  const getTabBarStyle = (route) => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    let display =
-      routeName === "MyChatRoom" || routeName === "Login" ? "none" : "flex";
-    return { display };
-  };
+  const getTabBarStyle = (route) => {  
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'BARTER';
+      let display = (routeName === 'MyChatRoom' || routeName === 'Login') ? 'none':'flex';
+      return {display}
+  }
 
   return fontsLoaded ? (
     <Tab.Navigator

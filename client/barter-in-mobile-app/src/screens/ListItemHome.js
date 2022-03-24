@@ -7,6 +7,7 @@ import {
   TextInput,
   Dimensions,
   SafeAreaView,
+  Image
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -14,7 +15,7 @@ import ItemSpace from "../components/ItemSpace";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 import Items from "../components/Items";
-// import items from "../../data/items";
+import * as Progress from 'react-native-progress';
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -43,11 +44,6 @@ const ListItemHomeScreen = ({ route }) => {
       getItemsId: id,
     },
   });
-
-  let items;
-  if (data) {
-    items = data?.getItems;
-  }
 
   async function getToken() {
     try {
@@ -93,13 +89,22 @@ const ListItemHomeScreen = ({ route }) => {
           <TextInput
             placeholder="Search Item"
             style={styles.searchInput}
-            onChangeText={setSearchTitle}
+            onChangeText={(text) => { setSearchTitle(text) }}
             value={searchTitle}
           />
         </View>
       </View>
-      <FlatList
-        data={items}
+
+      {data?.getItems.length === 0 ?
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+          <Image
+            source={{uri:'https://www.qrs.in/frontent/images/noresult.png'}}
+            style={{ width: 300, height: 250, marginTop: 100}}
+         />
+        </View>
+        :
+         <FlatList
+        data={data?.getItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Items item={item} />}
         ItemSeparatorComponent={() => <ItemSpace width={10} />}
@@ -107,6 +112,7 @@ const ListItemHomeScreen = ({ route }) => {
         ListFooterComponent={() => <ItemSpace width={10} />}
         numColumns={numColumns}
       />
+      }
     </View>
   );
 };

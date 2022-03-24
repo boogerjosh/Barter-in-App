@@ -11,18 +11,16 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-// import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import LottieView from 'lottie-react-native';
+import * as Progress from 'react-native-progress';
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
-import highlights from "../../data/banner";
-import categories from "../../data/categories";
 import Highlight from "../components/Highlight";
 import Categories from "../components/Categories";
 import categoryAdd from "../../data/categoryAdd";
 import ItemSpace from "../components/ItemSpace";
-import axios from "axios";
 
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -51,10 +49,6 @@ const HomeScreen = () => {
     },
   });
 
-  let items = [];
-  if (data) {
-    items = data?.getItemsHome;
-  }
   async function getToken() {
     try {
       let newToken = await AsyncStorage.getItem("access_token");
@@ -122,11 +116,15 @@ const HomeScreen = () => {
           </View>
         </View>
       </View>
-      {/* Search Bar */}
-
+      
       <View style={styles.highlightWrapper}>
+        {loading ?
+          <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center'}}>
+            <Progress.Circle size={50} indeterminate={true} color={COLORS.PRIMARY} borderWidth={10} />
+          </View>
+        :
         <FlatList
-          data={items}
+          data={data?.getItemsHome}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Highlight item={item} />}
           horizontal
@@ -135,7 +133,9 @@ const HomeScreen = () => {
           ListFooterComponent={() => <ItemSpace width={20} />}
           showsHorizontalScrollIndicator={false}
         />
+      }
       </View>
+
       <View style={styles.categoryWrapper}>
         <View style={styles.category}>
           <View>
@@ -152,6 +152,7 @@ const HomeScreen = () => {
           />
         </View>
       </View>
+
     </SafeAreaView>
   );
 };
@@ -160,8 +161,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   listCategory: {
     justifyContent: "center",

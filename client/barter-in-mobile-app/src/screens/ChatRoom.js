@@ -24,8 +24,9 @@ Notifications.setNotificationHandler({
   }),
 });
 
-socket = io("http://cc11-110-138-86-180.ngrok.io");
-const ChatRoomScreen = ({ route }) => {
+
+socket = io("https://server-barter-in.herokuapp.com");
+const ChatRoomScreen = (routes) => {
   const notificationListener = useRef();
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
