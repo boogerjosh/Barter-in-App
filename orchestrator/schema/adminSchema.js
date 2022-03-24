@@ -7,7 +7,7 @@ const redis = new Redis({
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
 });
-
+// deploy
 const typeDefs = gql`
   type Item {
     id: ID
