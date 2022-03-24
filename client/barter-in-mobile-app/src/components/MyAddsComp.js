@@ -32,7 +32,7 @@ const MyAddsComp = ({ item }) => {
   const [deleteItem, { error, reset }] = useMutation(DELETE_ITEM, {
     refetchQueries: [
       GET_MY_ADS, // DocumentNode object parsed with gql
-      "getMyAds", // Query name
+      "GetMyAds", // Query name
     ],
   });
   // console.log(item.id);

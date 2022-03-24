@@ -35,7 +35,7 @@ const MuBarterRoomComp = ({ item }) => {
   const [patchRoomBarter, { error, reset }] = useMutation(PATCH_ROOM_BARTER, {
     refetchQueries: [
       GET_ROOM_BARTER, // DocumentNode object parsed with gql
-      "getRoomBarter", // Query name
+      "GetRoomBarter", // Query name
     ],
   });
   console.log(item.id, token, "KOJD");
@@ -93,12 +93,9 @@ const MuBarterRoomComp = ({ item }) => {
               <Text style={styles.itemTitle} numberOfLines={3}>
                 {item?.Item1?.title}
               </Text>
+              <Text style={styles.itemSubTitle}>{item?.Item1?.brand}</Text>
               <Text style={styles.itemSubTitle}>
-                Brand: {item?.Item1?.brand}
-              </Text>
-              <Text style={styles.itemSubTitle}>
-                Since : {item?.Item1?.yearOfPurchase} | Category:{" "}
-                {item?.Item1?.category}
+                {item?.Item1?.yearOfPurchase} | {item?.Item1?.category}
               </Text>
             </View>
           </View>
@@ -120,12 +117,9 @@ const MuBarterRoomComp = ({ item }) => {
               <Text style={styles.itemTitle} numberOfLines={3}>
                 {item?.Item2?.title}
               </Text>
+              <Text style={styles.itemSubTitle}>{item?.Item2?.brand}</Text>
               <Text style={styles.itemSubTitle}>
-                Brand: {item?.Item2?.brand}
-              </Text>
-              <Text style={styles.itemSubTitle}>
-                Since : {item?.Item2?.yearOfPurchase} | Category:{" "}
-                {item?.Item2?.category}
+                {item?.Item2?.yearOfPurchase} | {item?.Item2?.category}
               </Text>
             </View>
           </View>
