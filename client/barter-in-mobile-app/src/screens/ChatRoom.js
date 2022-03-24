@@ -4,8 +4,6 @@ import { GiftedChat, Bubble, Send } from "react-native-gifted-chat";
 import {
   StyleSheet,
   View,
-  Dimensions,
-  Platform,
   SafeAreaView,
 } from "react-native";
 import { io } from "socket.io-client";
@@ -25,8 +23,8 @@ Notifications.setNotificationHandler({
 });
 
 
-socket = io("https://server-barter-in.herokuapp.com");
-const ChatRoomScreen = (routes) => {
+socket = io("https://edd6-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io");
+const ChatRoomScreen = ({ route }) => {
   const notificationListener = useRef();
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");

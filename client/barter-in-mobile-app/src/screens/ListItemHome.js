@@ -73,7 +73,7 @@ const ListItemHomeScreen = ({ route }) => {
       <SafeAreaView style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-            <Text style={styles.nameText}>Category Name</Text>
+            <Text style={styles.nameText}>{route.params.categoryName}</Text>
           </View>
         </View>
       </SafeAreaView>

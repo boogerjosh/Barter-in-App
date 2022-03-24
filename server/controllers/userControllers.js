@@ -101,6 +101,7 @@ class userControllers {
       res.status(201).send({ message: "Item has been created" });
     } catch (error) {
       await t.rollback();
+      console.log(error)
       next(error);
     }
   }
@@ -108,6 +109,7 @@ class userControllers {
   static async postImage(req, res, next) {
     try {
       const { files } = req;
+      console.log(files)
       const mappedArray = await Promise.all(
         files.map((file) => {
           return uploadFile(file).then((data) => {
@@ -127,6 +129,7 @@ class userControllers {
       );
       res.status(201).json(mappedArray);
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }

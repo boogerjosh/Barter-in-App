@@ -58,6 +58,8 @@ const Login = () => {
 
   const navigation = useNavigation();
   const handleGoogleSignIn = () => {
+
+    console.log('hiiiiiii')
     const config = {
       iosClientId: `844458367499-o26lt12vj3hmr4l995o11q3dosv0meav.apps.googleusercontent.com`,
       androidClientId: `844458367499-c1pqe2nh4on96u7go5oc5r0bum5c05dv.apps.googleusercontent.com`,
@@ -68,6 +70,7 @@ const Login = () => {
       .then((result) => {
         user = result.user;
         let token1 = token;
+        console.log(token1, '====')
         return LoginGoogle({ variables: { newUser: user, newToken: token1 } });
       })
       .then((data) => {
