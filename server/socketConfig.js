@@ -12,9 +12,10 @@ io.on("connection", (socket) => {
   console.log(socket.id);
   socket.on("chatMessage", async (message) => {
     messageArray.unshift(message);
+    console.log(message)
     const tokenReceiver = JSON.parse(await redis.get(`tokenForId${message.user.receiverId}`))
     console.log(tokenReceiver, '----')
-    sendPushNotification(tokenReceiver.token, 'Message', message.text, 'MyChatRoom', message.user._id)
+    sendPushNotification(tokenReceiver.token, 'Message', message.text, 'MyChatRoom', message.user._id, message.user.recieverName)
     socket.broadcast.emit("getMessage", messageArray);
   });  
   socket.on("firstConnect", () => {

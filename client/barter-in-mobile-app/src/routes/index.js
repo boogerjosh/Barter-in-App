@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AppLoading from "expo-app-loading";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -11,19 +11,28 @@ import ProfileScreen from "../screens/Profile";
 import MyAddsRouter from "./MyAddsRouter";
 import PostItemRouter from "./PostItemRouter";
 import Splash from "../screens/Splash";
+import * as Notifications from "expo-notifications";
 
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Login from "../screens/Login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import ChatRoomScreen from "../screens/ChatRoom";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MainApp = () => {
-
   const [auth, setAuth] = useState(false);
+  const navigation = useNavigation();
   async function getToken() {
     try {
       let token = await AsyncStorage.getItem("access_token");
@@ -41,6 +50,16 @@ const MainApp = () => {
     getToken();
   });
 
+  useEffect(() => {
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
+      navigation.push(response.notification.request.content.data.navigate, {
+        itemUserId: response.notification.request.content.data.navigateData,
+      });
+      Router(response.notification.request.content.data.username)
+    });
+  }, []);
+
   const [fontsLoaded] = useFonts({
     Regular: require("../../assets/fonts/Poppins-Regular.ttf"),
     Bold: require("../../assets/fonts/Poppins-Bold.ttf"),
@@ -53,13 +72,12 @@ const MainApp = () => {
     Italic: require("../../assets/fonts/Poppins-Italic.ttf"),
   });
 
-
-  const getTabBarStyle = (route) => {  
-      const routeName = getFocusedRouteNameFromRoute(route);
-      let display = (routeName === 'MyChatRoom' || routeName === 'Login') ? 'none':'flex';
-      return {display}
-  }
-
+  const getTabBarStyle = (route) => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    let display =
+      routeName === "MyChatRoom" || routeName === "Login" ? "none" : "flex";
+    return { display };
+  };
 
   return fontsLoaded ? (
     <Tab.Navigator
@@ -90,95 +108,73 @@ const MainApp = () => {
       <Tab.Screen
         name="EXPLORE"
         component={HomeRouter}
-        options={
-          ({ route }) => ({
-            tabBarStyle: getTabBarStyle(route),
-            headerShown: false
-          }
-          )
-        }
-
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
+          headerShown: false,
+        })}
       />
       <Tab.Screen
         name="MY ADS"
         component={MyAddsRouter}
-        options={
-          ({ route }) => ({
-            tabBarStyle: getTabBarStyle(route),
-            headerShown: false
-          }
-          )
-        }
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
+          headerShown: false,
+        })}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-               navigation.navigate('Login');
+              navigation.navigate("Login");
             } else if (auth) {
-              console.log(auth, 'my adds')
-              navigation.navigate('MY ADS');
+              console.log(auth, "my adds");
+              navigation.navigate("MY ADS");
             }
-        },
-  })}
-
+          },
+        })}
       />
       <Tab.Screen
         name="ADD ADS"
         component={PostItemRouter}
-        options={
-          ({ route }) => ({
-            tabBarStyle: getTabBarStyle(route),
-            headerShown: false
-          }
-          )
-        }
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
+          headerShown: false,
+        })}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-              navigation.navigate('Login');
+              navigation.navigate("Login");
             } else {
-              navigation.navigate('ADD ADS');
+              navigation.navigate("ADD ADS");
             }
-        },
-  })}
-
+          },
+        })}
       />
       <Tab.Screen
         name="BARTER"
         component={BarterRouter}
-
-        options={
-          ({ route }) => ({
-            tabBarStyle: getTabBarStyle(route),
-            headerShown: false
-          }
-          )
-        }
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
+          headerShown: false,
+        })}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
             if (!auth) {
-
-              navigation.navigate('Login');
+              navigation.navigate("Login");
             } else {
-              navigation.navigate('BARTER');
+              navigation.navigate("BARTER");
             }
-        },
-  })}
-
+          },
+        })}
       />
       <Tab.Screen
         name="MY ACCOUNT"
         component={ProfileScreen}
-         options={
-          ({ route }) => ({
-            tabBarStyle: getTabBarStyle(route),
-            headerShown: false
-          }
-          )
-        }
-
+        options={({ route }) => ({
+          tabBarStyle: getTabBarStyle(route),
+          headerShown: false,
+        })}
       />
     </Tab.Navigator>
   ) : (
@@ -186,7 +182,7 @@ const MainApp = () => {
   );
 };
 
-const Router = () => {
+const Router = (route) => {
   return (
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen
@@ -213,30 +209,42 @@ const Router = () => {
         options={{ headerShown: false }}
       />
 
-  
       <Stack.Screen
-      name="Login"
-      component={Login}
-      options={{
-        headerBackTitleVisible: false,
-        title: "",
-        headerTintColor: COLORS.PRIMARY,
-        headerShown: false,
-      }}
-    /> 
-    
-    <Stack.Screen
-      name="PostItemRouter"
-      component={PostItemRouter}
-      options={{ headerShown: false }}
-    />
+        name="Login"
+        component={Login}
+        options={{
+          headerBackTitleVisible: false,
+          title: "",
+          headerTintColor: COLORS.PRIMARY,
+          headerShown: false,
+        }}
+      />
 
-    <Stack.Screen
-      name="BarterRouter"
-      component={BarterRouter}
-      options={{ headerShown: false }}
-    />
+      <Stack.Screen
+        name="PostItemRouter"
+        component={PostItemRouter}
+        options={{ headerShown: false }}
+      />
 
+      <Stack.Screen
+        name="BarterRouter"
+        component={BarterRouter}
+        options={{ headerShown: false }}
+      />
+
+      {/* <Stack.Screen
+      name="MyChatRoom"
+      component={ChatRoomScreen}
+      options={{ headerShown: false }}
+    /> */}
+
+      <Stack.Screen
+        name="MyChatRoom"
+        component={ChatRoomScreen}
+        options={({ route }) => ({
+          title: '',
+        })}
+      />
     </Stack.Navigator>
   );
 };

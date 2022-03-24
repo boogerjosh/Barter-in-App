@@ -27,28 +27,28 @@ Notifications.setNotificationHandler({
 
 });
 
-
-socket = io("https://51a8-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io");
-const ChatRoomScreen = (routes) => {
+socket = io("http://cc11-110-138-86-180.ngrok.io");
+const ChatRoomScreen = ({route}) => {
   // COBA
+  console.log(route.params.userName, '<<')
   const notificationListener = useRef();
   // ENDCOBA
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
   const [id, setId] = useState();
   const [photoUrl, setPhotoUrl] = useState();
-  const [receiverId, setReceiverId] = useState(10000);
+  const [receiverId, setReceiverId] = useState();
   const [displayMessage, setDisplayMessage] = useState([]);
 
   useEffect(async () => {
-    console.log(routes.route.params.itemUserId, '<<<<<<<<<<<<<<<<<<<<<')
+    console.log(route.params.itemUserId, '<<<<<<<<<<<<<<<<<<<<<')
     socket.emit("firstConnect");
     socket.on("getMessage", (message) => {
       setMessages(message);
     });
     setUsername(await AsyncStorage.getItem("username"));
     setId(Number(await AsyncStorage.getItem("id")));
-    setReceiverId(Number(routes.route.params.itemUserId));
+    setReceiverId(Number(route.params.itemUserId));
     setPhotoUrl(await AsyncStorage.getItem("photoUrl"));
   }, []);
 
@@ -125,6 +125,7 @@ const ChatRoomScreen = (routes) => {
           name: username,
           avatar: photoUrl,
           receiverId: receiverId,
+          recieverName: route.params.userName
         }}
         renderBubble={renderBubble}
         alwaysShowSend
