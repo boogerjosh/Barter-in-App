@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { GiftedChat, Bubble, Send } from "react-native-gifted-chat";
 
@@ -6,7 +5,6 @@ import {
   StyleSheet,
   View,
   Dimensions,
-
   Platform,
   SafeAreaView,
 } from "react-native";
@@ -24,15 +22,11 @@ Notifications.setNotificationHandler({
     shouldPlaySound: false,
     shouldSetBadge: false,
   }),
-
 });
 
 socket = io("http://cc11-110-138-86-180.ngrok.io");
-const ChatRoomScreen = ({route}) => {
-  // COBA
-  console.log(route.params.userName, '<<')
+const ChatRoomScreen = ({ route }) => {
   const notificationListener = useRef();
-  // ENDCOBA
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
   const [id, setId] = useState();
@@ -41,7 +35,6 @@ const ChatRoomScreen = ({route}) => {
   const [displayMessage, setDisplayMessage] = useState([]);
 
   useEffect(async () => {
-    console.log(route.params.itemUserId, '<<<<<<<<<<<<<<<<<<<<<')
     socket.emit("firstConnect");
     socket.on("getMessage", (message) => {
       setMessages(message);
@@ -125,7 +118,7 @@ const ChatRoomScreen = ({route}) => {
           name: username,
           avatar: photoUrl,
           receiverId: receiverId,
-          recieverName: route.params.userName
+          recieverName: route.params.userName,
         }}
         renderBubble={renderBubble}
         alwaysShowSend
@@ -133,16 +126,13 @@ const ChatRoomScreen = ({route}) => {
         scrollToBottom
         scrollToBottomComponent={scrollToBottomComponent}
       />
-
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   viewContainer: {
-
     flex: 1,
-
   },
 });
 

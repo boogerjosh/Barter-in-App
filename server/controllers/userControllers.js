@@ -15,7 +15,6 @@ class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
-      // console.log(req.body, 'hii dr graphql')
       const user = await User.findOrCreate({
         where: {
           email: payload.email,

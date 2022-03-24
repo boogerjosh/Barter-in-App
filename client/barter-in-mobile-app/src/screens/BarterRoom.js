@@ -52,19 +52,6 @@ const BarterRoomScreen = () => {
   if (data) {
     roomBarters = data?.getRoomBarter;
   }
-  console.log(roomBarters, "/..");
-
-  // const [roomBarters, setRoomBarters] = useState([]);
-  // const getRoomBarters = async () => {
-  //   try {
-  //     const data = await axios.get(
-  //       "https://af93-110-138-93-44.ngrok.io/myRoomBarters"
-  //     );
-  //     setRoomBarters(data.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   useFocusEffect(
     React.useCallback(() => {

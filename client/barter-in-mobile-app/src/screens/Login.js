@@ -47,12 +47,12 @@ async function registerForPushNotificationsAsync() {
 
 const Login = () => {
   const [token, setToken] = useState("");
-  const [LoginGoogle, { data, loading, error }] = useMutation(POST_GOOGLE_LOGIN);
+  const [LoginGoogle, { data, loading, error }] =
+    useMutation(POST_GOOGLE_LOGIN);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((data) => {
-      setToken(data)
-      console.log(data, 'data')
+      setToken(data);
     });
   }, []);
 
@@ -63,14 +63,12 @@ const Login = () => {
       androidClientId: `844458367499-c1pqe2nh4on96u7go5oc5r0bum5c05dv.apps.googleusercontent.com`,
       scopes: ["profile", "email"],
     };
-    let user = {}
+    let user = {};
     Google.logInAsync(config)
       .then((result) => {
         user = result.user;
-        console.log(token, '----')
-        let token1 = token
+        let token1 = token;
         return LoginGoogle({ variables: { newUser: user, newToken: token1 } });
-        
       })
       .then((data) => {
         AsyncStorage.setItem("id", data.data.loginGoogle.id);
@@ -81,7 +79,7 @@ const Login = () => {
           "access_token",
           data.data.loginGoogle.access_token
         );
-       })
+      })
       .then((result) => {
         navigation.navigate("Profile", {
           dataUser: user,
@@ -89,7 +87,6 @@ const Login = () => {
       })
       .catch((err) => {
         console.log(err);
-        console.log("An error occurred. Check your network and try again");
       });
   };
 

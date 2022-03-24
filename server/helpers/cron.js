@@ -5,7 +5,6 @@ function deleteItem(id) {
   let d = new Date();
   d.setMilliseconds(d.getMilliseconds() + 1000 * 3600);
 
-  // console.log("Before job instantiation");
   const job = new CronJob(
     d,
     () => {
@@ -17,6 +16,5 @@ function deleteItem(id) {
   );
   return job.start();
 }
-// console.log("After job instantiation");
 
 module.exports = deleteItem;
