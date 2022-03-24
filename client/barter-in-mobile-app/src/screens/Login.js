@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,13 +20,11 @@ import COLORS from "../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Google from "expo-google-app-auth";
-import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const windowHeight = Dimensions.get("window").height;
-const { height, width } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
-import { AuthContext } from "../components/context";
 
 import { useMutation } from "@apollo/client";
 import { POST_GOOGLE_LOGIN } from "../../lib/apollo/queries/items";

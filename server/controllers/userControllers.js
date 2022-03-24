@@ -90,63 +90,6 @@ class userControllers {
         })
       );
 
-      // const mappedArray = await Promise.all(
-      //   files.map((file) => {
-      //     let data = uploadFile(file);
-      //     console.log(data, "<<<<<<");
-      //     let tags = [];
-      //     if (data.AITags) {
-      //       data.AITags.forEach((e) => {
-      //         tags.push(e.name);
-      //       });
-      //     }
-      //     let temp = {
-      //       imageUrl: data.url,
-      //       itemId: createItems.id,
-      //       tag: tags.join(", "),
-      //     };
-      //     return temp;
-      //   })
-      // );
-
-      // const mappedArray = Promise.all(
-      //   files.map((file) => {
-      //     return uploadFile(file).then((data) => {
-      //       let tags = [];
-      //       if (data.AITags) {
-      //         data.AITags.forEach((e) => {
-      //           tags.push(e.name);
-      //         });
-      //       }
-      //       let temp = {
-      //         imageUrl: data.url,
-      //         itemId: createItems.id,
-      //         tag: tags.join(", "),
-      //       };
-      //       return temp;
-      //     });
-      //   })
-      // )
-
-      // let mappedArray = [];
-      // for (const file of files) {
-      //   let data = await uploadFile(file);
-      //   let tags = [];
-      //   if (data.AITags) {
-      //     data.AITags.forEach((e) => {
-      //       tags.push(e.name);
-      //     });
-      //   }
-      //   let temp = {
-      //     imageUrl: data.url,
-      //     itemId: createItem.id,
-      //     tag: tags.join(", "),
-      //   };
-      //   console.log(data, ">>>>>");
-      //   mappedArray.push(temp);
-      // }
-      // console.log(mappedArray);
-
       await Image.bulkCreate(mappedArray, {
         returning: true,
         transaction: t,
@@ -332,8 +275,9 @@ class userControllers {
 
   static async getMyAds(req, res, next) {
     try {
+      console.log(req.userLogin.id, '=====')
       let items = await Item.findAll({
-        Where: {
+        where: {
           [Op.and]: [
             {
               userId: req.userLogin.id,

@@ -29,27 +29,7 @@ const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 
 const InputItem = ({ route }) => {
-  //graphql
-  const [postItem, { error, data }] = useMutation(POST_ITEM, {
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-    variables: {
-      // newItem: {
-      //   title: null,
-      //   description: null,
-      //   brand: null,
-      //   yearOfPurchase: null,
-      //   category: null,
-      //   images: [
-      //     {
-      //       imageUrl: null,
-      //       tag: null,
-      //     },
-      //   ],
-      // },
-      // access_token: "",
-    },
-  });
+  const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM)
 
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
@@ -60,7 +40,7 @@ const InputItem = ({ route }) => {
     category: route.params.id,
   });
   const [errors, setErrors] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
+  const [loaded, setLoading] = React.useState(false);
   const [adsImage, setProfileImage] = useState({
     image1: "",
     image2: "",
@@ -214,7 +194,7 @@ const InputItem = ({ route }) => {
       try {
         const token = await AsyncStorage.getItem("access_token");
         const responseImage = await fetch(
-          `https://245f-2001-448a-1061-10b7-855e-111e-1bdf-867d.ngrok.io/users/myImage`,
+          `https://51a8-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io/users/myImage`,
           {
             method: "POST",
             headers: {
@@ -231,31 +211,21 @@ const InputItem = ({ route }) => {
         } else if (responseImage.ok) {
           let itemImage = await responseImage.json();
           console.log(itemImage, "====");
-          const responseItem = await fetch(
-            `https://245f-2001-448a-1061-10b7-855e-111e-1bdf-867d.ngrok.io/users/addItem`,
-            {
-              method: "POST",
-              headers: {
-                Accept: "application/json, text/plain, */*",
-                "Content-Type": "application/json",
-                access_token: token,
-              },
-              body: JSON.stringify({
-                title: inputs.title,
-                category: inputs.category,
-                description: inputs.description,
-                brand: inputs.brand,
-                yearOfPurchase: inputs.yearOfPurchase,
-                imageFields: itemImage,
-              }),
-            }
-          );
-          if (!responseItem.ok) {
-            const message = `An error has occured: ${responseItem.status}`;
-            console.log(responseItem.ok, "item Ok");
-            throw new Error(message);
+          let fieldsInput = {
+             title: inputs.title,
+             category: inputs.category,
+             description: inputs.description,
+             brand: inputs.brand,
+             yearOfPurchase: inputs.yearOfPurchase,
+             imageFields: itemImage,
           }
-          console.log("?????");
+          const data = await fieldsInput({ variables: { newItem: fieldsInput, access_token: token } });
+          console.log(data, '====')
+          // if (!responseItem.ok) {
+          //   const message = `An error has occured: ${responseItem.status}`;
+          //   console.log(responseItem.ok, "item Ok");
+          //   throw new Error(message);
+          // }
           setLoading(false);
           setProfileImage({
             image1: "",
@@ -307,7 +277,7 @@ const InputItem = ({ route }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
-      <Loader visible={loading} />
+      <Loader visible={loaded} />
       <ScrollView
         contentContainerStyle={{ paddingTop: 25, paddingHorizontal: 20 }}
       >

@@ -81,9 +81,7 @@ const ProfileScreen = ({ route }) => {
         <View style={{ flexDirection: "row", marginTop: 15 }}>
           {auth ? (
             <Avatar.Image
-               source={{
-            uri: `${photo}`,
-          }}
+               source={photo ? {uri: photo } : null}
               size={80}
             />
           ) : (

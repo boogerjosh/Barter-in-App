@@ -47,9 +47,7 @@ const DetailScreen = ({ route }) => {
         }}
       >
         <Image
-          source={{
-            uri: `${item?.imageUrl}`,
-          }}
+          source={item?.imageUrl ? {uri: item?.imageUrl } : null}
           style={{
             height: 250,
             width: width * 0.8,
