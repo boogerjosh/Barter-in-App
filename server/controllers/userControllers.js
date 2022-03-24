@@ -23,7 +23,7 @@ class userControllers {
         defaults: {
           password: "rahasia" + Math.random() * 10,
           role: "Customer",
-          username: payload.name,
+          username: payload.givenName,
           address: "-",
           photoUrl: payload.photoUrl,
         },
