@@ -37,8 +37,8 @@ const numColumns = 3;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [username, setUsername] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [username, setUsername] = useState("");
+  const [photo, setPhoto] = useState("");
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
   const [id, setId] = useState("");
@@ -75,19 +75,6 @@ const HomeScreen = () => {
     }
   }
 
-  // if (loading) {
-  //   return <View></View>;
-  // }
-  // console.log(items, ">>>>>");
-  // console.log(loading, ">>>>>");
-  // const getItems = async () => {
-  //   try {
-  //     const data = await axios.get("https://8dea-110-138-93-44.ngrok.io/items");
-  //     setItems(data.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   useFocusEffect(
     React.useCallback(() => {
       getToken();
@@ -107,23 +94,31 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-            { auth ?  <View>
-              <Text style={styles.nameText}>{username}</Text>
-            </View> :  <View>
-              <Text style={styles.nameText}>Login</Text>
-            </View> }
+            {auth ? (
+              <View>
+                <Text style={styles.nameText}>{username}</Text>
+              </View>
+            ) : (
+              <View>
+                <Text style={styles.nameText}>Login</Text>
+              </View>
+            )}
             <View style={styles.iconWrapper}>
               <FontAwesome5 name="award" size={24} color="gold" />
             </View>
           </View>
           <View>
-            { auth ?  <Image
-              source={photo ? {uri: photo } : null}
-              style={styles.headerImage}
-            /> : <Image
-              source={require("../../assets/profileacc.png")}
-              style={styles.headerImage}
-            /> }
+            {auth ? (
+              <Image
+                source={photo ? { uri: photo } : null}
+                style={styles.headerImage}
+              />
+            ) : (
+              <Image
+                source={require("../../assets/profileacc.png")}
+                style={styles.headerImage}
+              />
+            )}
           </View>
         </View>
       </View>

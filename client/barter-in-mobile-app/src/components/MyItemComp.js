@@ -30,17 +30,12 @@ const setWidth = (w) => (width / 100) * w;
 const setHeight = (h) => (height / 200) * h;
 
 const MyItemComp = ({ item, itemId, userId }) => {
-  // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
 
-  //graphql mutation
   const [postRoomBarter, { error, reset }] = useMutation(POST_ROOM_BARTER, {
-    refetchQueries: [
-      GET_ROOM_BARTER, // DocumentNode object parsed with gql
-      "GetRoomBarter", // Query name
-    ],
+    refetchQueries: [GET_ROOM_BARTER, "GetRoomBarter"],
   });
 
   const addRoomBarter = () => {

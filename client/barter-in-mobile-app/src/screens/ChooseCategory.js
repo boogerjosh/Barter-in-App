@@ -23,7 +23,6 @@ const ChooseCategory = ({ navigation }) => {
   async function getToken() {
     try {
       let token = await AsyncStorage.getItem("access_token");
-      console.log(token, ">>>>>");
       if (token) {
         setAuth(true);
       } else {

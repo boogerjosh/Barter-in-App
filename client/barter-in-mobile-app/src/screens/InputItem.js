@@ -111,7 +111,7 @@ const InputItem = ({ route }) => {
       handleError("Title is required", "title");
       isValid = false;
     } else if (inputs.title.length < 15) {
-      handleError('Min title length of 15', 'title');
+      handleError("Min title length of 15", "title");
       isValid = false;
     }
 
@@ -119,9 +119,9 @@ const InputItem = ({ route }) => {
       handleError("Description is required", "description");
       isValid = false;
     } else if (inputs.description.length < 20) {
-      handleError('Min description length of 20', 'description');
+      handleError("Min description length of 20", "description");
       isValid = false;
-    } 
+    }
 
     if (!inputs.brand) {
       handleError("Brand is required", "brand");
@@ -153,10 +153,7 @@ const InputItem = ({ route }) => {
   };
 
   const [fieldsInput, { data, loading, error }] = useMutation(POST_ITEM, {
-    refetchQueries: [
-      GET_MY_ADS,
-      "GetMyAds"
-    ],
+    refetchQueries: [GET_MY_ADS, "GetMyAds"],
   });
 
   const addAds = () => {
@@ -206,11 +203,9 @@ const InputItem = ({ route }) => {
         );
         if (!responseImage.ok) {
           const message = `An error has occured: ${responseImage.status}`;
-          console.log(responseImage.ok);
           throw new Error(message);
         } else if (responseImage.ok) {
           let itemImage = await responseImage.json();
-          console.log(itemImage, "====");
           let fieldsInputs = {
             title: inputs.title,
             category: inputs.category,
@@ -219,7 +214,6 @@ const InputItem = ({ route }) => {
             yearOfPurchase: inputs.yearOfPurchase,
             imageFields: itemImage,
           };
-          console.log(fieldsInputs, "hihihihi====");
           fieldsInput({
             variables: { newItem: fieldsInputs, accessToken: token },
           });

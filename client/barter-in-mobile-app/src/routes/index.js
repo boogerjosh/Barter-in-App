@@ -52,11 +52,10 @@ const MainApp = () => {
 
   useEffect(() => {
     Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
       navigation.push(response.notification.request.content.data.navigate, {
         itemUserId: response.notification.request.content.data.navigateData,
       });
-      Router(response.notification.request.content.data.username)
+      Router(response.notification.request.content.data.username);
     });
   }, []);
 
@@ -126,7 +125,6 @@ const MainApp = () => {
             if (!auth) {
               navigation.navigate("Login");
             } else if (auth) {
-              console.log(auth, "my adds");
               navigation.navigate("MY ADS");
             }
           },
@@ -242,7 +240,7 @@ const Router = (route) => {
         name="MyChatRoom"
         component={ChatRoomScreen}
         options={({ route }) => ({
-          title: '',
+          title: "",
         })}
       />
     </Stack.Navigator>
