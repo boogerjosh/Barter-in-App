@@ -122,6 +122,7 @@ const InputItem = ({ route }) => {
       handleError("Min description length of 20", "description");
       isValid = false;
     }
+    
 
     if (!inputs.brand) {
       handleError("Brand is required", "brand");
@@ -191,7 +192,7 @@ const InputItem = ({ route }) => {
       try {
         const token = await AsyncStorage.getItem("access_token");
         const responseImage = await fetch(
-          `https://server-barter-in.herokuapp.com/users/myImage`,
+          `https://edd6-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io/users/myImage`,
           {
             method: "POST",
             headers: {
@@ -201,6 +202,7 @@ const InputItem = ({ route }) => {
             body: formData,
           }
         );
+        console.log(responseImage, 'imagesss')
         if (!responseImage.ok) {
           const message = `An error has occured: ${responseImage.status}`;
           throw new Error(message);

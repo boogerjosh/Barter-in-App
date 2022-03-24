@@ -18,7 +18,7 @@ const Categories = ({ item }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.push("ListItemHome", { item })}
+      onPress={() => navigation.push("ListItemHome", { item, categoryName: item.title })}
     >
       <View
         style={{

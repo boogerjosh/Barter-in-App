@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 const Redis = require("ioredis");
-const url = "https://server-barter-in.herokuapp.com/users";
+const url = "http://localhost:3001/users";
 const redis = new Redis({
   port: 10199,
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
@@ -205,8 +205,8 @@ const resolvers = {
           imageFields,
         } = newItem;
         let { data } = await axios.post(
-          `${url}/additem`,
-          { title, description, category, yearOfPurchase, brand, imageFields },
+          `${url}/addItem`,
+           { title, description, category, yearOfPurchase, brand, imageFields },
           {
             headers: {
               access_token: access_token,
@@ -228,9 +228,7 @@ const resolvers = {
           photoUrl: newUser.photoUrl,
           token: newToken,
         };
-
         const { data } = await axios.post(`${url}/googleLogin`, input);
-
         return data;
       } catch (error) {
         console.log(error);

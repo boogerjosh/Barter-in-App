@@ -1,13 +1,13 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 const Redis = require("ioredis");
-const url = "http://localhost:3001/admins";
+const url = "https://server-barter-in.herokuapp.com/admins";
 const redis = new Redis({
   port: 10199,
   host: "redis-10199.c98.us-east-1-4.ec2.cloud.redislabs.com",
   password: "8e7Ny2t28Zl9oYbsDXCpjwAmhFzuguxq",
 });
-
+// deploy
 const typeDefs = gql`
   type Item {
     id: ID

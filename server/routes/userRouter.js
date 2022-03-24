@@ -15,7 +15,6 @@ userRouter.get("/items-barters", userControllers.dataForBarter);
 
 userRouter.post(
   "/addItem",
-  multerImage().array("image"),
   userControllers.addItem
 );
 
