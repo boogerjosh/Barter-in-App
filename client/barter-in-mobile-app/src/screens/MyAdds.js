@@ -58,26 +58,7 @@ const MyAddsScreen = () => {
   if (data) {
     items = data?.getMyAds;
   }
-  // console.log(data);
-  // console.log(data.getMyAds, " .>>>>");
-  // console.log(error, "dskoad");
-  // console.log(items, "ji<F>EO");
 
-  // const getItems = async () => {
-  //   try {
-  //     const data = await axios.get(
-  //       "https://7cd3-110-138-93-44.ngrok.io/items",
-  //       {
-  //         headers: {
-  //           access_token: await AsyncStorage.getItem("access_token"),
-  //         },
-  //       }
-  //     );
-  //     setItems(data.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   useFocusEffect(
     React.useCallback(() => {
       getToken();

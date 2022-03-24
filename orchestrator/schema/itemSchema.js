@@ -127,15 +127,15 @@ const resolvers = {
     getItems: async (_, args) => {
       try {
         const { search, id } = args;
+        console.log(args, ">>>>>>.");
+        console.log(id, ">>>>>>");
         const { filterByTitle, filterByCategory } = search;
 
         const { data } = await axios.get(
           `${url}/items?filterByTitle=${filterByTitle}&filterByCategory=${filterByCategory}&id=${id}`
         );
-        
-        console.log(data)
+
         return data;
-   
       } catch (error) {
         console.log(error);
       }

@@ -39,7 +39,7 @@ const MyItemComp = ({ item, itemId, userId }) => {
   const [postRoomBarter, { error, reset }] = useMutation(POST_ROOM_BARTER, {
     refetchQueries: [
       GET_ROOM_BARTER, // DocumentNode object parsed with gql
-      "getRoomBarter", // Query name
+      "GetRoomBarter", // Query name
     ],
   });
 
@@ -63,8 +63,6 @@ const MyItemComp = ({ item, itemId, userId }) => {
       if (newToken) {
         setToken(newToken);
         setAuth(true);
-      } else {
-        navigation.navigate("Login");
       }
     } catch (error) {
       console.log(error);
@@ -97,8 +95,8 @@ const MyItemComp = ({ item, itemId, userId }) => {
           </View>
           <View style={styles.rightContainer}>
             <Text style={styles.itemTitle} numberOfLines={3}>
-              {item?.title.length >= 14
-                ? item?.title.slice(0, 13) + "..."
+              {item?.title.length >= 15
+                ? item?.title.slice(0, 14) + "..."
                 : item?.title}
             </Text>
             <Text style={styles.itemSubTitle}>{item?.brand}</Text>

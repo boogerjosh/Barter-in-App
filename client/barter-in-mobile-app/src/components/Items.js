@@ -31,7 +31,7 @@ const Items = ({ item }) => {
         <ImageBackground
           style={styles.imageContainer}
           imageStyle={{ borderRadius: 12 }}
-          source={{ uri: item?.Images[0].imageUrl }}
+          source={{ uri: item?.Images[0]?.imageUrl }}
         >
           {/* <View style={{ ...styles.container }}>
           <Image

@@ -274,7 +274,7 @@ class userControllers {
           ],
         },
         limit: 10,
-        order: [['updatedAt', 'DESC']],
+        order: [["updatedAt", "DESC"]],
         include: [Image],
       });
       res.status(200).json(items);
@@ -398,6 +398,7 @@ class userControllers {
             include: [Image],
           },
         ],
+        order: [["createdAt", "DESC"]],
       });
       res.status(200).json(response1);
     } catch (error) {

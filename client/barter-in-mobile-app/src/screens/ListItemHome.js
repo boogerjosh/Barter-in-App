@@ -49,15 +49,15 @@ const ListItemHomeScreen = ({ route }) => {
   if (data) {
     items = data?.getItems;
   }
-  // console.log(data);
-  // console.log(items, "<><><><><");
 
   async function getToken() {
     try {
       let newToken = await AsyncStorage.getItem("access_token");
+      let newId = await AsyncStorage.getItem("id");
       if (newToken) {
         setToken(newToken);
         setAuth(true);
+        setId(newId);
       } else {
         navigation.navigate("Login");
       }
