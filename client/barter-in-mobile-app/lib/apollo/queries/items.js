@@ -196,8 +196,8 @@ export const PATCH_ROOM_BARTER = gql`
 `;
 
 export const POST_GOOGLE_LOGIN = gql`
-  mutation LoginGoogle($newUser: inputUser) {
-    loginGoogle(newUser: $newUser) {
+  mutation LoginGoogle($newUser: inputUser, $newToken: String) {
+    loginGoogle(newUser: $newUser, newToken: $newToken ) {
       id
       access_token
       username

@@ -37,6 +37,8 @@ const numColumns = 3;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [username, setUsername] = useState('');
+  const [photo, setPhoto] = useState('');
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
   const [id, setId] = useState("");
@@ -53,15 +55,20 @@ const HomeScreen = () => {
   if (data) {
     items = data?.getItemsHome;
   }
-  // console.log(items, ">?>?>?");
   async function getToken() {
     try {
       let newToken = await AsyncStorage.getItem("access_token");
       let newId = await AsyncStorage.getItem("id");
+      let username = await AsyncStorage.getItem("username");
+      let photo = await AsyncStorage.getItem("photoUrl");
       if (newToken) {
         setId(newId);
+        setPhoto(photo);
+        setUsername(username);
         setToken(newToken);
         setAuth(true);
+      } else {
+        setAuth(false);
       }
     } catch (error) {
       console.log(error);
@@ -100,18 +107,23 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <View style={styles.headerDetails}>
-            <View>
-              <Text style={styles.nameText}>Your Name</Text>
-            </View>
+            { auth ?  <View>
+              <Text style={styles.nameText}>{username}</Text>
+            </View> :  <View>
+              <Text style={styles.nameText}>Login</Text>
+            </View> }
             <View style={styles.iconWrapper}>
               <FontAwesome5 name="award" size={24} color="gold" />
             </View>
           </View>
           <View>
-            <Image
-              source={require("../../assets/person.jpg")}
+            { auth ?  <Image
+              source={photo ? {uri: photo } : null}
               style={styles.headerImage}
-            />
+            /> : <Image
+              source={require("../../assets/profileacc.png")}
+              style={styles.headerImage}
+            /> }
           </View>
         </View>
       </View>

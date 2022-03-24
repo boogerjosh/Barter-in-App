@@ -15,6 +15,7 @@ class userControllers {
   static async loginGoogle(req, res, next) {
     try {
       const payload = req.body;
+      console.log(req.body, 'hii dr graphql')
       const user = await User.findOrCreate({
         where: {
           email: payload.email,
@@ -33,6 +34,7 @@ class userControllers {
       });
 
       const newToken = { id: user[0].dataValues.id, token: req.body.token };
+
       await redis.set(
         `tokenForId${user[0].dataValues.id}`,
         JSON.stringify(newToken)

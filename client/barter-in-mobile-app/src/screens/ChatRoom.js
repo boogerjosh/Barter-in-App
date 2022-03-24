@@ -50,9 +50,6 @@ const ChatRoomScreen = (routes) => {
     setId(Number(await AsyncStorage.getItem("id")));
     setReceiverId(Number(routes.route.params.itemUserId));
     setPhotoUrl(await AsyncStorage.getItem("photoUrl"));
-    if (Number(await AsyncStorage.getItem("id")) === 2) {
-      setReceiverId(8);
-    } else setReceiverId(2);
   }, []);
 
   useEffect(() => {

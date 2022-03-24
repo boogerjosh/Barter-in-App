@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Title is required",
           },
-          len: {
-            args: [15],
-            msg: "Length minimum must be 15 characters",
-          },
+          // len: {
+          //   args: [15],
+          //   msg: "Length minimum must be 15 characters",
+          // },
         },
       },
       category: {

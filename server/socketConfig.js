@@ -12,7 +12,8 @@ io.on("connection", (socket) => {
   console.log(socket.id);
   socket.on("chatMessage", async (message) => {
     messageArray.unshift(message);
-    const tokenReceiver=JSON.parse(await redis.get(`tokenForId${message.user.receiverId}`))
+    const tokenReceiver = JSON.parse(await redis.get(`tokenForId${message.user.receiverId}`))
+    console.log(tokenReceiver, '----')
     sendPushNotification(tokenReceiver.token, 'Message', message.text, 'MyChatRoom', message.user._id)
     socket.broadcast.emit("getMessage", messageArray);
   });  

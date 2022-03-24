@@ -24,6 +24,7 @@ const HomeRouter = () => {
     try {
       let token = await AsyncStorage.getItem("access_token");
       if (token) {
+        console.log(token, 'hii room chat')
         setAuth(true);
       } else {
         setAuth(false);
@@ -42,13 +43,13 @@ const HomeRouter = () => {
   const navigation = useNavigation();
   return (
     <Stack.Navigator
-      screenListeners={({ route, navigation }) => ({
-        state: (e) => {
-          if ((!auth && route.name === 'MyChatRoom') || (!auth && route.name === 'MyItemBarter')) {
-            navigation.navigate('Login')
-          } 
-        },
-      })}
+      // screenListeners={({ route, navigation }) => ({
+      //   state: (e) => {
+      //     if ((!auth && route.name === 'MyChatRoom') || (!auth && route.name === 'MyItemBarter')) {
+      //       navigation.navigate('Login')
+      //     } 
+      //   },
+      // })}
     >
         <Stack.Screen
           name="HomeRouter"
