@@ -2,7 +2,7 @@ const { comparePassword } = require("../helpers/bcrypt");
 const deleteItem = require("../helpers/cron");
 const { signToken } = require("../helpers/jwt");
 const { User, Item, Image } = require("../models");
-
+// push
 class adminControllers {
   static async register(req, res, next) {
     const { username, email, password, address } = req.body;
