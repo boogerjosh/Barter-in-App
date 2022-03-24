@@ -77,7 +77,7 @@ const typeDefs = gql`
     brand: String
     yearOfPurchase: String
     category: String
-    images: [image]
+    imageFields: [image]
   }
 
   input inputUser {
@@ -200,17 +200,19 @@ const resolvers = {
     postItem: async (_, args) => {
       try {
         const { access_token, newItem } = args;
-        const { title, description, category, yearOfPublish, brand, images } =
+        console.log(args, 'heiheihhie')
+        const { title, description, category, yearOfPurchase, brand, imageFields } =
           newItem;
         let { data } = await axios.post(
           `${url}/additem`,
           { title, description, category, yearOfPurchase, brand, imageFields },
           {
             headers: {
-              access_token,
+              access_token: access_token,
             },
           }
         );
+        console.log(data, '====')
         return data;
       } catch (error) {
         console.log(error);

@@ -54,10 +54,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "Description is required",
           },
-          len: {
-            args: [20],
-            msg: "Description minimum length must be 20 characters",
-          },
+          // len: {
+          //   args: [20],
+          //   msg: "Description minimum length must be 20 characters",
+          // },
         },
       },
       brand: {

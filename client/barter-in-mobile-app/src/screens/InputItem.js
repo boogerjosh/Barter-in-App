@@ -23,6 +23,7 @@ import Button from "../constants/Button";
 import Loader from "../constants/Loader";
 
 import { useMutation } from "@apollo/client";
+
 import { POST_ITEM, GET_MY_ADS } from "../../lib/apollo/queries/items";
 
 const { width } = Dimensions.get("screen");
@@ -159,10 +160,16 @@ const InputItem = ({ route }) => {
     }
   };
 
+  const [fieldsInput, {data, loading, error}] = useMutation(POST_ITEM, {
+    refetchQueries: [
+      GET_MY_ADS, // DocumentNode object parsed with gql
+      "getMyAds", // Query name
+    ],
+  })
+
   const addAds = () => {
-    console.log("masuk");
     setLoading(true);
-    setTimeout(async () => {
+    setTimeout(async () => {      
       const formData = new FormData();
       let filename3 = adsImage.image3.split("/").pop();
       let match3 = /\.(\w+)$/.exec(filename3);
@@ -212,7 +219,7 @@ const InputItem = ({ route }) => {
         } else if (responseImage.ok) {
           let itemImage = await responseImage.json();
           console.log(itemImage, "====");
-          let fieldsInput = {
+          let fieldsInputs = {
              title: inputs.title,
              category: inputs.category,
              description: inputs.description,
@@ -220,13 +227,8 @@ const InputItem = ({ route }) => {
              yearOfPurchase: inputs.yearOfPurchase,
              imageFields: itemImage,
           }
-          const data = await fieldsInput({ variables: { newItem: fieldsInput, access_token: token } });
-          console.log(data, '====')
-          // if (!responseItem.ok) {
-          //   const message = `An error has occured: ${responseItem.status}`;
-          //   console.log(responseItem.ok, "item Ok");
-          //   throw new Error(message);
-          // }
+          console.log(fieldsInputs, 'hihihihi====')
+          fieldsInput({ variables: { newItem: fieldsInputs, accessToken: token } });
           setLoading(false);
           setProfileImage({
             image1: "",
@@ -240,27 +242,8 @@ const InputItem = ({ route }) => {
             yearOfPurchase: "",
             category: "",
           });
-          navigation.navigate("MyAdds");
+          navigation.navigate("MY ADS");
         }
-
-        let item = response.json();
-        console.log(item);
-        setLoading(false);
-        setProfileImage((prevState) => ({
-          ...prevState,
-          image1: "",
-          image2: "",
-          image3: "",
-        }));
-        setInputs((prevState) => ({
-          ...prevState,
-          title: "",
-          description: "",
-          brand: "",
-          yearOfPurchase: "",
-          category: "",
-        }));
-        navigation.navigate("MyAdds");
       } catch (error) {
         console.log(error);
         Alert.alert("Error", "Something went wrong");
@@ -278,7 +261,7 @@ const InputItem = ({ route }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
-      <Loader visible={loaded} />
+      <Loader visible={loaded} style={{ marginBottom: 50}}/>
       <ScrollView
         contentContainerStyle={{ paddingTop: 25, paddingHorizontal: 20 }}
       >
