@@ -16,6 +16,7 @@ const { height, width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
 import ItemSpace from "../components/ItemSpace";
 import axios from "axios";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -25,11 +26,27 @@ import { GET_ROOM_BARTER } from "../../lib/apollo/queries/items";
 const BarterRoomScreen = () => {
   const navigation = useNavigation();
   //graphql
+  const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState("");
+  async function getToken() {
+    try {
+      let newToken = await AsyncStorage.getItem("access_token");
+      if (newToken) {
+        setToken(newToken);
+        setAuth(true);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const { loading, error, data } = useQuery(GET_ROOM_BARTER, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
     variables: {
-      access_token: "",
+      accessToken: token,
     },
   });
 
@@ -37,7 +54,7 @@ const BarterRoomScreen = () => {
   if (data) {
     roomBarters = data?.getRoomBarter;
   }
-  console.log(loading, "/..");
+  console.log(roomBarters, "/..");
 
   // const [roomBarters, setRoomBarters] = useState([]);
   // const getRoomBarters = async () => {
@@ -51,26 +68,11 @@ const BarterRoomScreen = () => {
   //   }
   // };
 
-  const [auth, setAuth] = useState(false);
-  async function getToken() {
-    try {
-      // await AsyncStorage.removeItem("access_token");
-      let token = await AsyncStorage.getItem("access_token");
-      console.log(token, ">>>>>");
-      if (token) {
-        setAuth(true);
-      } else {
-        navigation.navigate("MY ACCOUNT");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useFocusEffect(() => {
-    getToken();
-    // getRoomBarters();
-  });
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,10 @@ import FONTS from "../constants/Fonts";
 import COLORS from "../constants/Colors";
 
 import { useMutation } from "@apollo/client";
-import { DELETE_ITEM } from "../../lib/apollo/queries/items";
+import { DELETE_ITEM, GET_MY_ADS } from "../../lib/apollo/queries/items";
+
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SPACING = 20;
 const ITEM_SIZE = 30;
@@ -23,22 +26,44 @@ const setWidth = (w) => (width / 100) * w;
 const setHeight = (h) => (height / 200) * h;
 
 const MyAddsComp = ({ item }) => {
-  // console.log("🚀 ~ file: MyAddsComp.js ~ line 18 ~ MyAddsComp ~ item", item);
-
+  // const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState("");
   //graphql mutation
   const [deleteItem, { error, reset }] = useMutation(DELETE_ITEM, {
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-    variables: {
-      // id: item.id,
-      // access_token: "",
-    },
+    refetchQueries: [
+      GET_MY_ADS, // DocumentNode object parsed with gql
+      "getMyAds", // Query name
+    ],
   });
+  // console.log(item.id);
+  const deleteMyAds = () => {
+    console.log(item.id, ">>>>>>");
+    deleteItem({
+      fetchPolicy: "network-only",
+      nextFetchPolicy: "cache-first",
+      variables: { itemId: item.id, accessToken: token },
+    });
+    navigation.navigate("MY ADS");
+  };
 
-  // let items;
-  // if (data) {
-  //   items = data?.getItemsHome;
-  // }
+  async function getToken() {
+    try {
+      let newToken = await AsyncStorage.getItem("access_token");
+      let newId = await AsyncStorage.getItem("id");
+      if (newToken) {
+        setToken(newToken);
+        // setAuth(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getToken();
+    }, [])
+  );
 
   const navigation = useNavigation();
   const stylingStatus = () => {
@@ -79,7 +104,7 @@ const MyAddsComp = ({ item }) => {
             // marginTop: setHeight(4),
             // marginBottom: setHeight(4),
           }}
-          onPress={() => navigation.push("MyChatRoom")}
+          onPress={deleteMyAds}
         >
           {/* <Text
             style={{
@@ -123,7 +148,9 @@ const MyAddsComp = ({ item }) => {
             </View>
             <View style={styles.rightContainer}>
               <Text style={styles.itemTitle} numberOfLines={3}>
-                {item?.title}
+                {item?.title.length >= 18
+                  ? item?.title.slice(0, 17) + "..."
+                  : item?.title}
               </Text>
               <Text style={styles.itemSubTitle}>{item?.brand}</Text>
               <Text style={styles.itemSubTitle}>

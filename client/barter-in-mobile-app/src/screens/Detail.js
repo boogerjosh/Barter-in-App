@@ -26,7 +26,7 @@ const DetailScreen = ({ route }) => {
   //     itemId: route.params.id
   //   },
   // })
-  console.log(loading, error, data)
+  console.log(route);
   const [readMore, setReadMore] = useState(false);
   const navigation = useNavigation();
   const controllRead = (value) => {
@@ -36,13 +36,21 @@ const DetailScreen = ({ route }) => {
   const { loading, error, data } = useQuery(GET_ITEM, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
+    variables: {
+      itemId: route.params.id,
+    },
   });
 
   let detailItem;
+  let images = [];
   if (data) {
     detailItem = data?.getItem;
+    detailItem?.Images.forEach((el) => {
+      images.push(el.imageUrl);
+    });
   }
 
+  console.log(images, "detailItem");
   // if(loading){
   //   return (<></>)
   // }
@@ -57,7 +65,7 @@ const DetailScreen = ({ route }) => {
       >
         <Image
           source={{
-            uri: `${item}`,
+            uri: `${item?.imageUrl}`,
           }}
           style={{
             height: 250,
@@ -68,6 +76,7 @@ const DetailScreen = ({ route }) => {
     );
   };
 
+  let _carousel;
   return (
     <View style={styles.container}>
       <ScrollView style={{ width: Dimensions.get("window").width }}>
@@ -75,11 +84,7 @@ const DetailScreen = ({ route }) => {
           ref={(c) => {
             _carousel = c;
           }}
-          data={[
-            "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
-            "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
-            "https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/16/4472846/4472846_67ddfc39-170c-4638-bf49-4d31e8184be8_980_980.jpg",
-          ]}
+          data={detailItem?.Images}
           renderItem={renderItem2}
           sliderWidth={width * 1}
           itemWidth={width * 0.8}
@@ -97,7 +102,7 @@ const DetailScreen = ({ route }) => {
               borderColor: "#C0C0C0",
             }}
           >
-            Examplenya ini baju gueu deh
+            {detailItem?.title}
           </Text>
         </View>
         <View
@@ -148,7 +153,7 @@ const DetailScreen = ({ route }) => {
               color: COLORS.LIGHT_GRAY,
             }}
           >
-            Calvin Klein
+            {detailItem?.brand}
           </Text>
         </View>
         <View
@@ -185,7 +190,7 @@ const DetailScreen = ({ route }) => {
               color: COLORS.LIGHT_GRAY,
             }}
           >
-            1990
+            {detailItem?.yearOfPurchase}
           </Text>
         </View>
         <View
@@ -225,16 +230,7 @@ const DetailScreen = ({ route }) => {
                 borderColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              auctor, neque a fringilla semper, neque massa commodo neque, sed
-              varius nulla urna at neque. Vivamus ullamcorper mauris ex, eget
-              consectetur elit ultrices at. Etiam massa massa, pellentesque et
-              risus quis, suscipit scelerisque tortor. Morbi ac tincidunt
-              ligula, non ullamcorper orci. Morbi laoreet turpis sed nisi
-              aliquet, vel efficitur sem faucibus. Cras vestibulum iaculis
-              libero sed blandit. Nulla quis ex maximus, dapibus nunc eu,
-              pulvinar lacus. Phasellus aliquet mattis turpis, vitae faucibus
-              purus sollicitudin ut.
+              {detailItem?.description}
             </Text>
           ) : (
             <Text
@@ -249,16 +245,7 @@ const DetailScreen = ({ route }) => {
               }}
               numberOfLines={3}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              auctor, neque a fringilla semper, neque massa commodo neque, sed
-              varius nulla urna at neque. Vivamus ullamcorper mauris ex, eget
-              consectetur elit ultrices at. Etiam massa massa, pellentesque et
-              risus quis, suscipit scelerisque tortor. Morbi ac tincidunt
-              ligula, non ullamcorper orci. Morbi laoreet turpis sed nisi
-              aliquet, vel efficitur sem faucibus. Cras vestibulum iaculis
-              libero sed blandit. Nulla quis ex maximus, dapibus nunc eu,
-              pulvinar lacus. Phasellus aliquet mattis turpis, vitae faucibus
-              purus sollicitudin ut.
+              {detailItem?.description}
             </Text>
           )}
           {readMore ? (
@@ -349,7 +336,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                Josua
+                {detailItem?.User?.username}
               </Text>
               <Text
                 style={{
@@ -360,7 +347,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                test@gmail.com
+                {detailItem?.User?.email}
               </Text>
             </View>
           </View>
@@ -398,7 +385,7 @@ const DetailScreen = ({ route }) => {
               justifyContent: "center",
               marginTop: 4,
             }}
-            onPress={() => navigation.push("MyItemBarter", {})}
+            onPress={() => navigation.push("MyItemBarter", { detailItem })}
           >
             <Text
               style={{
@@ -422,7 +409,12 @@ const DetailScreen = ({ route }) => {
               marginTop: 20,
               marginBottom: 25,
             }}
-            onPress={() => navigation.push("MyChatRoom", { userName: 'Josua', itemUserId: 8 })}
+            onPress={() =>
+              navigation.push("MyChatRoom", {
+                userName: detailItem?.User?.username,
+                itemUserId: detailItem?.User?.id,
+              })
+            }
           >
             <Text
               style={{

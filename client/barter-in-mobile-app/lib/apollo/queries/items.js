@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
 
 export const GET_ITEMS = gql`
-  query GetItems($search: inputSearch) {
-    getItems(search: $search) {
+  query GetItems($search: inputSearch, $getItemsId: ID) {
+    getItems(search: $search, id: $getItemsId) {
       id
       title
       category
-      yearOfPurchase
       brand
+      yearOfPurchase
       Images {
         id
         imageUrl
@@ -16,9 +16,24 @@ export const GET_ITEMS = gql`
   }
 `;
 
+// export const GET_ITEMS_HOME = gql`
+//   query GetItemsHome {
+//     getItemsHome {
+//       id
+//       title
+//       category
+//       yearOfPurchase
+//       Images {
+//         id
+//         imageUrl
+//       }
+//     }
+//   }
+// `;
+
 export const GET_ITEMS_HOME = gql`
-  query GetItemsHome {
-    getItemsHome {
+  query GetItemsHome($getItemsHomeId: ID) {
+    getItemsHome(id: $getItemsHomeId) {
       id
       title
       category
@@ -86,14 +101,49 @@ export const GET_DATA_FOR_BARTER = gql`
   }
 `;
 
+// export const GET_ROOM_BARTER = gql`
+//   query GetRoomBarter($accessToken: String) {
+//     getRoomBarter(access_token: $accessToken) {
+//       id
+//       user1
+//       user2
+//       item1
+//       item2
+//     }
+//   }
+// `;
 export const GET_ROOM_BARTER = gql`
   query GetRoomBarter($accessToken: String) {
     getRoomBarter(access_token: $accessToken) {
       id
-      user1
-      user2
       item1
       item2
+      Item1 {
+        id
+        title
+        category
+        brand
+        yearOfPurchase
+        Images {
+          id
+          imageUrl
+        }
+      }
+      Item2 {
+        id
+        title
+        category
+        brand
+        yearOfPurchase
+        Images {
+          id
+          imageUrl
+        }
+      }
+      user1
+      user2
+      status1
+      status2
     }
   }
 `;

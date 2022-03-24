@@ -23,7 +23,7 @@ import Button from "../constants/Button";
 import Loader from "../constants/Loader";
 
 import { useMutation } from "@apollo/client";
-import { POST_ITEM } from "../../lib/apollo/queries/items";
+import { POST_ITEM, GET_MY_ADS } from "../../lib/apollo/queries/items";
 
 const { width } = Dimensions.get("screen");
 const setWidth = (w) => (width / 100) * w;
@@ -31,24 +31,10 @@ const setWidth = (w) => (width / 100) * w;
 const InputItem = ({ route }) => {
   //graphql
   const [postItem, { error, data }] = useMutation(POST_ITEM, {
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-    variables: {
-      // newItem: {
-      //   title: null,
-      //   description: null,
-      //   brand: null,
-      //   yearOfPurchase: null,
-      //   category: null,
-      //   images: [
-      //     {
-      //       imageUrl: null,
-      //       tag: null,
-      //     },
-      //   ],
-      // },
-      // access_token: "",
-    },
+    refetchQueries: [
+      GET_MY_ADS, // DocumentNode object parsed with gql
+      "getMyAds", // Query name
+    ],
   });
 
   const navigation = useNavigation();
