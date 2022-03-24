@@ -191,7 +191,7 @@ const InputItem = ({ route }) => {
       try {
         const token = await AsyncStorage.getItem("access_token");
         const responseImage = await fetch(
-          `http://cc11-110-138-86-180.ngrok.io/users/myImage`,
+          `https://server-barter-in.herokuapp.com/users/myImage`,
           {
             method: "POST",
             headers: {

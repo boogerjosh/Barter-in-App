@@ -36,17 +36,6 @@ const DetailScreen = ({ route }) => {
     },
   });
 
-
-  let detailItem;
-  let images = [];
-  if (data) {
-    detailItem = data?.getItem;
-    detailItem?.Images.forEach((el) => {
-      images.push(el.imageUrl);
-    });
-  }
-
-
   const renderItem2 = ({ item, index }) => {
     return (
       <View
@@ -66,16 +55,12 @@ const DetailScreen = ({ route }) => {
     );
   };
 
-  let _carousel;
   return (
   <SafeAreaView style={styles.container}>    
     <View style={styles.container}>
       <ScrollView style={{ width: Dimensions.get("window").width }}>
         <Carousel
-          ref={(c) => {
-            _carousel = c;
-          }}
-          data={detailItem?.Images ? detailItem?.Images : null}
+          data={data?.getItem.Images ? data?.getItem.Images : null}
           renderItem={renderItem2}
           sliderWidth={width * 1}
           itemWidth={width * 0.8}
@@ -93,7 +78,7 @@ const DetailScreen = ({ route }) => {
               borderColor: "#C0C0C0",
             }}
           >
-            {detailItem?.title}
+            {data?.getItem.title}
           </Text>
         </View>
         <View
@@ -144,7 +129,7 @@ const DetailScreen = ({ route }) => {
               color: COLORS.LIGHT_GRAY,
             }}
           >
-            {detailItem?.brand}
+            {data?.getItem.brand}
           </Text>
         </View>
         <View
@@ -181,7 +166,7 @@ const DetailScreen = ({ route }) => {
               color: COLORS.LIGHT_GRAY,
             }}
           >
-            {detailItem?.yearOfPurchase}
+            {data?.getItem.yearOfPurchase}
           </Text>
         </View>
         <View
@@ -221,7 +206,7 @@ const DetailScreen = ({ route }) => {
                 borderColor: COLORS.EXTRA_LIGHT_GRAY,
               }}
             >
-              {detailItem?.description}
+              {data?.getItem.description}
             </Text>
           ) : (
             <Text
@@ -236,7 +221,7 @@ const DetailScreen = ({ route }) => {
               }}
               numberOfLines={3}
             >
-              {detailItem?.description}
+              {data?.getItem.description}
             </Text>
           )}
           {readMore ? (
@@ -315,7 +300,7 @@ const DetailScreen = ({ route }) => {
           >
             <Image
                source={{
-            uri: `${detailItem?.User.photoUrl}`,
+            uri: `${data?.getItem.User.photoUrl}`,
             }}
               style={styles.headerImage}
             />
@@ -329,7 +314,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                {detailItem?.User?.username}
+                {data?.getItem.User.username}
               </Text>
               <Text
                 style={{
@@ -340,7 +325,7 @@ const DetailScreen = ({ route }) => {
                   marginRight: 15,
                 }}
               >
-                {detailItem?.User?.email}
+                {data?.getItem.User.email}
               </Text>
             </View>
           </View>
@@ -378,7 +363,7 @@ const DetailScreen = ({ route }) => {
               justifyContent: "center",
               marginTop: 4,
             }}
-            onPress={() => navigation.push("MyItemBarter", { detailItem })}
+            onPress={() => navigation.push("MyItemBarter", { detailItem: data?.getItem })}
           >
             <Text
               style={{
@@ -404,8 +389,8 @@ const DetailScreen = ({ route }) => {
             }}
             onPress={() =>
               navigation.push("MyChatRoom", {
-                userName: detailItem?.User?.username,
-                itemUserId: detailItem?.User?.id,
+                userName: data?.getItem.User.username,
+                itemUserId: data?.getItem.User.id,
               })
             }
           >

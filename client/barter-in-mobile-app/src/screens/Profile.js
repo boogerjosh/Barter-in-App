@@ -138,12 +138,6 @@ const ProfileScreen = ({ route }) => {
       {auth ? (
         <View style={styles.userInfoSection}>
           <View style={styles.row}>
-            <Icon name="phone" color="#777777" size={20} />
-            <Text style={{ color: "#777777", marginLeft: 20 }}>
-              +628-XXX-XXX
-            </Text>
-          </View>
-          <View style={styles.row}>
             <Icon name="email" color="#777777" size={20} />
             <Text style={{ color: "#777777", marginLeft: 20 }}>
               {email}
