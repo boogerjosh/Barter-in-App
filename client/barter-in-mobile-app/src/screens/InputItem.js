@@ -157,9 +157,8 @@ const InputItem = ({ route }) => {
     refetchQueries: [GET_MY_ADS, "GetMyAds"],
   });
 
-  const addAds = () => {
+  const addAds = async () => {
     setLoading(true);
-    setTimeout(async () => {
       const formData = new FormData();
       let filename3 = adsImage.image3.split("/").pop();
       let match3 = /\.(\w+)$/.exec(filename3);
@@ -192,7 +191,7 @@ const InputItem = ({ route }) => {
       try {
         const token = await AsyncStorage.getItem("access_token");
         const responseImage = await fetch(
-          `https://edd6-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io/users/myImage`,
+          `https://835d-2001-448a-106d-1070-85ce-2944-efaa-9402.ngrok.io/users/myImage`,
           {
             method: "POST",
             headers: {
@@ -202,11 +201,10 @@ const InputItem = ({ route }) => {
             body: formData,
           }
         );
-        console.log(responseImage, 'imagesss')
         if (!responseImage.ok) {
           const message = `An error has occured: ${responseImage.status}`;
           throw new Error(message);
-        } else if (responseImage.ok) {
+        } else {
           let itemImage = await responseImage.json();
           let fieldsInputs = {
             title: inputs.title,
@@ -220,18 +218,6 @@ const InputItem = ({ route }) => {
             variables: { newItem: fieldsInputs, accessToken: token },
           });
           setLoading(false);
-          setProfileImage({
-            image1: "",
-            image2: "",
-            image3: "",
-          });
-          setInputs({
-            title: "",
-            description: "",
-            brand: "",
-            yearOfPurchase: "",
-            category: "",
-          });
           navigation.navigate("MY ADS");
         }
       } catch (error) {
@@ -239,7 +225,6 @@ const InputItem = ({ route }) => {
         Alert.alert("Error", "Something went wrong");
         setLoading(false);
       }
-    }, 3000);
   };
 
   const handleOnchange = (text, input) => {

@@ -23,7 +23,7 @@ Notifications.setNotificationHandler({
 });
 
 
-socket = io("https://edd6-2001-448a-1061-10b7-19a9-7805-9f3a-2aef.ngrok.io");
+socket = io("https://835d-2001-448a-106d-1070-85ce-2944-efaa-9402.ngrok.io");
 const ChatRoomScreen = ({ route }) => {
   const notificationListener = useRef();
   const [messages, setMessages] = useState([]);

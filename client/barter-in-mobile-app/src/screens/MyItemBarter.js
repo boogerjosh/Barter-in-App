@@ -25,7 +25,7 @@ import { useQuery } from "@apollo/client";
 import { GET_DATA_FOR_BARTER } from "../../lib/apollo/queries/items";
 
 const MyItemBarter = ({ route }) => {
-  console.log(route, '----')
+  
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
