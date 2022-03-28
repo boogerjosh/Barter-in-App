@@ -27,6 +27,7 @@ const SPACING = 20;
 const ITEM_SIZE = 30;
 
 const MuBarterRoomComp = ({ item }) => {
+  
   const navigation = useNavigation();
   const [auth, setAuth] = useState(false);
   const [token, setToken] = useState("");
@@ -38,10 +39,12 @@ const MuBarterRoomComp = ({ item }) => {
       "GetRoomBarter", // Query name
     ],
   });
+
   const updateRoomBarter = () => {
     patchRoomBarter({ variables: { accessToken: token, roomId: item.id } });
     // navigation.navigate("HomeRouter");
   };
+
   async function getToken() {
     try {
       let newToken = await AsyncStorage.getItem("access_token");
@@ -151,7 +154,10 @@ const MuBarterRoomComp = ({ item }) => {
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.8}
-              onPress={() => navigation.push("ChatRoom", {})}
+              onPress={() => navigation.push("ChatRoom", {
+                userName: 'Chat Room',
+                itemUserId: item?.user2,
+              })}
             >
               <Text style={styles.buttonText}>CHAT</Text>
             </TouchableOpacity>
