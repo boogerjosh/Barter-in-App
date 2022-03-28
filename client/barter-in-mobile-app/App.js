@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApolloProvider } from "@apollo/client";
 
 const App = () => {
+
   const [fontsLoaded] = useFonts({
     Regular: require("./assets/fonts/Poppins-Regular.ttf"),
     Bold: require("./assets/fonts/Poppins-Bold.ttf"),
@@ -20,6 +21,7 @@ const App = () => {
     Medium: require("./assets/fonts/Poppins-Medium.ttf"),
     Italic: require("./assets/fonts/Poppins-Italic.ttf"),
   });
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
 
@@ -42,15 +44,12 @@ const App = () => {
       setTimeout(async() => {
         setIsLoading(false);
         try {
-          await AsyncStorage.getItem("username");
-          await AsyncStorage.getItem("email");
-          await AsyncStorage.getItem("photoUrl");
           await AsyncStorage.getItem('access_token');
         } catch(e) {
           console.log(e);
         }
       }, 1000);
-  }, [userToken]);
+  }, []);
   
   if( isLoading ) {
     return(
@@ -59,6 +58,7 @@ const App = () => {
       </View>
     );
   }
+
   return fontsLoaded ? (
     <ApolloProvider client={client}>
       <AuthContext.Provider value={authContext}>

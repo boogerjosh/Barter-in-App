@@ -68,12 +68,12 @@ const ProfileScreen = ({ route }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.header}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
         <View style={styles.headerWrapper}>
           <Text style={styles.nameText}>My Account</Text>
         </View>
-      </SafeAreaView>
+      </View>
       <StatusBar style="auto" />
 
       <View style={styles.userInfoSection}>
@@ -224,7 +224,7 @@ const ProfileScreen = ({ route }) => {
         </TouchableOpacity>
         }
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

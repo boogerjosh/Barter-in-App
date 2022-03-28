@@ -69,9 +69,10 @@ const Login = () => {
     Google.logInAsync(config)
       .then((result) => {
         user = result.user;
-        let token1 = token;
-        console.log(token1, '====')
-        return LoginGoogle({ variables: { newUser: user, newToken: token1 } });
+        return registerForPushNotificationsAsync()
+      })
+      .then((data) => {
+            return LoginGoogle({ variables: { newUser: user, newToken: data } })
       })
       .then((data) => {
         AsyncStorage.setItem("id", data.data.loginGoogle.id);

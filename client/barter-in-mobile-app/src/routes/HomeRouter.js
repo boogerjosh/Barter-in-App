@@ -19,6 +19,7 @@ const Stack = createNativeStackNavigator();
 
 const HomeRouter = () => {
   const [auth, setAuth] = useState(false);
+
   async function getToken() {
     try {
       let token = await AsyncStorage.getItem("access_token");
@@ -41,13 +42,16 @@ const HomeRouter = () => {
   const navigation = useNavigation();
   return (
     <Stack.Navigator
-    // screenListeners={({ route, navigation }) => ({
-    //   state: (e) => {
-    //     if ((!auth && route.name === 'MyChatRoom') || (!auth && route.name === 'MyItemBarter')) {
-    //       navigation.navigate('Login')
-    //     }
-    //   },
-    // })}
+    screenListeners={({ route, navigation }) => ({
+      state: (e) => {
+        if ((!auth && route.name === 'MyChatRoom') ) {
+          navigation.navigate('Login')
+        }
+         if ((!auth && route.name === 'MyItemBarter') ) {
+          navigation.navigate('Login')
+        }
+      },
+    })}
     >
       <Stack.Screen
         name="HomeRouter"
