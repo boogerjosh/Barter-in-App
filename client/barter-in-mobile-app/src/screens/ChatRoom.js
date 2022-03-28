@@ -23,7 +23,7 @@ Notifications.setNotificationHandler({
 });
 
 
-socket = io("https://835d-2001-448a-106d-1070-85ce-2944-efaa-9402.ngrok.io");
+socket = io("https://barterin-server.herokuapp.com");
 const ChatRoomScreen = ({ route }) => {
   
   const notificationListener = useRef();

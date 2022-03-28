@@ -53,8 +53,6 @@ const BarterRoomScreen = () => {
     roomBarters = data?.getRoomBarter;
   }
 
-  console.log(roomBarters, '---')
-
   useFocusEffect(
     React.useCallback(() => {
       getToken();

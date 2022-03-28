@@ -45,8 +45,8 @@ const App = () => {
         setIsLoading(false);
         try {
           await AsyncStorage.getItem('access_token');
-        } catch(e) {
-          console.log(e);
+        } catch(err) {
+          console.log(err);
         }
       }, 1000);
   }, []);
