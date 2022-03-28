@@ -26,6 +26,17 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          username: "Arya",
+          email: "aryawdy16@gmail.com",
+          password: hashPassword("smio28934ng02m"),
+          role: "Customer",
+          address: "-",
+          photoUrl:
+            "https://lh3.googleusercontent.com/a-/AOh14GggQkL7YgD5mIDSNzppGS-eUJ8XuF-kKYIqWheCzw=s288-p-no",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
           username: "Glenn",
           email: "leonardusglenn@gmail.com",
           password: hashPassword("smio28934ng02m"),
