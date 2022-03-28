@@ -393,11 +393,7 @@ class userControllers {
             model: Item,
             as: "Item2",
             include: [Image],
-          },
-           {
-            model: User,
-            as: "User2",
-          },
+          }
         ],
         order: [["createdAt", "DESC"]],
       });
