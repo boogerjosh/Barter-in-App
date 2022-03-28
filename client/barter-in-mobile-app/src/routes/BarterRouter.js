@@ -27,11 +27,11 @@ const BarterRouter = () => {
           }}
       />
       <Stack.Screen name="ChatRoom" component={ChatRoomScreen}
-          options={{
-            headerBackTitleVisible: false,
-            title: "",
-            headerTintColor: COLORS.PRIMARY,
-          }}
+        options={({ route }) => ({
+          headerBackTitleVisible: false,
+          headerTintColor: COLORS.PRIMARY,
+          title: route.params.userName,
+        })}
       />
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>

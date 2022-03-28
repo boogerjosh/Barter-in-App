@@ -53,6 +53,8 @@ const BarterRoomScreen = () => {
     roomBarters = data?.getRoomBarter;
   }
 
+  console.log(roomBarters, '---')
+
   useFocusEffect(
     React.useCallback(() => {
       getToken();
@@ -79,7 +81,6 @@ const BarterRoomScreen = () => {
           ListHeaderComponent={() => <ItemSpace width={10} />}
           ListFooterComponent={() => <ItemSpace width={10} />}
           renderItem={({ item }) => <MuBarterRoomComp item={item} />}
-          // numColumns={numColumns}
         />
       </View>
     </SafeAreaView>
